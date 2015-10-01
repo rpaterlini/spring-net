@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Spring.Data.NHibernate4.NestedTxSuspension.Integration.Tests.build" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Spring.HibernateTxScopeTransactionManager.xml" />

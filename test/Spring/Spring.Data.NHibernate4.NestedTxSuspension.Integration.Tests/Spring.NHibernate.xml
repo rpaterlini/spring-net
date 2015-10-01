@@ -2,7 +2,7 @@
 <objects xmlns="http://www.springframework.net" xmlns:db="http://www.springframework.net/database">
   <description>Dependency Injection for NHibernate Session</description>
 
-  <object id="Spring.Data.NHibernate.LocalSessionFactoryObject" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate4">
+  <object id="Spring.Data.NHibernate.LocalSessionFactoryObject" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate">
     <property name="DbProvider" ref="ActiveDbProvider"/>
   
     <property name="HibernateProperties">

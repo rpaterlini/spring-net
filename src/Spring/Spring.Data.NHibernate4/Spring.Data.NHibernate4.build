@@ -6,22 +6,16 @@
       * current.build.debug       - (true|false) debug build?
       * current.build.defines.csc - framework-specific build defines for C# compiler
  -->
+ 
+	<include buildfile="${spring.basedir}/CopyLibToBinHelpers.include"/>
+ 
 	<target name="build">
 
-		<echo message="${nh4.lib.dir}" />
-		<copy todir="${current.bin.dir}" overwrite="true">
-			<fileset basedir="${nh4.lib.dir}">
-				<include name="**/*.dll" />
-			</fileset>
-		</copy>		
-		<echo message="${iesi4.lib.dir}" />
-		<copy todir="${current.bin.dir}" overwrite="true">
-			<fileset basedir="${iesi4.lib.dir}">
-				<include name="**/*.dll" />
-			</fileset>
-		</copy>		
-
 		<!-- build Spring.Data.NHibernate4 -->
+		
+		<call target="copycommonlogginglibtobin" />
+		<call target="copynh4libtobin" />
+		
 		<csc target="library" define="${current.build.defines.csc},NH_4_0"
 			 warnaserror="true"
 			 optimize="${build.optimize}"
@@ -52,10 +46,15 @@
 				<include name="System.Web.dll" />
 				<include name="System.Xml.dll" />
 				<include name="System.EnterpriseServices.dll" />
-				<include name="${current.bin.dir}/*.dll" />
-				<exclude name="${current.bin.dir}/Spring.Data.NHibernate*.dll" />
-				<exclude name="${current.bin.dir}/*NHibernate3*.*.dll" />
-				<exclude name="${current.bin.dir}/CloverRuntime.dll" />
+				<include name="${current.bin.dir}/Common.Logging.dll"/>
+				<include name="${current.bin.dir}/Common.Logging.Core.dll"/>
+				<include name="${current.bin.dir}/Spring.Core.dll"/>
+				<include name="${current.bin.dir}/Spring.Aop.dll"/>
+				<include name="${current.bin.dir}/Spring.Data.dll"/>
+				
+				<include name="${current.bin.dir}/NHibernate.dll"/>
+				<include name="${current.bin.dir}/Iesi.Collections.dll"/>
+				
 			</references>
 		</csc>
 	</target>

@@ -3,7 +3,7 @@
 
   <db:provider id="ActiveDbProvider" connectionString="${conn.active}" provider="${provider.active}" />
 
-  <object id="Spring.Data.NHibernate.Generic.HibernateTemplate" type="Spring.Data.NHibernate.Generic.HibernateTemplate, Spring.Data.NHibernate4">
+  <object id="Spring.Data.NHibernate.Generic.HibernateTemplate" type="Spring.Data.NHibernate.Generic.HibernateTemplate, Spring.Data.NHibernate">
     <property name="SessionFactory" ref="Spring.Data.NHibernate.LocalSessionFactoryObject" />
     <property name="TemplateFlushMode" value="Auto" />
     <property name="CacheQueries" value="true" />

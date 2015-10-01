@@ -6,8 +6,15 @@
       * current.build.debug       - (true|false) debug build?
       * current.build.defines.csc - framework-specific build defines for C# compiler
 -->
+
+
+	<include buildfile="${spring.basedir}/CopyLibToBinHelpers.include"/>
+
 	<target name="build">
 		<!-- build Spring.Aop -->
+		
+		<call target="copycommonlogginglibtobin" />
+		
 		<csc target="library" define="${current.build.defines.csc}"
 		     warnaserror="true"
 		     optimize="${build.optimize}"
