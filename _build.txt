@@ -19,8 +19,11 @@
 	- User/Password springqa/springqa come db_owner del db Spring
 	 
 - Esegui:
-    build clean compile-build-4.5 -D:"project.build.sign=true" -D:"package.version=2.0.1" -D:"project.build.config=release"
-- L'output è in buildlog.txt
+
+    build clean compile-build-4.0 -D:"project.build.sign=true" -D:"package.version=2.0.1" -D:"project.build.config=release"
+	build clean compile-build-4.5 -D:"project.build.sign=true" -D:"package.version=2.0.1" -D:"project.build.config=release"
+
+	- L'output è in buildlog.txt
 - Ci possono comunque essere errori nei test, ignorarli
 - Il compilato è in build\net\4.5\release 
 

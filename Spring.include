@@ -48,7 +48,7 @@
 		      hive="LocalMachine"
 		      failonerror="false" />
 
-  <property name="net-4.5.installed" value="${string::starts-with(registry.net-4.5.installed, '4.5.') == true}" />
+  <property name="net-4.5.installed" value="${string::starts-with(registry.net-4.5.installed, '4.6.') == true}" />
 
   <readregistry property="vs-net90.dir" key="SOFTWARE\Microsoft\VisualStudio\9.0\InstallDir" hive="LocalMachine" failonerror="false"/>
 
