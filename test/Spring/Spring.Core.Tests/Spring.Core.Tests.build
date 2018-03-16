@@ -26,7 +26,7 @@
 			output="${current.bin.dir}/${project::get-name()}.dll"
 			doc="${current.bin.dir}/${project::get-name()}.xml"
 			nostdlib="true"
-			noconfig="true"
+			noconfig="true" verbose="true"
 			>
 			<nowarn>
 				<warning number="${nowarn.numbers.test},0219,0169,0612" /> <!-- add 0414 for mono 2.0 -->
