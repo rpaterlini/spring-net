@@ -24,6 +24,8 @@ using AopAlliance.Intercept;
 using NHibernate.Engine;
 using NHibernate.Proxy.Poco;
 using NHibernate.Type;
+using NHibernate.Util;
+
 using Spring.Aop;
 using Spring.Reflection.Dynamic;
 
@@ -55,11 +57,17 @@ namespace Spring.Data.NHibernate.Bytecode
         public LazyInitializer(string entityName, Type persistentClass, object id, MethodInfo getIdentifierMethod,
                                MethodInfo setIdentifierMethod, IAbstractComponentType componentIdType,
                                ISessionImplementor session)
+        #if NH_4_0
+            : base(
+                entityName, persistentClass, id, getIdentifierMethod,
+                setIdentifierMethod, componentIdType, session, ReflectHelper.OverridesEquals(persistentClass)) { }
+        #else
             : base(
                 entityName, persistentClass, id, getIdentifierMethod,
                 setIdentifierMethod, componentIdType, session) { }
+        #endif
 
-        #region Implementation of IInterceptor
+#region Implementation of IInterceptor
 
         /// <summary>
         /// Implement this method to perform extra treatments before and after
@@ -106,9 +114,9 @@ namespace Spring.Data.NHibernate.Bytecode
             }
         }
 
-        #endregion
+#endregion
 
-        #region Implementation of ITargetSource
+#region Implementation of ITargetSource
 
         object ITargetSource.GetTarget()
         {
@@ -127,6 +135,6 @@ namespace Spring.Data.NHibernate.Bytecode
             get { return false; }
         }
 
-        #endregion
+#endregion
     }
 }
