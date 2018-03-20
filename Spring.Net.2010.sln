@@ -114,6 +114,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spring.Template.Velocity.Ca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spring.Data.NHibernate4.NestedTxSuspension.Integration.Tests", "test\Spring\Spring.Data.NHibernate4.NestedTxSuspension.Integration.Tests\Spring.Data.NHibernate4.NestedTxSuspension.Integration.Tests.csproj", "{DE276F7C-4564-49EC-AABC-B964EC3D1626}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spring.Data.NHibernate5.2010", "src\Spring\Spring.Data.NHibernate5\Spring.Data.NHibernate5.2010.csproj", "{40B71B07-11E5-405E-8A05-96EA275978A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -594,13 +596,25 @@ Global
 		{DE276F7C-4564-49EC-AABC-B964EC3D1626}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE276F7C-4564-49EC-AABC-B964EC3D1626}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DE276F7C-4564-49EC-AABC-B964EC3D1626}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Debug|.NET.Build.0 = Debug|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Release|.NET.ActiveCfg = Release|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Release|.NET.Build.0 = Release|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{40B71B07-11E5-405E-8A05-96EA275978A8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		NAntAddinLastFileName = Spring.build
 		SolutionGuid = {70214C3F-FEE2-4ACF-81EF-5A4E1888ACE9}
+		NAntAddinLastFileName = Spring.build
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Spring.Net.2010.vsmdi

@@ -646,7 +646,7 @@ namespace Spring.Data.NHibernate
             Execute(new SaveOrUpdateAllHibernateCallback(this, entities), true);
         }
 
-#if !NH_4_0
+#if !NH_4_0 && !NH_5_0
         /// <summary>
         /// Save or update the contents of given persistent object,
         /// according to its id (matching the configured "unsaved-value"?).
@@ -2144,7 +2144,7 @@ namespace Spring.Data.NHibernate
         }
     }
 
-#if !NH_4_0
+#if !NH_4_0 && !NH_5_0
     internal class SaveOrUpdateCopyHibernateCallback : IHibernateCallback
     {
         private HibernateTemplate outer;

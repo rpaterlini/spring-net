@@ -25,6 +25,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+#if NH_5_0
+using System.Threading;
+using System.Threading.Tasks;
+#endif
 
 using Common.Logging;
 using NHibernate;
@@ -77,7 +81,7 @@ namespace Spring.Data.NHibernate
     public class LocalSessionFactoryObject : IFactoryObject, IInitializingObject, IPersistenceExceptionTranslator, IDisposable
         , IApplicationContextAware
 	{
-		#region Fields
+#region Fields
 
         private Configuration configuration;
 
@@ -123,9 +127,9 @@ namespace Spring.Data.NHibernate
 
         private IBytecodeProvider bytecodeProvider;
 
-        #endregion
+#endregion
 
-		#region Constants
+#region Constants
 
 		/// <summary>
 		/// The shared <see cref="ILog"/> instance for this class (and derived classes).
@@ -133,9 +137,9 @@ namespace Spring.Data.NHibernate
 		protected static readonly ILog log =
 			LogManager.GetLogger(typeof (LocalSessionFactoryObject));
 
-	    #endregion
+#endregion
 
-		#region Constructor (s)
+#region Constructor (s)
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LocalSessionFactoryObject"/> class.
         /// </summary>
@@ -144,9 +148,9 @@ namespace Spring.Data.NHibernate
 
 		}
 
-		#endregion
+#endregion
 
-		#region Properties
+#region Properties
 
         /// <summary>
         /// Setting the Application Context determines were resources are loaded from
@@ -430,11 +434,11 @@ namespace Spring.Data.NHibernate
             set { this.bytecodeProvider = value; }
 	    }
 
-	    #endregion
+#endregion
 
-		#region Methods
+#region Methods
 
-		#endregion
+#endregion
 
         /// <summary>
         /// Return the singleon session factory.
@@ -539,13 +543,13 @@ namespace Spring.Data.NHibernate
                 if (config.GetProperty(Environment.ConnectionProvider) != null &&
                     hibernateProperties.ContainsKey(Environment.ConnectionProvider))
                 {
-                    #region Logging
+#region Logging
                     if (log.IsInfoEnabled)
                     {
                         log.Info("Overriding use of Spring's Hibernate Connection Provider with [" +
                                  hibernateProperties[Environment.ConnectionProvider] + "]");
                     }
-                    #endregion 
+#endregion
                     config.Properties.Remove(Environment.ConnectionProvider);
                 }
 
@@ -690,12 +694,12 @@ namespace Spring.Data.NHibernate
 	    {
             if (sessionFactory != null)
             {
-                #region Instrumentation
+#region Instrumentation
                 if (log.IsInfoEnabled)
                 {
                     log.Info("Closing Hibernate SessionFactory");
                 }  
-                #endregion                  
+#endregion
                 sessionFactory.Close();
             }
 
@@ -934,7 +938,7 @@ namespace Spring.Data.NHibernate
             return sf;
         }
 
-        #region DbProviderWrapper Helper class
+#region DbProviderWrapper Helper class
 
         internal class DbProviderWrapper : ConnectionProvider
         {
@@ -950,6 +954,38 @@ namespace Spring.Data.NHibernate
                 set { _dbProvider = value; }
             }
 
+#if NH_5_0
+            public override Task<DbConnection> GetConnectionAsync(CancellationToken cancellationToken)
+            {
+                return Task.FromResult(GetConnection());
+            }
+
+            public override void CloseConnection(DbConnection conn)
+            {
+                base.CloseConnection(conn);
+                conn.Dispose();
+            }
+
+            public override DbConnection GetConnection()
+            {
+                IDbProvider provider = _dbProvider;
+                if (provider == null && configTimeDbProvider != null)
+                {
+                    // NH 2.1 has a need to access db provider before
+                    // it has been set "the natural way" (it gets the DB's reserved words)
+                    // allow it via configuration time db provider reference
+                    provider = configTimeDbProvider;
+                }
+
+                if (provider == null)
+                {
+                    throw new Exception("There was no DB provider available, unable to create connection");
+                }
+                IDbConnection dbCon = provider.CreateConnection();
+                dbCon.Open();
+                return (DbConnection) dbCon;
+            }
+#else
             public override void CloseConnection(IDbConnection conn)
             {
                 base.CloseConnection(conn);
@@ -975,11 +1011,13 @@ namespace Spring.Data.NHibernate
                 dbCon.Open();
                 return dbCon;
             }
+#endif
+
         }
 
-        #endregion // DbProviderWrapper Helper class
+#endregion // DbProviderWrapper Helper class
 
-	    #region IPersistenceExceptionTranslator Members
+#region IPersistenceExceptionTranslator Members
 
         /// <summary>
         /// Implementation of the PersistenceExceptionTranslator interface,
@@ -996,7 +1034,7 @@ namespace Spring.Data.NHibernate
         /// exception could not be translated.
         /// </returns>
         /// <seealso cref="PersistenceExceptionTranslationPostProcessor"/>
-	    public DataAccessException TranslateExceptionIfPossible(Exception ex)
+        public DataAccessException TranslateExceptionIfPossible(Exception ex)
 	    {            
             if (ex is HibernateException)
             {
@@ -1035,6 +1073,6 @@ namespace Spring.Data.NHibernate
             return SessionFactoryUtils.ConvertAdoAccessException(AdoExceptionTranslator, ex);            
         }
 
-	    #endregion
+#endregion
 	}
 }

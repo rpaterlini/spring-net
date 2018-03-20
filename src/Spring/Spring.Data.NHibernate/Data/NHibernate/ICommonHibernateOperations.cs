@@ -222,7 +222,7 @@ namespace Spring.Data.NHibernate
         /// <exception cref="DataAccessException">In case of Hibernate errors</exception>
         void SaveOrUpdate(object entity);
 
-#if !NH_4_0
+#if !NH_4_0 && !NH_5_0
         /// <summary>
         /// Save or update the contents of given persistent object,
         /// according to its id (matching the configured "unsaved-value"?).
@@ -254,6 +254,6 @@ namespace Spring.Data.NHibernate
         /// <exception cref="DataAccessException">In case of Hibernate errors</exception>
         object Merge(object entity);
 
-        #endregion
+#endregion
     }
 }
