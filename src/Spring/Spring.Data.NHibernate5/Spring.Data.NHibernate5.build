@@ -11,12 +11,12 @@
  
 	<target name="build">
 
-		<!-- build Spring.Data.NHibernate4 -->
+		<!-- build Spring.Data.NHibernate5 -->
 		
 		<call target="copycommonlogginglibtobin" />
 		<call target="copynh4libtobin" />
 		
-		<csc target="library" define="${current.build.defines.csc},NH_4_0"
+		<csc target="library" define="${current.build.defines.csc},NH_5_0"
 			 warnaserror="true"
 			 optimize="${build.optimize}"
 			 debug="${current.build.debug}"
@@ -40,7 +40,7 @@
 				<include name="Microsoft.CSharp.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
-                <include name="System.Configuration.dll"/>
+        <include name="System.Configuration.dll"/>
 				<include name="System.Data.dll" />
 				<include name="System.Transactions.dll" />
 				<include name="System.Web.dll" />
