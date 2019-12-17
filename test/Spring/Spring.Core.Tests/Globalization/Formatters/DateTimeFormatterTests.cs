@@ -32,11 +32,10 @@ namespace Spring.Globalization.Formatters
     public class DateTimeFormatterTests
     {
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void FormatNullValue()
         {
             DateTimeFormatter fmt = new DateTimeFormatter("d");
-            fmt.Format(null);
+            Assert.Throws<ArgumentNullException>(() => fmt.Format(null));
         }
 
         [Test]
@@ -48,11 +47,10 @@ namespace Spring.Globalization.Formatters
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void FormatNonDate()
         {
             DateTimeFormatter fmt = new DateTimeFormatter("d");
-            fmt.Format("not a date");
+            Assert.Throws<ArgumentException>(() => fmt.Format("not a date"));
         }
 #if !MONO
         [Test]
@@ -71,11 +69,18 @@ namespace Spring.Globalization.Formatters
             Console.WriteLine("Steve:  " + Environment.Version);
 
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7AndBeforeWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual("14. avgust 2004.", fmt.Format(new DateTime(2004, 8, 14)));
                 Assert.AreEqual("24. avgust 1974.", fmt.Format(new DateTime(1974, 8, 24)));
             }
+
+            else if (CultureInfoUtils.OperatingSystemIsAtLeastWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
+            {
+                Assert.AreEqual("subota, 14. avgust 2004.", fmt.Format(new DateTime(2004, 8, 14)));
+                Assert.AreEqual("subota, 24. avgust 1974.", fmt.Format(new DateTime(1974, 8, 24)));
+            }
+
             else
             {
                 Assert.AreEqual("14. avgust 2004", fmt.Format(new DateTime(2004, 8, 14)));
@@ -84,7 +89,7 @@ namespace Spring.Globalization.Formatters
 
             fmt = new DateTimeFormatter("dd-MMM-yyyy", CultureInfoUtils.SerbianCyrillicCultureName);
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual("14-авг.-2004", fmt.Format(new DateTime(2004, 8, 14)));
                 Assert.AreEqual("24-авг.-1974", fmt.Format(new DateTime(1974, 8, 24)));
@@ -110,11 +115,18 @@ namespace Spring.Globalization.Formatters
 
             fmt = new DateTimeFormatter("D", CultureInfoUtils.SerbianLatinCultureName);
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7AndBeforeWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual(new DateTime(2004, 8, 14), fmt.Parse("14. avgust 2004."));
                 Assert.AreEqual(new DateTime(1974, 8, 24), fmt.Parse("24. avgust 1974."));
             }
+
+            else if (CultureInfoUtils.OperatingSystemIsAtLeastWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
+            {
+                Assert.AreEqual(new DateTime(2004, 8, 14), fmt.Parse("subota, 14. avgust 2004."));
+                Assert.AreEqual(new DateTime(1974, 8, 24), fmt.Parse("subota, 24. avgust 1974."));
+            }
+
             else
             {
                 Assert.AreEqual(new DateTime(2004, 8, 14), fmt.Parse("14. avgust 2004"));
@@ -123,7 +135,7 @@ namespace Spring.Globalization.Formatters
 
             fmt = new DateTimeFormatter("dd-MMM-yyyy", CultureInfoUtils.SerbianCyrillicCultureName);
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual(new DateTime(2004, 8, 14), fmt.Parse("14-авг.-2004"));
                 Assert.AreEqual(new DateTime(1974, 8, 24), fmt.Parse("24-авг.-1974"));

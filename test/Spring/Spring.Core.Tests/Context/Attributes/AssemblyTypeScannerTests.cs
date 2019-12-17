@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+
 using NUnit.Framework;
 using Spring.Core;
 using Spring.Util;
@@ -81,11 +81,11 @@ namespace Spring.Context.Attributes
         {
             _scanner.WithIncludeFilter(t => t.Name.Contains("ConfigurationClass"));
 
-            IEnumerable<Type> types = _scanner.Scan();
+            var types = _scanner.Scan().ToList();
 
             Assert.That(types, Contains.Item((typeof(TheConfigurationClass))));
             Assert.That(types, Contains.Item((typeof(TheImportedConfigurationClass))));
-            Assert.That(types.Count(), Is.EqualTo(2));
+            Assert.That(types.Count, Is.EqualTo(2));
         }
 
         private AssemblyObjectDefinitionScanner _scanner;

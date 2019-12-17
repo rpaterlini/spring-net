@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 /*
  * Copyright 2002-2010 the original author or authors.
@@ -32,11 +32,10 @@ namespace Spring.Globalization.Formatters
     public class CurrencyFormatterTests
     {
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void FormatNullValue()
         {
             CurrencyFormatter fmt = new CurrencyFormatter();
-            fmt.Format(null);
+            Assert.Throws<ArgumentNullException>(() => fmt.Format(null));
         }
 
         [Test]
@@ -48,11 +47,10 @@ namespace Spring.Globalization.Formatters
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void FormatNonNumber()
         {
             CurrencyFormatter fmt = new CurrencyFormatter();
-            fmt.Format("not a number");
+            Assert.Throws<ArgumentException>(() => fmt.Format("not a number"));
         }
 #if !MONO
         [Test]
@@ -66,13 +64,22 @@ namespace Spring.Globalization.Formatters
 
             fmt = new CurrencyFormatter(CultureInfoUtils.SerbianLatinCultureName);
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7AndBeforeWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual("1.234,00 din.", fmt.Format(1234));
                 Assert.AreEqual("1.234,56 din.", fmt.Format(1234.56));
                 Assert.AreEqual("-1.234,00 din.", fmt.Format(-1234));
                 Assert.AreEqual("-1.234,56 din.", fmt.Format(-1234.56));
             }
+
+            else if (CultureInfoUtils.OperatingSystemIsAtLeastWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
+            {
+                Assert.AreEqual("1.234 RSD", fmt.Format(1234));
+                Assert.AreEqual("1.235 RSD", fmt.Format(1234.56));
+                Assert.AreEqual("-1.234 RSD", fmt.Format(-1234));
+                Assert.AreEqual("-1.235 RSD", fmt.Format(-1234.56));
+            }
+
             else
             {
                 Assert.AreEqual("1.234,00 Din.", fmt.Format(1234));
@@ -83,7 +90,7 @@ namespace Spring.Globalization.Formatters
 
             fmt = new CurrencyFormatter(CultureInfoUtils.SerbianCyrillicCultureName);
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual("1.234,00 дин.", fmt.Format(1234));
                 Assert.AreEqual("1.234,56 дин.", fmt.Format(1234.56));
@@ -111,13 +118,20 @@ namespace Spring.Globalization.Formatters
 
             fmt = new CurrencyFormatter(CultureInfoUtils.SerbianLatinCultureName);
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7AndBeforeWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual(1234, fmt.Parse("1.234,00 din."));
                 Assert.AreEqual(1234.56, fmt.Parse("1.234,56 din."));
                 Assert.AreEqual(-1234, fmt.Parse("-1.234,00 din."));
                 Assert.AreEqual(-1234.56, fmt.Parse("-1.234,56 din."));
             }
+
+            else if (CultureInfoUtils.OperatingSystemIsAtLeastWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
+            {
+                Assert.AreEqual(1234, fmt.Parse("1.234 RSD"));
+                Assert.AreEqual(-1234, fmt.Parse("-1.234 RSD"));
+            }
+
             else
             {
                 Assert.AreEqual(1234, fmt.Parse("1.234,00 Din."));
@@ -128,7 +142,7 @@ namespace Spring.Globalization.Formatters
 
             fmt = new CurrencyFormatter(CultureInfoUtils.SerbianCyrillicCultureName);
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual(1234, fmt.Parse("1.234,00 дин."));
                 Assert.AreEqual(1234.56, fmt.Parse("1.234,56 дин."));
@@ -159,22 +173,36 @@ namespace Spring.Globalization.Formatters
             fmt = new CurrencyFormatter(CultureInfoUtils.SerbianLatinCultureName);
             fmt.PositivePattern = 1;
             fmt.CurrencySymbol = "din";
-            Assert.AreEqual("1.234,00din", fmt.Format(1234));
-            Assert.AreEqual("1.234,56din", fmt.Format(1234.56));
-            Assert.AreEqual("-1.234,00 din", fmt.Format(-1234));
-            Assert.AreEqual("-1.234,56 din", fmt.Format(-1234.56));
+
+            if (CultureInfoUtils.OperatingSystemIsAtLeastWindows10Build10586 && CultureInfoUtils.ClrIsVersion4OrLater)
+            {
+                Assert.AreEqual("1.234din", fmt.Format(1234));
+                Assert.AreEqual("1.235din", fmt.Format(1234.56));
+                Assert.AreEqual("-1.234 din", fmt.Format(-1234));
+                Assert.AreEqual("-1.235 din", fmt.Format(-1234.56));
+            }
+            else
+            {
+                Assert.AreEqual("1.234,00din", fmt.Format(1234));
+                Assert.AreEqual("1.234,56din", fmt.Format(1234.56));
+                Assert.AreEqual("-1.234,00 din", fmt.Format(-1234));
+                Assert.AreEqual("-1.234,56 din", fmt.Format(-1234.56));
+            }
+
+            
 
             fmt = new CurrencyFormatter(CultureInfoUtils.SerbianCyrillicCultureName);
             fmt.GroupSizes = new int[] { 1, 2 };
             fmt.GroupSeparator = "'";
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual("1'23'4,00 дин.", fmt.Format(1234));
                 Assert.AreEqual("1'23'4,56 дин.", fmt.Format(1234.56));
                 Assert.AreEqual("-1'23'4,00 дин.", fmt.Format(-1234));
                 Assert.AreEqual("-1'23'4,56 дин.", fmt.Format(-1234.56));
             }
+
             else
             {
                 Assert.AreEqual("1'23'4,00 Дин.", fmt.Format(1234));
@@ -207,7 +235,7 @@ namespace Spring.Globalization.Formatters
             fmt.GroupSizes = new int[] { 1, 2 };
             fmt.GroupSeparator = "'";
 
-            if (CultureInfoUtils.OperatingSystemIsLaterThanWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
+            if (CultureInfoUtils.OperatingSystemIsAfterWindows7 && CultureInfoUtils.ClrIsVersion4OrLater)
             {
                 Assert.AreEqual(1234, fmt.Parse("1'23'4,00 дин."));
                 Assert.AreEqual(1234.56, fmt.Parse("1'23'4,56 дин."));

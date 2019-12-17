@@ -24,8 +24,6 @@ using System;
 using System.Reflection;
 using System.Reflection.Emit;
 
-using Spring.Util;
-
 #endregion
 
 namespace Spring.Proxy
@@ -129,7 +127,7 @@ namespace Spring.Proxy
 
             ImplementCustom(typeBuilder);
 
-            return typeBuilder.CreateType();
+            return typeBuilder.CreateTypeInfo();
         }
 
         /// <summary>

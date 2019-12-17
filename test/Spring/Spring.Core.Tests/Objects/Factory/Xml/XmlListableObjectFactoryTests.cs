@@ -20,8 +20,6 @@
 
 #region Imports
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -85,7 +83,7 @@ namespace Spring.Objects.Factory.Xml
         protected void SetUp()
         {
             parent = new DefaultListableObjectFactory();
-            IDictionary<string, object> m = new Dictionary<string, object>();
+            var m = new Dictionary<string, object>();
             m["name"] = "Albert";
             parent.RegisterObjectDefinition("father", new RootObjectDefinition(typeof(TestObject), new MutablePropertyValues(m)));
             m = new Dictionary<string, object>();

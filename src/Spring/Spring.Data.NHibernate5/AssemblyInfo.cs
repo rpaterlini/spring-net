@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 
 [assembly: AssemblyTitle("Spring.Net NHibernate 5.0 support")]

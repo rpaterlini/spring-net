@@ -18,18 +18,20 @@
 
 #endregion
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Messaging;
 using Common.Logging;
 using Spring.Context;
 using Spring.Expressions;
 using Spring.Messaging.Core;
-using Spring.Messaging.Support;
 using Spring.Messaging.Support.Converters;
 using Spring.Objects.Factory;
 using Spring.Reflection.Dynamic;
+
+#if NETSTANDARD
+using Experimental.System.Messaging;
+#else
+using System.Messaging;
+#endif
 
 namespace Spring.Messaging.Listener
 {

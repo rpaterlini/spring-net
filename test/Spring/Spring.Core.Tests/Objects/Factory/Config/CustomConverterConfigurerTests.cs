@@ -18,16 +18,14 @@
 
 #endregion
 
-#region Imports
-
 using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
-using NUnit.Framework;
-using Rhino.Mocks;
 
-#endregion
+using FakeItEasy;
+
+using NUnit.Framework;
 
 namespace Spring.Objects.Factory.Config
 {
@@ -38,19 +36,15 @@ namespace Spring.Objects.Factory.Config
 	[TestFixture]
     public sealed class CustomConverterConfigurerTests
     {
-	    private MockRepository mocks;
 	    private IConfigurableListableObjectFactory factory;
 
         [SetUp]
         public void SetUp()
         {
-            mocks = new MockRepository();
-            factory = mocks.StrictMock<IConfigurableListableObjectFactory>();
-
+            factory = A.Fake<IConfigurableListableObjectFactory>();
         }
 
 		[Test]
-		[ExpectedException(typeof(ObjectInitializationException))]
         public void UseInvalidKeyForConverterMapKey()
 		{
         	IDictionary converters = new Hashtable();
@@ -58,13 +52,10 @@ namespace Spring.Objects.Factory.Config
 
             CustomConverterConfigurer config = new CustomConverterConfigurer();
 			config.CustomConverters = converters;
-			config.PostProcessObjectFactory(factory);
-
-            mocks.VerifyAll();
+            Assert.Throws<ObjectInitializationException>(() => config.PostProcessObjectFactory(factory));
 		}
 
 		[Test]
-		[ExpectedException(typeof(ObjectInitializationException))]
 		public void UseNonTypeConverterForConverterMapValue()
 		{
 			IDictionary converters = new Hashtable();
@@ -72,13 +63,10 @@ namespace Spring.Objects.Factory.Config
 
 			CustomConverterConfigurer config = new CustomConverterConfigurer();
 			config.CustomConverters = converters;
-			config.PostProcessObjectFactory(factory);
-        
-            mocks.VerifyAll();
-        }
+            Assert.Throws<ObjectInitializationException>(() => config.PostProcessObjectFactory(factory));
+                }
 
 		[Test]
-		[ExpectedException(typeof(ObjectInitializationException))]
 		public void UseNonResolvableTypeForConverterMapKey()
 		{
 			IDictionary converters = new Hashtable();
@@ -87,9 +75,7 @@ namespace Spring.Objects.Factory.Config
 
 			CustomConverterConfigurer config = new CustomConverterConfigurer();
 			config.CustomConverters = converters;
-			config.PostProcessObjectFactory(factory);
-        
-            mocks.VerifyAll();
+            Assert.Throws<ObjectInitializationException>(() => config.PostProcessObjectFactory(factory));
         }
 
 		/// <summary>
@@ -102,9 +88,6 @@ namespace Spring.Objects.Factory.Config
 			CustomConverterConfigurer config = new CustomConverterConfigurer();
 			config.CustomConverters = null;
 			config.PostProcessObjectFactory(factory);
-			mocks.ReplayAll();
-
-            mocks.VerifyAll();
 		}
 
 		[Test]
@@ -115,21 +98,16 @@ namespace Spring.Objects.Factory.Config
             DateTimeConverter dateTimeConverter = new DateTimeConverter();
             Type colorType = typeof(Color);
             ColorConverter colorConverter = new ColorConverter();
-		    
+
             converters.Add(dateTimeType, dateTimeConverter);
 		    converters.Add(colorType, colorConverter);
 
             factory.RegisterCustomConverter(dateTimeType, dateTimeConverter);
             factory.RegisterCustomConverter(colorType, colorConverter);
 
-            mocks.ReplayAll();
-
 			CustomConverterConfigurer config = new CustomConverterConfigurer();
 			config.CustomConverters = converters;
 			config.PostProcessObjectFactory(factory);
-
-            mocks.VerifyAll();
-
 		}
     }
 }

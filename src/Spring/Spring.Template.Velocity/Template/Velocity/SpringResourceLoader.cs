@@ -50,7 +50,6 @@ namespace Spring.Template.Velocity {
     /// <see cref="ResourceLoader"/>
     /// <see cref="AssemblyResourceLoader"/>
     /// <author>Erez Mazor (.NET) </author>
-    [CLSCompliant(false)]
     public class SpringResourceLoader : ResourceLoader {
         ///<summary>
         /// Prefix used for the NVelocity Configuration
@@ -92,8 +91,8 @@ namespace Spring.Template.Velocity {
         /// </summary>
         /// <param name="configuration">The ExtendedProperties representing the Velocity configuration.</param>
         public override void Init(ExtendedProperties configuration) {
-            resourceLoader = (IResourceLoader)rsvc.GetApplicationAttribute(SPRING_RESOURCE_LOADER);
-            string resourceLoaderPath = (string)rsvc.GetApplicationAttribute(SPRING_RESOURCE_LOADER_PATH);
+            resourceLoader = (IResourceLoader)runtimeServices.GetApplicationAttribute(SPRING_RESOURCE_LOADER);
+            string resourceLoaderPath = (string)runtimeServices.GetApplicationAttribute(SPRING_RESOURCE_LOADER_PATH);
             if (resourceLoader == null) {
                 throw new ArgumentException("'resourceLoader' application attribute must be present for SpringResourceLoader");
             }
