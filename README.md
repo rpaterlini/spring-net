@@ -166,7 +166,7 @@ Documented sample applications can be found in "examples":
 VS.NET
 ------
 
-Visual Studio 2017 is required to open and build the solution. The free community version of Visual Studio should suffice.
+Visual Studio 2019 is required to open and build the solution. The free community version of Visual Studio should suffice.
 
 For the first time you need to execute `Build.cmd` which will generate `GenCommonAssemblyInfo.cs` file required for builds.
 
@@ -178,6 +178,11 @@ Build scripts are delivered with the download package.
 To build the source and run the unit tests type
 
 build test
+
+Options:
++ `-D:"current.build.config=release"` switch to release build
++ `-D:"project.build.sign=true"` signed build (see below)
++ `-D:"package.version=3.0.0"` library version
 
 If you want to run the build to create strongly signed assemblies you can generate a key file by executing the following command (assuming that sn.exe is properly on your search path):
 

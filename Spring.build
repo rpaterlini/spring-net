@@ -327,7 +327,7 @@ Commandline Examples:
 		  workingdir="${spring.basedir}"
 		  failonerror="true" />
 	  
-      <foreach item="File" property="filename">
+  	  <foreach item="File" property="filename">
       <in>
         <items basedir="${spring.basedir}">
           <include name="*.sln" />
@@ -465,6 +465,7 @@ Commandline Examples:
 		<property name="lib.dir" value="${spring.basedir}/lib/net/4.0"/>
 	</if>
 
+	<echo message="!!! ${current.build.config}" />
     <exec program="${msbuild.exe}" verbose="true">
       <arg value="Spring.NET.sln"/>
       <arg line="/nologo" />
@@ -603,7 +604,7 @@ Commandline Examples:
     <property name="target.dir" value="${path::combine(project::get-base-directory(),'build')}"/>
     <echo message="Deleting all builds from all configurations : '${target.dir}'"/>
     <delete
-            dir="${project::get-base-directory()}/build/net"
+            dir="${target.dir}"
             if="${directory::exists(target.dir)}"
             failonerror="false"/>
   </target>
