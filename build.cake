@@ -30,9 +30,7 @@ Setup((ctx) =>
     // Executed BEFORE the first task.
     Information( "Running tasks:");
     Information( $" From {rootPath.FullPath}" );
-    Information( $" To {binPath.FullPath}" );
     Information( $" Configuration {configuration}" );
-    Information( $" Deploy {deployPath}" );
 });
 
 Teardown((ctx) =>
