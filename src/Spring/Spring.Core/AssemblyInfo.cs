@@ -21,6 +21,5 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: ComVisible(false)]
 [assembly: AssemblyTitle("Spring.Core")]
 [assembly: AssemblyDescription("Core functionality for Spring.Net IoC container")]

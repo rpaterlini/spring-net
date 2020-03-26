@@ -170,8 +170,7 @@ namespace Spring.Scheduling.Quartz
         /// If not specified, the default Scheduler will be used.
         /// </summary>
         /// <value>The name of the scheduler.</value>
-        /// <seealso cref="ISchedulerFactory.GetScheduler(string)"/>
-        /// <seealso cref="ISchedulerFactory.GetScheduler()"/>
+        /// <seealso cref="ISchedulerFactory.GetScheduler(System.Threading.CancellationToken)"/>
         public virtual string SchedulerName
         {
             set => schedulerName = value;
@@ -342,7 +341,7 @@ namespace Spring.Scheduling.Quartz
         /// <value>
         /// 	<c>true</c> if [wait for jobs to complete on Shutdown]; otherwise, <c>false</c>.
         /// </value>
-        /// <seealso cref="IScheduler.Shutdown(bool)"/>
+        /// <seealso cref="IScheduler.Shutdown(System.Threading.CancellationToken)"/>
         public virtual bool WaitForJobsToCompleteOnShutdown
         {
             set => waitForJobsToCompleteOnShutdown = value;
@@ -698,7 +697,7 @@ namespace Spring.Scheduling.Quartz
         /// <param name="schedName">the name of the scheduler to create</param>
         /// <returns>the Scheduler instance</returns>
         /// <seealso cref="AfterPropertiesSet"/>
-        /// <seealso cref="ISchedulerFactory.GetScheduler()"/>
+        /// <seealso cref="ISchedulerFactory.GetScheduler(System.Threading.CancellationToken)"/>
         protected virtual IScheduler CreateScheduler(ISchedulerFactory schedulerFactory, string schedName)
         {
             SchedulerRepository repository = SchedulerRepository.Instance;

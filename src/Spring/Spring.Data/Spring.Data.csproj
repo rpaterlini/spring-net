@@ -3,7 +3,19 @@
     <TargetFrameworks>netstandard2.0;$(TargetFullFrameworkVersion)</TargetFrameworks>
     <Description>Interfaces and classes that provide Data access support in Spring.Net</Description>
     <NoWarn>1591</NoWarn>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Debug\Spring.Data\Spring.Data.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Release\Spring.Data\Spring.Data.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoVersion.cs" Link="AssemblyInfoVersion.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spring.Aop\Spring.Aop.csproj" />
     <ProjectReference Include="..\Spring.Core\Spring.Core.csproj" />
@@ -15,9 +27,6 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GenCommonAssemblyInfo.cs">
-      <Link>GenCommonAssemblyInfo.cs</Link>
-    </Compile>
     <None Include="Data\Config\spring-database-1.3.xsx">
       <DependentUpon>spring-database-1.3.xsd</DependentUpon>
     </None>

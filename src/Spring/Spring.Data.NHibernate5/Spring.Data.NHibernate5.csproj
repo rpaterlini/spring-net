@@ -4,6 +4,15 @@
     <Description>Interfaces and classes that provide NHibernate 5 support in Spring.Net</Description>
     <RootNamespace>Spring.Data.NHibernate</RootNamespace>
     <NoWarn>0618</NoWarn>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Debug\Spring.Data.NHibernate5\Spring.Data.NHibernate5.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Release\Spring.Data.NHibernate5\Spring.Data.NHibernate5.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spring.Aop\Spring.Aop.csproj" />
@@ -19,9 +28,9 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GenCommonAssemblyInfo.cs">
-      <Link>GenCommonAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Remove="Data\NHibernate\Support\OpenSessionInViewModule.cs" Condition=" '$(TargetFramework)' != 'net461'" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoVersion.cs" Link="AssemblyInfoVersion.cs" />
   </ItemGroup>
 </Project>

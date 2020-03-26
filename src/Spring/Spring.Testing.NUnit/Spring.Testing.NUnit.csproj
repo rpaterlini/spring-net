@@ -3,7 +3,19 @@
     <TargetFrameworks>netstandard2.0;$(TargetFullFrameworkVersion)</TargetFrameworks>
     <Description>Interfaces and classes that provide NUnit integration in Spring.Net</Description>
     <NoWarn>1587, 1591, 219, 162, 618</NoWarn>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Debug\Spring.Testing.NUnit\Spring.Testing.NUnit.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Release\Spring.Testing.NUnit\Spring.Testing.NUnit.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoVersion.cs" Link="AssemblyInfoVersion.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spring.Core\Spring.Core.csproj" />
     <ProjectReference Include="..\Spring.Data\Spring.Data.csproj" />
@@ -12,9 +24,6 @@
     <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GenCommonAssemblyInfo.cs">
-      <Link>GenCommonAssemblyInfo.cs</Link>
-    </Compile>
     <None Include="Spring.Testing.NUnit.build" />
   </ItemGroup>
 </Project>

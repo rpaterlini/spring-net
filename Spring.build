@@ -477,8 +477,8 @@ Commandline Examples:
       <arg line='/property:Platform="Any CPU"'/>
     </exec>
 	
-	<call target="copylibs" />
-    <call target="compile-test" />
+	<!--call target="copylibs" />
+    <call target="compile-test" /-->
   </target>  
   
   <target name="compile-mono-2.0" description="Builds MONO Framework 2.0 version"

@@ -2,7 +2,19 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <Description>Interfaces and classes that provide portable service abstractions in Spring.Net</Description>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Debug\Spring.Services\Spring.Services.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\..\build\Release\Spring.Services\Spring.Services.xml</DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoVersion.cs" Link="AssemblyInfoVersion.cs" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spring.Core\Spring.Core.csproj" />
   </ItemGroup>
@@ -15,10 +27,6 @@
     <Reference Include="System.Web.Services" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GenCommonAssemblyInfo.cs">
-      <Link>GenCommonAssemblyInfo.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
     <None Include="Spring.Services.build" />
     <EmbeddedResource Include="EnterpriseServices\EnterpriseServices.keys" />
     <EmbeddedResource Include="Remoting\Config\spring-remoting-1.1.xsd" />

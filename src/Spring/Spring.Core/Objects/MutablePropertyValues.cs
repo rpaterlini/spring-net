@@ -55,7 +55,7 @@ namespace Spring.Objects
         /// overloaded <see cref="Spring.Objects.MutablePropertyValues.Add(PropertyValue)"/>,
         /// <see cref="Spring.Objects.MutablePropertyValues.Add(string, object)"/>,
         /// <see cref="Spring.Objects.MutablePropertyValues.AddAll(IDictionary{string, object})"/>,
-        /// and <see cref="Spring.Objects.MutablePropertyValues.AddAll(IList{PropertyValue})"/>
+        /// and Spring.Objects.MutablePropertyValues.AddAll(IList{PropertyValue})
         /// methods.
         /// </p>
         /// </remarks>
