@@ -1,3 +1,27 @@
+Branch `Working3`
+-
+Branch della versione 3.0 di Spring.NET specifica per Mose.Toolkit.
+
+### Compilazione
+Basata su Cake, da powershell:
+
+	.\build.ps1 deploy -configuration release
+	
+L'output è in `./build/deployRelease`
+
+### Sviluppo
+VisualStudio 2019
+
+### Changelog
+
+* Nuova build cake
+* AssemblyInfoVersion.cs con riferimenti al repository git
+
+**_More to come ...._**
+
+\
+\
+\
 THE SPRING.NET FRAMEWORK, Release 3.0.0  (PRE-RELEASE)
 ---------------------------------------------------------
 http://www.springframework.net/
