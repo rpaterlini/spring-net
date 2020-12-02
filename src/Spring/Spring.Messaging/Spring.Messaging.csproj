@@ -12,8 +12,8 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GenCommonAssemblyInfo.cs">
-      <Link>GenCommonAssemblyInfo.cs</Link>
+    <Compile Include="..\AssemblyInfoVersion.cs">
+      <Link>AssemblyInfoVersion.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

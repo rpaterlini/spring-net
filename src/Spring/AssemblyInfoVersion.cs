@@ -13,8 +13,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright 2002-2018 Spring.NET Framework Team.")]
 
 // Aggiornati in base a tag e repository Git
-[assembly: AssemblyTrademark("Git 3.0.0-1-gc3698ee - 2020/03/26 17:12:42 - Working3 - https://github.com/rpaterlini/spring-net.git - ")]
-[assembly: AssemblyFileVersion("3.0.0.1")]
+[assembly: AssemblyTrademark("Git 3.0.0-9-gae2b969 - 2020/12/02 11:13:06 - Working3 - https://github.com/rpaterlini/spring-net.git - ")]
+[assembly: AssemblyFileVersion("3.0.0.9")]
 [assembly: AssemblyVersion("3.0.0.0")]
 
 #if DEBUG

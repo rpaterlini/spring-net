@@ -19,8 +19,8 @@
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GenCommonAssemblyInfo.cs">
-      <Link>GenCommonAssemblyInfo.cs</Link>
+    <Compile Include="..\AssemblyInfoVersion.cs">
+      <Link>AssemblyInfoVersion.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

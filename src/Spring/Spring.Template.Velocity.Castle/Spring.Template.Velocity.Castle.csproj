@@ -9,8 +9,8 @@
     <PackageReference Include="Castle.NVelocity" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GenCommonAssemblyInfo.cs">
-      <Link>GenCommonAssemblyInfo.cs</Link>
+    <Compile Include="..\AssemblyInfoVersion.cs">
+      <Link>AssemblyInfoVersion.cs</Link>
     </Compile>
     <Compile Include="..\Spring.Template.Velocity\Template\Velocity\CommonsLoggingLogSystem.cs">
       <Link>Template\Velocity\CommonsLoggingLogSystem.cs</Link>

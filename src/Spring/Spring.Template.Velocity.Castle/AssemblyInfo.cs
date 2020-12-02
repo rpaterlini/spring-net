@@ -21,6 +21,5 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: ComVisible(false)]
 [assembly: AssemblyTitle("Spring.Template.Velocity.Castle")]
 [assembly: AssemblyDescription("Castle NVelocity template engine integration for Spring.NET")]
