@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 // Info comuni a tutti gli assembly
 [assembly: AssemblyCompany("SpringSource")]
 [assembly: AssemblyProduct("Spring.NET Framework 3.0.0")]
-[assembly: AssemblyCopyright("Copyright 2002-2018 Spring.NET Framework Team.")]
+[assembly: AssemblyCopyright("Copyright 2002-2020 Spring.NET Framework Team.")]
 
 // Aggiornati in base a tag e repository Git
 [assembly: AssemblyTrademark("Git $GIT_DESCRIBE$ - $GIT_LASTCOMMITDATE$ - $GIT_BRANCH$ - $GIT_REPOURL$ - $BUILD_TAG$")]
