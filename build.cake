@@ -165,6 +165,8 @@ Task("Deploy")
 	}
 	EnsureDirectoryExists(to);
 	
+	Information( $"Destination {to}" );
+	
 	CopyFiles( $"build/{configuration}/Spring.Aop/netstandard2.0/Spring.Aop*.*" ,to);
 	CopyFiles( $"build/{configuration}/Spring.Core/netstandard2.0/Spring.Core*.*" ,to);
 	CopyFiles( $"build/{configuration}/Spring.Data/netstandard2.0/Spring.Data*.*" ,to);
@@ -173,7 +175,7 @@ Task("Deploy")
 	CopyFiles( $"build/{configuration}/Spring.Scheduling.Quartz3/netstandard2.0/Spring.Scheduling.Quartz3*.*" ,to);
 	CopyFiles( $"build/{configuration}/Spring.Testing.NUnit/netstandard2.0/Spring.Testing.NUnit*.*" ,to);
 
-	CopyFiles( $"build/{configuration}/Spring.Services/net452/Spring.Services*.*" ,to);
+	CopyFiles( $"build/{configuration}/Spring.Services/net461/Spring.Services*.*" ,to);
 });
 
 
