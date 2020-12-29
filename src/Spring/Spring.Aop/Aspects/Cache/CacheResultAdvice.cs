@@ -78,14 +78,7 @@ namespace Spring.Aspects.Cache
                 CacheResultItemsAttribute[] itemInfoArray = (CacheResultItemsAttribute[])GetCustomAttributes(method, typeof(CacheResultItemsAttribute));
 
                 cacheResultInfo = new CacheResultInfo(resultInfo, itemInfoArray);
-                // need lock! Hashtable support only one writer!
-                lock (_cacheResultAttributeCache)
-                {
-                    if (!_cacheResultAttributeCache.Contains(method))
-                    {
-                        _cacheResultAttributeCache[method] = cacheResultInfo;
-                    }
-                }
+                _cacheResultAttributeCache[method] = cacheResultInfo;
             }
             return cacheResultInfo;
         }
