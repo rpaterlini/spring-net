@@ -48,7 +48,7 @@
 		      hive="LocalMachine"
 		      failonerror="false" />
 
-  <property name="net-4.5.installed" value="${string::starts-with(registry.net-4.5.installed, '4.7.') == true}" />
+  <property name="net-4.5.installed" value="${string::starts-with(registry.net-4.5.installed, '4.8.') == true}" />
 
   <readregistry property="vs-net90.dir" key="SOFTWARE\Microsoft\VisualStudio\9.0\InstallDir" hive="LocalMachine" failonerror="false"/>
 
@@ -267,7 +267,7 @@
             depends="common.set-assembly-attribute-values"
             description="Generate AssemblyInfo.cs using assembly.* properties."
 	    >
-	<asminfo output="src/Spring/GenCommonAssemblyInfo.cs" language="CSharp">
+<!-- 	<asminfo output="src/Spring/GenCommonAssemblyInfo.cs" language="CSharp">
 	    <imports>
 	        <import namespace="System" />
 	        <import namespace="System.Reflection" />
@@ -283,15 +283,15 @@
 		<attribute type="AssemblyVersionAttribute" value="${assembly.version}" />
 
 		<attribute type="AssemblyDelaySignAttribute" value="false"/>
-		<attribute type="AssemblyInformationalVersionAttribute" value="${assembly.version.informational}" />
+		<attribute type="AssemblyInformationalVersionAttribute" value="${assembly.version.informational}" /> -->
 
 		<!--
 		<attribute type="AssemblyTitleAttribute" value="${assembly.title}" />
 		<attribute type="AssemblyDescriptionAttribute" value="${assembly.description}" />
 		<attribute type="AssemblyFileVersionAttribute" value="${assembly.version.file}" />
 		-->
-            </attributes>
-	</asminfo>
+<!--             </attributes>
+	</asminfo> -->
     </target>
 
 

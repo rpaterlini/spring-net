@@ -1,0 +1,21 @@
+﻿#region using
+
+using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+#endregion
+
+[assembly: CLSCompliantAttribute(true)]
+[assembly: AssemblyConfigurationAttribute("net-4.5.win32; release")]
+[assembly: AssemblyProductAttribute("Spring.NET Framework 2.0.1 for .NET 4.5")]
+[assembly: AssemblyCompanyAttribute("SpringSource")]
+[assembly: AssemblyCopyrightAttribute("Copyright 2002-2012 Spring.NET Framework Team.")]
+[assembly: AssemblyTrademark("Git $GIT_DESCRIBE$ - $GIT_LASTCOMMITDATE$ - Branch $GIT_BRANCH$ - $GIT_REPOURL$ - $BUILD_TAG$")]
+[assembly: AssemblyCultureAttribute("")]
+[assembly: AssemblyVersionAttribute("2.0.1.45000")]
+[assembly: AssemblyDelaySignAttribute(false)]
+[assembly: AssemblyInformationalVersionAttribute("2.0.1.45000")]
+
+//[assembly: AssemblyFileVersion("$GIT_NEWTAG$.$GIT_COMMITCOUNT$")]
+

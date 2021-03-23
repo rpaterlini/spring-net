@@ -1,0 +1,1 @@
+..\..\build-support\SubGitRev\SubGitRev.exe info -r ..\.. -s GenCommonAssemblyInfo.cs.wcrev -d GenCommonAssemblyInfo.cs

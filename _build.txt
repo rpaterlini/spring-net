@@ -18,6 +18,10 @@
 	- Un database di nome Spring
 	- User/Password springqa/springqa come db_owner del db Spring
 	 
+Per riferimenti a Git:
+	- da src\Spring eseguire SubGitRev.bat prima della build
+	
+	
 - Esegui:
 
     build clean compile-build-4.0 -D:"project.build.sign=true" -D:"package.version=2.0.1" -D:"project.build.config=release"
