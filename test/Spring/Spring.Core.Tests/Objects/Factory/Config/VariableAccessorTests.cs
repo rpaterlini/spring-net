@@ -65,7 +65,7 @@ namespace Spring.Objects.Factory.Config
             .Add("InvalidDecimal", "")
             .Add("ValidGuid", TESTGUID.ToString())
             .Add("InvalidGuid", "")
-            .Add("ValidDateTime", TESTDATETIME.ToString(CultureInfo.InvariantCulture))
+            .Add("ValidDateTime", TESTDATETIME.ToString())
             .Add("InvalidDateTime", "blabla")
             .Add("ValidDateTimeUtcRoundtripFormatted", TESTDATETIME.ToUniversalTime().ToString("u"))
             ;

@@ -20,6 +20,8 @@
 
 #region Imports
 
+using System;
+using System.Configuration;
 using System.Threading;
 using NUnit.Framework;
 using Spring.Context;
@@ -37,8 +39,15 @@ namespace Spring.Scheduling.Quartz.Integration.Tests
         [SetUp]
         public void SetUp()
         {
+            var cd = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var occupation = ConfigurationManager.AppSettings["ConnectionString"];
+#if NETFRAMEWORK
             ctx = new XmlApplicationContext(
                 "assembly://Spring.Scheduling.Quartz3.Integration.Tests/Spring.Scheduling.Quartz/LocalDataSourceJobStoreTest.xml");
+#else
+            ctx = new XmlApplicationContext(
+    "assembly://Spring.Scheduling.Quartz3.Integration.Tests/Spring.Scheduling.Quartz/LocalDataSourceJobStoreTest-core.xml");
+#endif
         }
 
         [Test]

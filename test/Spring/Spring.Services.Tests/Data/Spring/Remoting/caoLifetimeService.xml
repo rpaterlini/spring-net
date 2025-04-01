@@ -27,7 +27,7 @@
 
   <!-- client -->
 
-  <r:caoFactory id="remoteCaoCounter2" remoteTargetName="counter2" serviceUrl="tcp://localhost:8005/"/>
+  <r:caoFactory id="remoteCaoCounter2" remoteTargetName="counter2" serviceUrl="tcp://localhost:8006/"/>
   
   <!--
 		Old fashion way without remoting config parser...

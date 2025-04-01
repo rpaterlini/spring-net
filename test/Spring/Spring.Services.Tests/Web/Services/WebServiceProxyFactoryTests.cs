@@ -536,7 +536,7 @@ namespace Spring.Web.Services
         {
             WebServiceProxyFactory wspf = new WebServiceProxyFactory();
 			// cf Post Build Events
-            wspf.ServiceUri = new FileSystemResource("file://~/Spring/Web/Services/nestedSchema.wsdl");
+            wspf.ServiceUri = new FileSystemResource("file://~/Data/Spring/Web/Services/nestedSchema.wsdl");
             wspf.ServiceInterface = typeof(INestedSchema);
             wspf.AfterPropertiesSet();
 

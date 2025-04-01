@@ -59,8 +59,13 @@ namespace Spring.Globalization.Formatters
             CurrencyFormatter fmt = new CurrencyFormatter("en-US");
             Assert.AreEqual("$1,234.00", fmt.Format(1234));
             Assert.AreEqual("$1,234.56", fmt.Format(1234.56));
+#if NETFRAMEWORK
             Assert.AreEqual("($1,234.00)", fmt.Format(-1234));
             Assert.AreEqual("($1,234.56)", fmt.Format(-1234.56));
+#else
+            Assert.AreEqual("-$1,234.00", fmt.Format(-1234));
+            Assert.AreEqual("-$1,234.56", fmt.Format(-1234.56));
+#endif
 
             fmt = new CurrencyFormatter(CultureInfoUtils.SerbianLatinCultureName);
 

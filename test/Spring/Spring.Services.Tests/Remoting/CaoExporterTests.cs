@@ -21,8 +21,9 @@
 #region Imports
 
 using System;
+using System.Globalization;
 using System.Runtime.Remoting.Lifetime;
-
+using System.Threading;
 using NUnit.Framework;
 
 using Spring.Context;
@@ -50,10 +51,14 @@ namespace Spring.Remoting
         [Test]
         public void RegistersSimpleObject()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
             IApplicationContext ctx = new XmlApplicationContext("assembly://Spring.Services.Tests/Spring.Data.Spring.Remoting/caoLifetimeService.xml");
+            var names = ctx.GetObject("remoteCaoCounter2");
             ContextRegistry.RegisterContext(ctx);
 
-            ICaoRemoteFactory caoFactory = Activator.GetObject(typeof(ICaoRemoteFactory), "tcp://localhost:8005/counter2") as ICaoRemoteFactory;
+            ICaoRemoteFactory caoFactory = Activator.GetObject(typeof(ICaoRemoteFactory), "tcp://localhost:8006/counter2") as ICaoRemoteFactory;
             Assert.IsNotNull(caoFactory, "Cao factory is null even though it has been registered.");
 
             MarshalByRefObject cao = caoFactory.GetObject() as MarshalByRefObject;
@@ -66,7 +71,7 @@ namespace Spring.Remoting
             IApplicationContext ctx = new XmlApplicationContext("assembly://Spring.Services.Tests/Spring.Data.Spring.Remoting/caoLifetimeService.xml");
             ContextRegistry.RegisterContext(ctx);
 
-            ICaoRemoteFactory caoFactory = Activator.GetObject(typeof(ICaoRemoteFactory), "tcp://localhost:8005/counter2") as ICaoRemoteFactory;
+            ICaoRemoteFactory caoFactory = Activator.GetObject(typeof(ICaoRemoteFactory), "tcp://localhost:8006/counter2") as ICaoRemoteFactory;
             Assert.IsNotNull(caoFactory, "Cao factory is null even though it has been registered.");
 
             MarshalByRefObject cao = caoFactory.GetObject() as MarshalByRefObject;

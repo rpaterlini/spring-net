@@ -168,6 +168,29 @@ VS.NET
 
 Visual Studio 2022 is required to open and build the solution. The free community version of Visual Studio should suffice.
 
+### Running tests
+- Before running tests that require a database connection is necessary:
+    - SqlServer must be running in (local)
+      - Check in `SQL Server Configuration Manager` that `Named Pipes` and `TCP/IP` protocols are enabled
+    - From `build-support` execute 
+	    - `create-integration-test-databases-and-users.sql` 
+    - From `\test\Spring\Spring.Data.Integration.Tests\Data` execute 
+	    - `Spring.Data.Integration.Tests_Spring_database.sql`
+	    - `Spring.Data.Integration.Tests_Credits_database.sql`
+	    - `Spring.Data.Integration.Tests_Debits_database.sql`
+	    - `Spring.Data.Integration.Tests_CreditsAndDebits_database.sql`
+    - Create a database named `quartz` and from `test\Spring\Spring.Scheduling.Quartz3.Integration.Tests\Data` execute `tables_sqlServer_Below2016.sql`
+- MSMQ is required for `Spring.Messaging.Test`
+- ActiveMQ is required for `Spring.Messaging.Nms`
+    - Download ActiveMQ Classic 6.0.1 from https://activemq.apache.org/components/classic/download/
+    - Follow this to install https://activemq.apache.org/components/classic/documentation/version-5-getting-started
+        - Extract the files from the ZIP file into a directory of your choice. 
+        - From a console window, change to the installation directory and run activemq:
+            - `bin\activemq start`
+  
+	
+	
+
 ## Acknowledgements
 
 InnovaSys Document X!

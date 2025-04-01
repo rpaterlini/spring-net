@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(TargetFullFrameworkVersion)</TargetFramework>
   </PropertyGroup>
@@ -47,5 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="WindowsService\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Data\Spring\Remoting\caoLifetimeService.xml" />
   </ItemGroup>
 </Project>
