@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,54 +14,47 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using Spring.Globalization;
 using Spring.Objects;
 using Spring.Util;
 
-#endregion
+namespace Spring.Web.Support;
 
-namespace Spring.Web.Support
+/// <summary>
+/// Resource cache implementation that uses Spring.NET page/handler state to cache resources.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+public class SharedStateResourceCache : AbstractResourceCache
 {
+    private readonly ISharedStateAware sharedStateHolder;
+
     /// <summary>
-    /// Resource cache implementation that uses Spring.NET page/handler state to cache resources.
+    /// Creates a new cache instance and attaches it to the given <see cref="sharedStateHolder" />
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    public class SharedStateResourceCache : AbstractResourceCache
+    /// <param name="sharedStateHolder">the holder of the shared state dictionary to be used for caching.</param>
+    public SharedStateResourceCache(ISharedStateAware sharedStateHolder)
     {
-        private readonly ISharedStateAware sharedStateHolder;
+        AssertUtils.ArgumentNotNull(sharedStateHolder, "sharedStateHolder");
+        this.sharedStateHolder = sharedStateHolder;
+    }
 
-        /// <summary>
-        /// Creates a new cache instance and attaches it to the given <see cref="sharedStateHolder" />
-        /// </summary>
-        /// <param name="sharedStateHolder">the holder of the shared state dictionary to be used for caching.</param>
-        public SharedStateResourceCache(ISharedStateAware sharedStateHolder)
-        {
-            AssertUtils.ArgumentNotNull(sharedStateHolder, "sharedStateHolder");
-            this.sharedStateHolder = sharedStateHolder;
-        }
+    /// <summary>
+    /// Gets the list of resources from cache.
+    /// </summary>
+    /// <param name="cacheKey">Cache key to use for lookup.</param>
+    /// <returns>A list of cached resources for the specified target object and culture.</returns>
+    protected override IList<Resource> GetResources(string cacheKey)
+    {
+        return (IList<Resource>) this.sharedStateHolder.SharedState[cacheKey];
+    }
 
-        /// <summary>
-        /// Gets the list of resources from cache.
-        /// </summary>
-        /// <param name="cacheKey">Cache key to use for lookup.</param>
-        /// <returns>A list of cached resources for the specified target object and culture.</returns>
-        protected override IList<Resource> GetResources(string cacheKey)
-        {
-            return (IList<Resource>)this.sharedStateHolder.SharedState[cacheKey];
-        }
-
-        /// <summary>
-        /// Puts the list of resources in the cache.
-        /// </summary>
-        /// <param name="cacheKey">Cache key to use for the specified resources.</param>
-        /// <param name="resources">A list of resources to cache.</param>
-        protected override void PutResources(string cacheKey, IList<Resource> resources)
-        {
-            this.sharedStateHolder.SharedState[cacheKey] = resources;
-        }
+    /// <summary>
+    /// Puts the list of resources in the cache.
+    /// </summary>
+    /// <param name="cacheKey">Cache key to use for the specified resources.</param>
+    /// <param name="resources">A list of resources to cache.</param>
+    protected override void PutResources(string cacheKey, IList<Resource> resources)
+    {
+        this.sharedStateHolder.SharedState[cacheKey] = resources;
     }
 }

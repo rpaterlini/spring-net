@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,48 +14,41 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Globalization.Formatters;
 
-namespace Spring.Globalization.Formatters
+/// <summary>
+/// Implementation of <see cref="IFormatter"/> that simply calls <see cref="object.ToString()"/>.
+/// </summary>
+/// <remarks>
+/// This formatter is a no-operation implementation.
+/// </remarks>
+/// <author>Erich Eichinger</author>
+public class NullFormatter : IFormatter
 {
     /// <summary>
-    /// Implementation of <see cref="IFormatter"/> that simply calls <see cref="object.ToString()"/>.
+    /// Initializes a new instance of the <see cref="NullFormatter"/> class.
     /// </summary>
-    /// <remarks>
-    /// This formatter is a no-operation implementation.
-    /// </remarks>
-    /// <author>Erich Eichinger</author>
-    public class NullFormatter : IFormatter
+    public NullFormatter()
     {
-        #region Constructors
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NullFormatter"/> class.
-        /// </summary>
-        public NullFormatter()
-        {
-        }
+    /// <summary>
+    /// Converts the passed value to a string by calling <see cref="Object.ToString()"/>.
+    /// </summary>
+    /// <param name="value">The value to convert.</param>
+    /// <returns>to string converted value.</returns>
+    public string Format(object value)
+    {
+        return value != null ? value.ToString() : null;
+    }
 
-        #endregion
-
-        /// <summary>
-        /// Converts the passed value to a string by calling <see cref="Object.ToString()"/>.
-        /// </summary>
-        /// <param name="value">The value to convert.</param>
-        /// <returns>to string converted value.</returns>
-        public string Format(object value)
-        {
-            return value != null ? value.ToString() : null;
-        }
-
-        /// <summary>
-        /// Returns the passed string "as is".
-        /// </summary>
-        /// <param name="value">The value to return.</param>
-        /// <returns>The value passed into this method.</returns>
-        public object Parse(string value)
-        {
-            return value;
-        }
+    /// <summary>
+    /// Returns the passed string "as is".
+    /// </summary>
+    /// <param name="value">The value to return.</param>
+    /// <returns>The value passed into this method.</returns>
+    public object Parse(string value)
+    {
+        return value;
     }
 }

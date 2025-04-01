@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,54 +14,50 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Core.IO;
 
-namespace Spring.Objects.Factory.Parsing
+namespace Spring.Objects.Factory.Parsing;
+
+public class Location
 {
-    public class Location
+    private IResource resource;
+    private object source;
+
+    /// <summary>
+    /// Initializes a new instance of the Location class.
+    /// </summary>
+    /// <param name="resource"></param>
+    /// <param name="source"></param>
+    public Location(IResource resource, object source)
     {
-        private IResource resource;
-        private object source;
+        //TODO: look into re-enabling this since resource *is* NULL when parsing config classes vs. acquiring IResources
+        //AssertUtils.ArgumentNotNull(resource, "resource");
+        this.resource = resource;
+        this.source = source;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the Location class.
-        /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="source"></param>
-        public Location(IResource resource, object source)
+    /// <summary>
+    /// Initializes a new instance of the Location class.
+    /// </summary>
+    /// <param name="resource"></param>
+    public Location(IResource resource)
+        : this(resource, null)
+    {
+    }
+
+    public IResource Resource
+    {
+        get
         {
-            //TODO: look into re-enabling this since resource *is* NULL when parsing config classes vs. acquiring IResources
-            //AssertUtils.ArgumentNotNull(resource, "resource");
-            this.resource = resource;
-            this.source = source;
+            return resource;
         }
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the Location class.
-        /// </summary>
-        /// <param name="resource"></param>
-        public Location(IResource resource)
-            : this(resource, null)
+    public object Source
+    {
+        get
         {
-
+            return source;
         }
-        public IResource Resource
-        {
-            get
-            {
-                return resource;
-            }
-        }
-        public object Source
-        {
-            get
-            {
-                return source;
-            }
-        }
-
-
     }
 }

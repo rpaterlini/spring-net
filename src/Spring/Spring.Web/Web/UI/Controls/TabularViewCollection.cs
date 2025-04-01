@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,66 +14,61 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Security.Permissions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-#endregion
+namespace Spring.Web.UI.Controls;
 
-namespace Spring.Web.UI.Controls
+/// <summary>
+/// Holds the collection of <see cref="TabularView"/> controls in a <see cref="TabularMultiView"/>.
+/// </summary>
+/// <author>Erich Eichinger</author>
+[
+    AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)
+    , AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+public class TabularViewCollection : ViewCollection
 {
-	/// <summary>
-	/// Holds the collection of <see cref="TabularView"/> controls in a <see cref="TabularMultiView"/>.
-	/// </summary>
-	/// <author>Erich Eichinger</author>
-	[
-		AspNetHostingPermission(SecurityAction.LinkDemand, Level=AspNetHostingPermissionLevel.Minimal)
-			, AspNetHostingPermission(SecurityAction.InheritanceDemand, Level=AspNetHostingPermissionLevel.Minimal)]
-	public class TabularViewCollection : ViewCollection
-	{
-		/// <summary>
-		/// Initialize a new instance.
-		/// </summary>
-		/// <param name="owner"></param>
-		public TabularViewCollection(Control owner) : base(owner)
-		{
-		}
+    /// <summary>
+    /// Initialize a new instance.
+    /// </summary>
+    /// <param name="owner"></param>
+    public TabularViewCollection(Control owner) : base(owner)
+    {
+    }
 
-		/// <summary>
-		/// Add the specified <see cref="TabularView"/> control to the collection.
-		/// </summary>
-		public override void Add(Control v)
-		{
-			if (!(v is TabularView))
-			{
-				throw new ArgumentException("ViewCollection_must_contain_view");
-			}
-			base.Add(v);
-		}
+    /// <summary>
+    /// Add the specified <see cref="TabularView"/> control to the collection.
+    /// </summary>
+    public override void Add(Control v)
+    {
+        if (!(v is TabularView))
+        {
+            throw new ArgumentException("ViewCollection_must_contain_view");
+        }
 
-		/// <summary>
-		/// Add the specified <see cref="TabularView"/> control to the collection.
-		/// </summary>
-		public override void AddAt(int index, Control v)
-		{
-			if (!(v is TabularView))
-			{
-				throw new ArgumentException("ViewCollection_must_contain_view");
-			}
-			base.AddAt(index, v);
-		}
+        base.Add(v);
+    }
 
-		/// <summary>
-		/// Obtain the specified <see cref="TabularView"/> control from the collection.
-		/// </summary>
-		public new TabularView this[int i]
-		{
-			get { return (TabularView) base[i]; }
-		}
-	}
+    /// <summary>
+    /// Add the specified <see cref="TabularView"/> control to the collection.
+    /// </summary>
+    public override void AddAt(int index, Control v)
+    {
+        if (!(v is TabularView))
+        {
+            throw new ArgumentException("ViewCollection_must_contain_view");
+        }
+
+        base.AddAt(index, v);
+    }
+
+    /// <summary>
+    /// Obtain the specified <see cref="TabularView"/> control from the collection.
+    /// </summary>
+    public new TabularView this[int i]
+    {
+        get { return (TabularView) base[i]; }
+    }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,33 +14,30 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Globalization;
 
-namespace Spring.Globalization
+namespace Spring.Globalization;
+
+/// <summary>
+/// Defines an interface that resource cache adapters have to implement.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+public interface IResourceCache
 {
     /// <summary>
-    /// Defines an interface that resource cache adapters have to implement.
+    /// Gets the list of resources from cache.
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    public interface IResourceCache
-    {
-        /// <summary>
-        /// Gets the list of resources from cache.
-        /// </summary>
-        /// <param name="target">Target to get a list of resources for.</param>
-        /// <param name="culture">Resource culture.</param>
-        /// <returns>A list of cached resources for the specified target object and culture.</returns>
-        IList<Resource> GetResources(object target, CultureInfo culture);
+    /// <param name="target">Target to get a list of resources for.</param>
+    /// <param name="culture">Resource culture.</param>
+    /// <returns>A list of cached resources for the specified target object and culture.</returns>
+    IList<Resource> GetResources(object target, CultureInfo culture);
 
-        /// <summary>
-        /// Puts the list of resources in the cache.
-        /// </summary>
-        /// <param name="target">Target to cache a list of resources for.</param>
-        /// <param name="culture">Resource culture.</param>
-        /// <param name="resources">A list of resources to cache.</param>
-        /// <returns>A list of cached resources for the specified target object and culture.</returns>
-        void PutResources(object target, CultureInfo culture, IList<Resource> resources);
-    }
+    /// <summary>
+    /// Puts the list of resources in the cache.
+    /// </summary>
+    /// <param name="target">Target to cache a list of resources for.</param>
+    /// <param name="culture">Resource culture.</param>
+    /// <param name="resources">A list of resources to cache.</param>
+    /// <returns>A list of cached resources for the specified target object and culture.</returns>
+    void PutResources(object target, CultureInfo culture, IList<Resource> resources);
 }

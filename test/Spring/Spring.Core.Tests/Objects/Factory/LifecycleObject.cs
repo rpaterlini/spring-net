@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,180 +14,164 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
-
 using Spring.Objects.Factory.Config;
 
-#endregion
+namespace Spring.Objects.Factory;
 
-namespace Spring.Objects.Factory {
+/// <summary>
+/// Simple test of IObjectFactory initialization and lifecycle callbacks.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Rick Evans (.NET)</author>
+public class LifecycleObject :
+    IObjectNameAware,
+    IInitializingObject,
+    IObjectFactoryAware,
+    IDisposable
+{
+    public virtual void PostProcessBeforeInit()
+    {
+        if (inited)
+        {
+            throw new ApplicationException("Factory called PostProcessBeforeInit after AfterPropertiesSet");
+        }
 
-	/// <summary>
-    /// Simple test of IObjectFactory initialization and lifecycle callbacks.
+        if (postProcessedBeforeInit)
+        {
+            throw new SystemException("Factory called PostProcessBeforeInit twice");
+        }
+
+        postProcessedBeforeInit = true;
+    }
+
+    /// <summary>
+    /// Dummy business method that will fail unless the factory
+    /// managed the object's lifecycle correctly
     /// </summary>
-    /// <author>Rod Johnson</author>
-    /// <author>Rick Evans (.NET)</author>
-    public class LifecycleObject :
-        IObjectNameAware,
-        IInitializingObject,
-        IObjectFactoryAware,
-        IDisposable {
-
-        #region Methods
-        public virtual void PostProcessBeforeInit ()
+    public virtual void BusinessMethod()
+    {
+        if (!inited || !postProcessedAfterInit)
         {
-            if (inited)
-            {
-                throw new ApplicationException ("Factory called PostProcessBeforeInit after AfterPropertiesSet");
-            }
-            if (postProcessedBeforeInit)
-            {
-                throw new SystemException("Factory called PostProcessBeforeInit twice");
-            }
-            postProcessedBeforeInit = true;
+            throw new SystemException("Factory didn't initialize lifecycle object correctly");
+        }
+    }
+
+    public virtual void PostProcessAfterInit()
+    {
+        if (!inited)
+        {
+            throw new SystemException("Factory called PostProcessAfterInit before AfterPropertiesSet");
         }
 
-        /// <summary>
-        /// Dummy business method that will fail unless the factory
-        /// managed the object's lifecycle correctly
-        /// </summary>
-        public virtual void BusinessMethod ()
+        if (postProcessedAfterInit)
         {
-            if (!inited || !postProcessedAfterInit)
-            {
-                throw new SystemException ("Factory didn't initialize lifecycle object correctly");
-            }
+            throw new SystemException("Factory called PostProcessAfterInit twice");
         }
-		
-        public virtual void PostProcessAfterInit ()
+
+        postProcessedAfterInit = true;
+    }
+
+    public bool Destroyed
+    {
+        get
         {
-            if (!inited)
-            {
-                throw new SystemException("Factory called PostProcessAfterInit before AfterPropertiesSet");
-            }
-            if (postProcessedAfterInit)
-            {
-                throw new SystemException("Factory called PostProcessAfterInit twice");
-            }
-            postProcessedAfterInit = true;
+            return destroyed;
         }
-        #endregion
-
-        #region Properties
-        public bool Destroyed 
+        set
         {
-            get 
-            {
-                return destroyed;
-            }
-            set 
-            {
-                destroyed = value;
-            }
+            destroyed = value;
         }
-        #endregion
+    }
 
-        #region Fields
-        private string objectName;
-        private IObjectFactory owningFactory;
-        private bool postProcessedBeforeInit;
-        private bool inited;
-        private bool postProcessedAfterInit;
-        private bool destroyed;
-        #endregion
+    private string objectName;
+    private IObjectFactory owningFactory;
+    private bool postProcessedBeforeInit;
+    private bool inited;
+    private bool postProcessedAfterInit;
+    private bool destroyed;
 
-        #region IObjectNameAware Members
-        public string ObjectName
+    public string ObjectName
+    {
+        get
         {
-            get 
-            {
-                return objectName;
-            }
-            set
-            {
-                objectName = value;
-            }
+            return objectName;
         }
-        #endregion
-
-        #region IInitializingObject Members
-        public void AfterPropertiesSet ()
+        set
         {
-            if (owningFactory == null)
-            {
-                throw new SystemException ("Factory didn't call ObjectFactory before AfterPropertiesSet on lifecycle object");
-            }
-            if (!postProcessedBeforeInit)
-            {
-                throw new SystemException ("Factory didn't call PostProcessBeforeInit before AfterPropertiesSet on lifecycle object");
-            }
-            if (inited)
-            {
-                throw new SystemException ("Factory called AfterPropertiesSet twice");
-            }
-            inited = true;
+            objectName = value;
         }
-        #endregion
+    }
 
-        #region IObjectFactoryAware Members
+    public void AfterPropertiesSet()
+    {
+        if (owningFactory == null)
+        {
+            throw new SystemException("Factory didn't call ObjectFactory before AfterPropertiesSet on lifecycle object");
+        }
+
+        if (!postProcessedBeforeInit)
+        {
+            throw new SystemException("Factory didn't call PostProcessBeforeInit before AfterPropertiesSet on lifecycle object");
+        }
+
+        if (inited)
+        {
+            throw new SystemException("Factory called AfterPropertiesSet twice");
+        }
+
+        inited = true;
+    }
+
+    public IObjectFactory ObjectFactory
+    {
+        get
+        {
+            return owningFactory;
+        }
+        set
+        {
+            owningFactory = value;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (destroyed)
+        {
+            throw new SystemException("Already destroyed...");
+        }
+
+        destroyed = true;
+    }
+
+    public class PostProcessor : IObjectPostProcessor, IObjectFactoryAware
+    {
+        public object PostProcessBeforeInitialization(object obj, string name)
+        {
+            if (obj is LifecycleObject)
+            {
+                ((LifecycleObject) obj).PostProcessBeforeInit();
+            }
+
+            return obj;
+        }
+
+        public object PostProcessAfterInitialization(object obj, string objectName)
+        {
+            if (obj is LifecycleObject)
+            {
+                ((LifecycleObject) obj).PostProcessAfterInit();
+            }
+
+            return obj;
+        }
+
+        private IObjectFactory objectFactory;
+
         public IObjectFactory ObjectFactory
         {
-            get 
-            {
-                return owningFactory;
-            }
-            set
-            {
-                owningFactory = value;
-            }
+            set { objectFactory = value; }
+            get { return objectFactory; }
         }
-        #endregion
-
-        #region IDisposable Members
-        public void Dispose ()
-        {
-            if (destroyed)
-            {
-                throw new SystemException ("Already destroyed...");
-            }
-            destroyed = true;
-        }
-        #endregion
-
-        #region Inner Class : PostProcessor
-        public class PostProcessor : IObjectPostProcessor, IObjectFactoryAware
-        {
-			
-            public object PostProcessBeforeInitialization (object obj, string name)
-            {
-                if (obj is LifecycleObject)
-                {
-                    ((LifecycleObject) obj).PostProcessBeforeInit ();
-                }
-                return obj;
-            }
-			
-            public object PostProcessAfterInitialization (object obj, string objectName)
-            {
-                if (obj is LifecycleObject)
-                {
-                    ((LifecycleObject) obj).PostProcessAfterInit ();
-                }
-                return obj;
-            }
-
-            private IObjectFactory objectFactory;
-
-            public IObjectFactory ObjectFactory
-            {
-                set { objectFactory=value; }
-                get { return objectFactory; }
-            }
-        }
-        #endregion
     }
 }

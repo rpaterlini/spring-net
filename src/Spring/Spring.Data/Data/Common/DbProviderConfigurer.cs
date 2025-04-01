@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,86 +14,64 @@
  * limitations under the License.
  */
 
-#endregion
-
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Spring.Core;
 using Spring.Core.IO;
 using Spring.Objects.Factory.Config;
 
-namespace Spring.Data.Common
+namespace Spring.Data.Common;
+
+/// <summary>
+///
+/// </summary>
+/// <author>Mark Pollack</author>
+public class DbProviderConfigurer : IObjectFactoryPostProcessor, IOrdered
 {
+    private static readonly ILogger<DbProviderConfigurer> log = LogManager.GetLogger<DbProviderConfigurer>();
+
+    private int order = Int32.MinValue;
+
+    private IResource providerResource;
+
     /// <summary>
-    ///
+    /// Initializes a new instance of the <see cref="T:System.Object"/> class.
     /// </summary>
-    /// <author>Mark Pollack</author>
-    public class DbProviderConfigurer : IObjectFactoryPostProcessor, IOrdered
+    public DbProviderConfigurer()
     {
-        #region Fields
-
-        private static readonly ILog log = LogManager.GetLogger(typeof(DbProviderConfigurer));
-
-        private int order = Int32.MinValue;
-
-        private IResource providerResource;
-
-        #endregion
-
-        #region Constructor
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
-        /// </summary>
-        public DbProviderConfigurer()
-        {
-        }
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the provider resource which contains additional IDbProvider definitions.
-        /// </summary>
-        /// <value>The provider resource.</value>
-        public IResource ProviderResource
-        {
-            get { return providerResource; }
-            set { providerResource = value; }
-        }
-
-        #endregion
-
-        #region Implementation of IObjectFactoryPostProcessor
-
-        /// <summary>
-        /// Modify the application context's internal object factory after its
-        /// standard initialization.
-        /// </summary>
-        /// <param name="factory">The object factory used by the application context.</param>
-        /// <remarks>
-        /// 	<p>
-        /// All object definitions will have been loaded, but no objects will have
-        /// been instantiated yet. This allows for overriding or adding properties
-        /// even to eager-initializing objects.
-        /// </p>
-        /// </remarks>
-        /// <exception cref="Spring.Objects.ObjectsException">
-        /// In case of errors.
-        /// </exception>
-        public void PostProcessObjectFactory(IConfigurableListableObjectFactory factory)
-        {
-            DbProviderFactory.DBPROVIDER_ADDITIONAL_RESOURCE_NAME = providerResource.Uri.AbsoluteUri;
-        }
-
-        #endregion
-
-        #region Implementation of IOrdered
-
-        public int Order
-        {
-            get { return order; }
-        }
-
-        #endregion
     }
 
+    /// <summary>
+    /// Gets or sets the provider resource which contains additional IDbProvider definitions.
+    /// </summary>
+    /// <value>The provider resource.</value>
+    public IResource ProviderResource
+    {
+        get { return providerResource; }
+        set { providerResource = value; }
+    }
+
+    /// <summary>
+    /// Modify the application context's internal object factory after its
+    /// standard initialization.
+    /// </summary>
+    /// <param name="factory">The object factory used by the application context.</param>
+    /// <remarks>
+    /// 	<p>
+    /// All object definitions will have been loaded, but no objects will have
+    /// been instantiated yet. This allows for overriding or adding properties
+    /// even to eager-initializing objects.
+    /// </p>
+    /// </remarks>
+    /// <exception cref="Spring.Objects.ObjectsException">
+    /// In case of errors.
+    /// </exception>
+    public void PostProcessObjectFactory(IConfigurableListableObjectFactory factory)
+    {
+        DbProviderFactory.DBPROVIDER_ADDITIONAL_RESOURCE_NAME = providerResource.Uri.AbsoluteUri;
+    }
+
+    public int Order
+    {
+        get { return order; }
+    }
 }

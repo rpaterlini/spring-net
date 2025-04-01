@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,35 +14,26 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects;
 
-#region Imports
-
-using System;
-
-#endregion
-
-namespace Spring.Objects {
-
-	/// <summary>
-	/// Exposes a static method that has a signature compatible with the
-	/// EventHandler delegate.
-    /// </summary>
-    public class StaticTestEventHandler
+/// <summary>
+/// Exposes a static method that has a signature compatible with the
+/// EventHandler delegate.
+/// </summary>
+public class StaticTestEventHandler
+{
+    public static void HandleArbitraryEvent(object sender, EventArgs e)
     {
-        public static void HandleArbitraryEvent (object sender, EventArgs e) 
-        {
-            _eventWasHandled = true;
-        }
+        _eventWasHandled = true;
+    }
 
-        public static bool EventWasHandled 
+    public static bool EventWasHandled
+    {
+        get
         {
-            get 
-            {
-                return _eventWasHandled;
-            }
+            return _eventWasHandled;
         }
+    }
 
-        protected static bool _eventWasHandled;
-	}
+    protected static bool _eventWasHandled;
 }

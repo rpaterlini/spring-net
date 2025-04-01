@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,74 +14,69 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
-
 using NUnit.Framework;
 
-namespace Spring.Globalization.Formatters
+namespace Spring.Globalization.Formatters;
+
+/// <summary>
+/// Unit tests for IntegerFormatter class.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[TestFixture]
+public class IntegerFormatterTests
 {
-	/// <summary>
-	/// Unit tests for IntegerFormatter class.
-	/// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [TestFixture]
-    public class IntegerFormatterTests
-	{
-        [Test]
-        public void FormatNullValue()
-        {
-            IntegerFormatter fmt = new IntegerFormatter();
-            Assert.Throws<ArgumentNullException>(() => fmt.Format(null));
-        }
+    [Test]
+    public void FormatNullValue()
+    {
+        IntegerFormatter fmt = new IntegerFormatter();
+        Assert.Throws<ArgumentNullException>(() => fmt.Format(null));
+    }
 
-        [Test]
-        public void ParseNullOrEmptyValue()
-        {
-            IntegerFormatter fmt = new IntegerFormatter();
-            Assert.AreEqual( 0, fmt.Parse(null));
-            Assert.AreEqual( 0, fmt.Parse(string.Empty) );
-        }
+    [Test]
+    public void ParseNullOrEmptyValue()
+    {
+        IntegerFormatter fmt = new IntegerFormatter();
+        Assert.AreEqual(0, fmt.Parse(null));
+        Assert.AreEqual(0, fmt.Parse(string.Empty));
+    }
 
-        [Test]
-        public void FormatNonNumber()
-        {
-            IntegerFormatter fmt = new IntegerFormatter();
-            Assert.Throws<ArgumentException>(() => fmt.Format("not a number"));
-        }
+    [Test]
+    public void FormatNonNumber()
+    {
+        IntegerFormatter fmt = new IntegerFormatter();
+        Assert.Throws<ArgumentException>(() => fmt.Format("not a number"));
+    }
 
-        [Test]
-        public void FormatUsingDefaults()
-        {
-            IntegerFormatter fmt = new IntegerFormatter();
-            Assert.AreEqual("1234", fmt.Format(1234));
-            Assert.AreEqual("-1234", fmt.Format(-1234));
-        }
+    [Test]
+    public void FormatUsingDefaults()
+    {
+        IntegerFormatter fmt = new IntegerFormatter();
+        Assert.AreEqual("1234", fmt.Format(1234));
+        Assert.AreEqual("-1234", fmt.Format(-1234));
+    }
 
-        [Test]
-        public void ParseUsingDefaults()
-        {
-            IntegerFormatter fmt = new IntegerFormatter();
-            Assert.AreEqual(1234, fmt.Parse("1234"));
-            Assert.AreEqual(-1234, fmt.Parse("-1234"));
-        }
+    [Test]
+    public void ParseUsingDefaults()
+    {
+        IntegerFormatter fmt = new IntegerFormatter();
+        Assert.AreEqual(1234, fmt.Parse("1234"));
+        Assert.AreEqual(-1234, fmt.Parse("-1234"));
+    }
 
-        [Test]
-        public void FormatUsingCustomSettings()
-        {
-            IntegerFormatter fmt = new IntegerFormatter("{0:00000}");
-            Assert.AreEqual("01234", fmt.Format(1234));
-            Assert.AreEqual("-01234", fmt.Format(-1234));
+    [Test]
+    public void FormatUsingCustomSettings()
+    {
+        IntegerFormatter fmt = new IntegerFormatter("{0:00000}");
+        Assert.AreEqual("01234", fmt.Format(1234));
+        Assert.AreEqual("-01234", fmt.Format(-1234));
 
-            fmt = new IntegerFormatter("{0,10}");
-            Assert.AreEqual("      1234", fmt.Format(1234));
+        fmt = new IntegerFormatter("{0,10}");
+        Assert.AreEqual("      1234", fmt.Format(1234));
 
-            fmt = new IntegerFormatter("{0,-10}");
-            Assert.AreEqual("1234      ", fmt.Format(1234));
+        fmt = new IntegerFormatter("{0,-10}");
+        Assert.AreEqual("1234      ", fmt.Format(1234));
 
-            fmt = new IntegerFormatter("{0:(###) ###-####}");
-            Assert.AreEqual("(813) 555-4034", fmt.Format(8135554034));
-        }
+        fmt = new IntegerFormatter("{0:(###) ###-####}");
+        Assert.AreEqual("(813) 555-4034", fmt.Format(8135554034));
     }
 }

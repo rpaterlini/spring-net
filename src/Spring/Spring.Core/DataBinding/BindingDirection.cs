@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,30 +14,27 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.DataBinding;
 
-namespace Spring.DataBinding
+/// <summary>
+/// Enumeration that defines possible values for data binding direction.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[Flags]
+public enum BindingDirection
 {
-	/// <summary>
-	/// Enumeration that defines possible values for data binding direction.
-	/// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [Flags]
-    public enum BindingDirection
-	{
-        /// <summary>
-        /// Specifies that value from the control property should be bound to a data model.
-        /// </summary>
-        SourceToTarget = 0x0001,
+    /// <summary>
+    /// Specifies that value from the control property should be bound to a data model.
+    /// </summary>
+    SourceToTarget = 0x0001,
 
-        /// <summary>
-        /// Specifies that value from the data model should be bound to control property.
-        /// </summary>
-        TargetToSource = 0x0002,
+    /// <summary>
+    /// Specifies that value from the data model should be bound to control property.
+    /// </summary>
+    TargetToSource = 0x0002,
 
-        /// <summary>
-        /// Specifies that binding is bidirectional.
-        /// </summary>
-        Bidirectional = SourceToTarget | TargetToSource
-	}
+    /// <summary>
+    /// Specifies that binding is bidirectional.
+    /// </summary>
+    Bidirectional = SourceToTarget | TargetToSource
 }

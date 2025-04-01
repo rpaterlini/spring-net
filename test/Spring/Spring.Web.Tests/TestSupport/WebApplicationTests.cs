@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,45 +14,41 @@
  * limitations under the License.
  */
 
-#endregion
-
 using NUnit.Framework;
 using NUnitAspEx;
 using NUnitAspEx.Core;
 
-namespace Spring.TestSupport
+namespace Spring.TestSupport;
+
+/// <summary>
+/// </summary>
+/// <author>Erich Eichinger</author>
+public abstract class WebApplicationTests
 {
-    /// <summary>
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    public abstract class WebApplicationTests
+    private readonly string virtualPath;
+    private readonly string relativePhysicalPath;
+    private IAspFixtureHost host;
+
+    public IAspFixtureHost Host
     {
-        private readonly string virtualPath;
-        private readonly string relativePhysicalPath;
-        private IAspFixtureHost host;
+        get { return host; }
+    }
 
-        public IAspFixtureHost Host
-        {
-            get { return host; }
-        }
+    protected WebApplicationTests(string virtualPath, string relativePhysicalPath)
+    {
+        this.virtualPath = virtualPath;
+        this.relativePhysicalPath = relativePhysicalPath;
+    }
 
-        protected WebApplicationTests(string virtualPath, string relativePhysicalPath)
-        {
-            this.virtualPath = virtualPath;
-            this.relativePhysicalPath = relativePhysicalPath;
-        }
+    [OneTimeSetUp]
+    public virtual void TestFixtureSetup()
+    {
+        host = AspFixtureHost.CreateInstance(virtualPath, relativePhysicalPath, this);
+    }
 
-        [OneTimeSetUp]
-        public virtual void TestFixtureSetup()
-        {
-            host = AspFixtureHost.CreateInstance(virtualPath, relativePhysicalPath, this);
-        }
-
-        [OneTimeTearDown]
-        public virtual void TestFixtureTearDown()
-        {
-            host = AspFixtureHost.ReleaseInstance(host);
-        }
-
+    [OneTimeTearDown]
+    public virtual void TestFixtureTearDown()
+    {
+        host = AspFixtureHost.ReleaseInstance(host);
     }
 }

@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +14,8 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
-
 using FakeItEasy;
-
 using NHibernate;
-
 using NUnit.Framework;
 
 namespace Spring.Data.NHibernate.Support
@@ -47,7 +39,6 @@ namespace Spring.Data.NHibernate.Support
         {
             private readonly ISessionFactory sessionFactory;
             private readonly IInterceptor entityInterceptor;
-
 
             public LazyResolvingSessionScopeSettings(ISessionFactory sessionFactory, IInterceptor entityInterceptor)
                 : base() // note, that we're calling default ctor here

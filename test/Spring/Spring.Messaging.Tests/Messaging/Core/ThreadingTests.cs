@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +14,30 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System.Threading;
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Messaging.Core;
 
-namespace Spring.Messaging.Core
+/// <summary>
+/// This class contains tests for
+/// </summary>
+/// <author>Mark Pollack</author>
+[TestFixture]
+public class ThreadingTests
 {
-    /// <summary>
-    /// This class contains tests for 
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    [TestFixture]
-    public class ThreadingTests
+    private int activeListenerCount = 0;
+
+    [SetUp]
+    public void Setup()
     {
-        private int activeListenerCount = 0;
-        [SetUp]
-        public void Setup()
-        {
-        }
+    }
 
-        [Test]
-        public void Test()
-        {
-            Interlocked.Increment(ref activeListenerCount);
-            // just gets the current value...
-            int count = Interlocked.CompareExchange(ref activeListenerCount, -1, -1);
-            Assert.AreEqual(1, count);
-
-        }
-
-        
+    [Test]
+    public void Test()
+    {
+        Interlocked.Increment(ref activeListenerCount);
+        // just gets the current value...
+        int count = Interlocked.CompareExchange(ref activeListenerCount, -1, -1);
+        Assert.AreEqual(1, count);
     }
 }

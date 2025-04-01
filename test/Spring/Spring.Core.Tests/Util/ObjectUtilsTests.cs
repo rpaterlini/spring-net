@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,365 +14,357 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Policy;
 using NUnit.Framework;
 using Spring.Objects;
 
-#endregion
+namespace Spring.Util;
 
-namespace Spring.Util
+/// <summary>
+/// Unit tests for the ObjectUtils class.
+/// </summary>
+/// <author>Rick Evans (.NET)</author>
+[TestFixture]
+public class ObjectUtilsTests
 {
-    /// <summary>
-    /// Unit tests for the ObjectUtils class.
-    /// </summary>
-    /// <author>Rick Evans (.NET)</author>
-    [TestFixture]
-    public class ObjectUtilsTests
+    [Test]
+    public void NullSafeEqualsWithBothNull()
     {
-        [Test]
-        public void NullSafeEqualsWithBothNull()
-        {
-            string first = null;
-            string second = null;
-            Assert.IsTrue(ObjectUtils.NullSafeEquals(first, second));
-        }
+        string first = null;
+        string second = null;
+        Assert.IsTrue(ObjectUtils.NullSafeEquals(first, second));
+    }
 
-        [Test]
-        public void NullSafeEqualsWithFirstNull()
-        {
-            string first = null;
-            string second = "";
-            Assert.IsFalse(ObjectUtils.NullSafeEquals(first, second));
-        }
+    [Test]
+    public void NullSafeEqualsWithFirstNull()
+    {
+        string first = null;
+        string second = "";
+        Assert.IsFalse(ObjectUtils.NullSafeEquals(first, second));
+    }
 
-        [Test]
-        public void NullSafeEqualsWithSecondNull()
-        {
-            string first = "";
-            string second = null;
-            Assert.IsFalse(ObjectUtils.NullSafeEquals(first, second));
-        }
+    [Test]
+    public void NullSafeEqualsWithSecondNull()
+    {
+        string first = "";
+        string second = null;
+        Assert.IsFalse(ObjectUtils.NullSafeEquals(first, second));
+    }
 
-        [Test]
-        public void NullSafeEqualsBothEquals()
-        {
-            string first = "this is it";
-            string second = "this is it";
-            Assert.IsTrue(ObjectUtils.NullSafeEquals(first, second));
-        }
+    [Test]
+    public void NullSafeEqualsBothEquals()
+    {
+        string first = "this is it";
+        string second = "this is it";
+        Assert.IsTrue(ObjectUtils.NullSafeEquals(first, second));
+    }
 
-        [Test]
-        public void NullSafeEqualsNotEqual()
-        {
-            string first = "this is it";
-            int second = 12;
-            Assert.IsFalse(ObjectUtils.NullSafeEquals(first, second));
-        }
+    [Test]
+    public void NullSafeEqualsNotEqual()
+    {
+        string first = "this is it";
+        int second = 12;
+        Assert.IsFalse(ObjectUtils.NullSafeEquals(first, second));
+    }
 
-        [Test]
-        public void IsAssignableAndNotTransparentProxyWithProxy()
+    [Test]
+    public void IsAssignableAndNotTransparentProxyWithProxy()
+    {
+        AppDomain domain = null;
+        try
         {
-            AppDomain domain = null;
-            try
-            {
-                AppDomainSetup setup = new AppDomainSetup();
-                setup.ApplicationBase = Environment.CurrentDirectory;
-                domain = AppDomain.CreateDomain("Spring", new Evidence(AppDomain.CurrentDomain.Evidence), setup);
-                object foo = domain.CreateInstanceAndUnwrap(GetType().Assembly.FullName, typeof(Foo).FullName);
-                // the instance is definitely assignable to the supplied interface type...
-                bool isAssignable = ObjectUtils.IsAssignableAndNotTransparentProxy(typeof (IFoo), foo);
-                Assert.IsFalse(isAssignable, "Proxied instance was not recognized as such.");
-            }
-            finally
-            {
-                AppDomain.Unload(domain);
-            }
+            AppDomainSetup setup = new AppDomainSetup();
+            setup.ApplicationBase = Environment.CurrentDirectory;
+            domain = AppDomain.CreateDomain("Spring", new Evidence(AppDomain.CurrentDomain.Evidence), setup);
+            object foo = domain.CreateInstanceAndUnwrap(GetType().Assembly.FullName, typeof(Foo).FullName);
+            // the instance is definitely assignable to the supplied interface type...
+            bool isAssignable = ObjectUtils.IsAssignableAndNotTransparentProxy(typeof(IFoo), foo);
+            Assert.IsFalse(isAssignable, "Proxied instance was not recognized as such.");
         }
-
-        [Test]
-        public void InstantiateTypeWithNullType()
+        finally
         {
-            Assert.Throws<ArgumentNullException>(() => ObjectUtils.InstantiateType(null));
+            AppDomain.Unload(domain);
         }
+    }
 
-        [Test]
-        public void InstantiateType()
+    [Test]
+    public void InstantiateTypeWithNullType()
+    {
+        Assert.Throws<ArgumentNullException>(() => ObjectUtils.InstantiateType(null));
+    }
+
+    [Test]
+    public void InstantiateType()
+    {
+        object foo = ObjectUtils.InstantiateType(typeof(TestObject));
+        Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
+        Assert.IsTrue(foo is TestObject, "The instantiated instance was not an instance of the type that was passed in.");
+    }
+
+    [Test]
+    public void InstantiateTypeThrowingWithinPublicConstructor()
+    {
+        try
         {
-            object foo = ObjectUtils.InstantiateType(typeof (TestObject));
-            Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
-            Assert.IsTrue(foo is TestObject, "The instantiated instance was not an instance of the type that was passed in.");
+            ObjectUtils.InstantiateType(typeof(ThrowingWithinConstructor));
+            Assert.Fail();
         }
-
-        [Test]
-        public void InstantiateTypeThrowingWithinPublicConstructor()
+        catch (FatalReflectionException ex)
         {
-            try
-            {
-                ObjectUtils.InstantiateType(typeof(ThrowingWithinConstructor));
-                Assert.Fail();
-            }
-            catch(FatalReflectionException ex)
-            {
-                // no nasty "TargetInvocationException" is in between!
-                Assert.AreEqual( typeof(ThrowingWithinConstructorException), ex.InnerException.GetType() );
-            }
+            // no nasty "TargetInvocationException" is in between!
+            Assert.AreEqual(typeof(ThrowingWithinConstructorException), ex.InnerException.GetType());
         }
+    }
 
-        [Test]
-        public void InstantiateTypeWithOpenGenericType()
-        {
-            Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof(Dictionary<,>)));
-        }
+    [Test]
+    public void InstantiateTypeWithOpenGenericType()
+    {
+        Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof(Dictionary<,>)));
+    }
 
-        [Test]
-        public void InstantiateGenericTypeWithArguments()
-        {
+    [Test]
+    public void InstantiateGenericTypeWithArguments()
+    {
 //            ObjectUtils.InstantiateType(typeof(Dictionary<string, int>), new object[] { new object() } );
-        }
+    }
 
-        [Test]
-        public void InstantiateTypeWithAbstractType()
+    [Test]
+    public void InstantiateTypeWithAbstractType()
+    {
+        Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof(AbstractType)));
+    }
+
+    [Test]
+    public void InstantiateTypeWithInterfaceType()
+    {
+        Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof(IList)));
+    }
+
+    [Test]
+    public void InstantiateTypeWithTypeExposingNoZeroArgCtor()
+    {
+        Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof(NoZeroArgConstructorType)));
+    }
+
+    [Test]
+    public void InstantiateTypeWithPrivateCtor()
+    {
+        ConstructorInfo ctor = typeof(OnlyPrivateCtor).GetConstructor(
+            BindingFlags.Instance | BindingFlags.NonPublic, null, new Type[] { typeof(string) },
+            null);
+        object foo = ObjectUtils.InstantiateType(ctor, new object[] { "Chungking Express" });
+        Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
+        Assert.IsTrue(foo is OnlyPrivateCtor, "The instantiated instance was not an instance of the type that was passed in.");
+        Assert.AreEqual("Chungking Express", ((OnlyPrivateCtor) foo).Name);
+    }
+
+    [Test]
+    public void InstantiateTypeWithNullCtor()
+    {
+        Assert.Throws<ArgumentNullException>(() => ObjectUtils.InstantiateType(typeof(IList).GetConstructor(Type.EmptyTypes), new object[] { }));
+    }
+
+    [Test]
+    public void InstantiateTypeWithCtorWithNoArgs()
+    {
+        Type type = typeof(TestObject);
+        ConstructorInfo ctor = type.GetConstructor(Type.EmptyTypes);
+        object foo = ObjectUtils.InstantiateType(ctor, ObjectUtils.EmptyObjects);
+        Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
+        Assert.IsTrue(foo is TestObject, "The instantiated instance was not an instance of the Type that was passed in.");
+    }
+
+    [Test]
+    public void InstantiateTypeWithCtorArgs()
+    {
+        Type type = typeof(TestObject);
+        ConstructorInfo ctor = type.GetConstructor(new Type[] { typeof(string), typeof(int) });
+        object foo = ObjectUtils.InstantiateType(ctor, new object[] { "Yakov Petrovich Golyadkin", 39 });
+        Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
+        Assert.IsTrue(foo is TestObject, "The instantiated instance was not an instance of the Type that was passed in.");
+        TestObject obj = foo as TestObject;
+        Assert.AreEqual("Yakov Petrovich Golyadkin", obj.Name);
+        Assert.AreEqual(39, obj.Age);
+    }
+
+    [Test]
+    public void InstantiateTypeWithBadCtorArgs()
+    {
+        Type type = typeof(TestObject);
+        ConstructorInfo ctor = type.GetConstructor(new Type[] { typeof(string), typeof(int) });
+        try
         {
-            Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof (AbstractType)));
+            ObjectUtils.InstantiateType(ctor, new object[] { 39, "Yakov Petrovich Golyadkin" });
+            Assert.Fail("Should throw an error");
         }
-
-        [Test]
-        public void InstantiateTypeWithInterfaceType()
+        catch
         {
-            Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof (IList)));
+            // ok...
         }
+    }
 
-        [Test]
-        public void InstantiateTypeWithTypeExposingNoZeroArgCtor()
-        {
-            Assert.Throws<FatalReflectionException>(() => ObjectUtils.InstantiateType(typeof(NoZeroArgConstructorType)));
-        }
+    [Test]
+    public void IsSimpleProperty()
+    {
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(string)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(long)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(bool)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(int)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(float)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(ushort)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(double)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(ulong)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(char)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(uint)));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(string[])));
+        Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof(Type)));
 
-        [Test]
-        public void InstantiateTypeWithPrivateCtor()
-        {
-            ConstructorInfo ctor = typeof (OnlyPrivateCtor).GetConstructor(
-                BindingFlags.Instance | BindingFlags.NonPublic, null, new Type[] {typeof (string)},
-                null);
-            object foo = ObjectUtils.InstantiateType(ctor, new object[] {"Chungking Express"});
-            Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
-            Assert.IsTrue(foo is OnlyPrivateCtor, "The instantiated instance was not an instance of the type that was passed in.");
-            Assert.AreEqual("Chungking Express", ((OnlyPrivateCtor) foo).Name);
-        }
+        Assert.IsFalse(ObjectUtils.IsSimpleProperty(typeof(TestObject)));
+        Assert.IsFalse(ObjectUtils.IsSimpleProperty(typeof(IList[])));
+    }
 
-        [Test]
-        public void InstantiateTypeWithNullCtor()
-        {
-            Assert.Throws<ArgumentNullException>(() => ObjectUtils.InstantiateType(typeof(IList).GetConstructor(Type.EmptyTypes), new object[] { }));
-        }
+    [Test]
+    public void EnumerateFirstElement()
+    {
+        string expected = "Hiya";
+        IList list = new string[] { expected, "Aw!", "Man!" };
+        IEnumerator enumerator = list.GetEnumerator();
+        object actual = ObjectUtils.EnumerateFirstElement(enumerator);
+        Assert.AreEqual(expected, actual);
+    }
 
-        [Test]
-        public void InstantiateTypeWithCtorWithNoArgs()
-        {
-            Type type = typeof (TestObject);
-            ConstructorInfo ctor = type.GetConstructor(Type.EmptyTypes);
-            object foo = ObjectUtils.InstantiateType(ctor, ObjectUtils.EmptyObjects);
-            Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
-            Assert.IsTrue(foo is TestObject, "The instantiated instance was not an instance of the Type that was passed in.");
-        }
+    [Test]
+    public void EnumerateElementAtIndex()
+    {
+        string expected = "Mmm...";
+        IList list = new string[] { "Aw!", "Man!", expected };
+        IEnumerator enumerator = list.GetEnumerator();
+        object actual = ObjectUtils.EnumerateElementAtIndex(enumerator, 2);
+        Assert.AreEqual(expected, actual);
+    }
 
-        [Test]
-        public void InstantiateTypeWithCtorArgs()
-        {
-            Type type = typeof (TestObject);
-            ConstructorInfo ctor = type.GetConstructor(new Type[] {typeof (string), typeof (int)});
-            object foo = ObjectUtils.InstantiateType(ctor, new object[] {"Yakov Petrovich Golyadkin", 39});
-            Assert.IsNotNull(foo, "Failed to instantiate an instance of a valid Type.");
-            Assert.IsTrue(foo is TestObject, "The instantiated instance was not an instance of the Type that was passed in.");
-            TestObject obj = foo as TestObject;
-            Assert.AreEqual("Yakov Petrovich Golyadkin", obj.Name);
-            Assert.AreEqual(39, obj.Age);
-        }
+    [Test]
+    public void EnumerateElementAtIndexViaIEnumerable()
+    {
+        string expected = "Mmm...";
+        IList list = new string[] { "Aw!", "Man!", expected };
+        object actual = ObjectUtils.EnumerateElementAtIndex(list, 2);
+        Assert.AreEqual(expected, actual);
+    }
 
-        [Test]
-        public void InstantiateTypeWithBadCtorArgs()
-        {
-            Type type = typeof (TestObject);
-            ConstructorInfo ctor = type.GetConstructor(new Type[] {typeof(string), typeof(int)});
-            try
-            {
-                ObjectUtils.InstantiateType(ctor, new object[] { 39, "Yakov Petrovich Golyadkin" });
-                Assert.Fail("Should throw an error");
-            }
-            catch
-            {
-                // ok...
-            }
-        }
+    [Test]
+    public void EnumerateElementAtOutOfRangeIndex()
+    {
+        string expected = "Mmm...";
+        IList list = new string[] { "Aw!", "Man!", expected };
+        IEnumerator enumerator = list.GetEnumerator();
+        Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(enumerator, 12));
+    }
 
-        [Test]
-        public void IsSimpleProperty()
-        {
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (string)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (long)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (bool)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (int)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (float)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (ushort)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (double)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (ulong)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (char)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (uint)));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (string[])));
-            Assert.IsTrue(ObjectUtils.IsSimpleProperty(typeof (Type)));
+    [Test]
+    public void EnumerateElementAtOutOfRangeIndexViaIEnumerable()
+    {
+        string expected = "Mmm...";
+        IList list = new string[] { "Aw!", "Man!", expected };
+        Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(list, 12));
+    }
 
-            Assert.IsFalse(ObjectUtils.IsSimpleProperty(typeof (TestObject)));
-            Assert.IsFalse(ObjectUtils.IsSimpleProperty(typeof (IList[])));
-        }
+    [Test]
+    public void EnumerateElementAtNegativeIndex()
+    {
+        string expected = "Mmm...";
+        IList list = new string[] { "Aw!", "Man!", expected };
+        IEnumerator enumerator = list.GetEnumerator();
+        Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(enumerator, -10));
+    }
 
-        [Test]
-        public void EnumerateFirstElement()
-        {
-            string expected = "Hiya";
-            IList list = new string[] {expected, "Aw!", "Man!"};
-            IEnumerator enumerator = list.GetEnumerator();
-            object actual = ObjectUtils.EnumerateFirstElement(enumerator);
-            Assert.AreEqual(expected, actual);
-        }
+    [Test]
+    public void EnumerateElementAtNegativeIndexViaIEnumerable()
+    {
+        string expected = "Mmm...";
+        IList list = new string[] { "Aw!", "Man!", expected };
+        Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(list, -10));
+    }
 
-        [Test]
-        public void EnumerateElementAtIndex()
-        {
-            string expected = "Mmm...";
-            IList list = new string[] {"Aw!", "Man!", expected};
-            IEnumerator enumerator = list.GetEnumerator();
-            object actual = ObjectUtils.EnumerateElementAtIndex(enumerator, 2);
-            Assert.AreEqual(expected, actual);
-        }
+    private interface IFoo
+    {
+    }
 
-        [Test]
-        public void EnumerateElementAtIndexViaIEnumerable()
-        {
-            string expected = "Mmm...";
-            IList list = new string[] {"Aw!", "Man!", expected};
-            object actual = ObjectUtils.EnumerateElementAtIndex(list, 2);
-            Assert.AreEqual(expected, actual);
-        }
+    private sealed class Foo : MarshalByRefObject, IFoo
+    {
+    }
 
-        [Test]
-        public void EnumerateElementAtOutOfRangeIndex()
-        {
-            string expected = "Mmm...";
-            IList list = new string[] {"Aw!", "Man!", expected};
-            IEnumerator enumerator = list.GetEnumerator();
-            Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(enumerator, 12));
-        }
-
-        [Test]
-        public void EnumerateElementAtOutOfRangeIndexViaIEnumerable()
-        {
-            string expected = "Mmm...";
-            IList list = new string[] {"Aw!", "Man!", expected};
-            Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(list, 12));
-        }
-
-        [Test]
-        public void EnumerateElementAtNegativeIndex()
-        {
-            string expected = "Mmm...";
-            IList list = new string[] {"Aw!", "Man!", expected};
-            IEnumerator enumerator = list.GetEnumerator();
-            Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(enumerator, -10));
-        }
-
-        [Test]
-        public void EnumerateElementAtNegativeIndexViaIEnumerable()
-        {
-            string expected = "Mmm...";
-            IList list = new string[] {"Aw!", "Man!", expected};
-            Assert.Throws<ArgumentOutOfRangeException>(() => ObjectUtils.EnumerateElementAtIndex(list, -10));
-        }
-
-        #region Helper Classes
-
-        private interface IFoo
-        {
-        }
-
-        private sealed class Foo : MarshalByRefObject, IFoo
-        {
-        }
-
+    /// <summary>
+    /// A class that doesn't have a parameterless constructor.
+    /// </summary>
+    private class NoZeroArgConstructorType
+    {
         /// <summary>
-        /// A class that doesn't have a parameterless constructor.
+        /// Creates a new instance of the NoZeroArgConstructorType class.
         /// </summary>
-        private class NoZeroArgConstructorType
+        /// <param name="foo">A spurious argument (ignored).</param>
+        public NoZeroArgConstructorType(string foo)
         {
-            /// <summary>
-            /// Creates a new instance of the NoZeroArgConstructorType class.
-            /// </summary>
-            /// <param name="foo">A spurious argument (ignored).</param>
-            public NoZeroArgConstructorType(string foo)
-            {
-            }
         }
+    }
 
+    /// <summary>
+    /// An abstract class. Doh!
+    /// </summary>
+    private abstract class AbstractType
+    {
         /// <summary>
-        /// An abstract class. Doh!
+        /// Creates a new instance of the AbstractType class.
         /// </summary>
-        private abstract class AbstractType
+        public AbstractType()
         {
-            /// <summary>
-            /// Creates a new instance of the AbstractType class.
-            /// </summary>
-            public AbstractType()
-            {
-            }
+        }
+    }
+
+    private class OnlyPrivateCtor
+    {
+        private OnlyPrivateCtor(string name)
+        {
+            _name = name;
         }
 
-        private class OnlyPrivateCtor
+        public string Name
         {
-            private OnlyPrivateCtor(string name)
-            {
-                _name = name;
-            }
-
-            public string Name
-            {
-                get { return _name; }
-                set { _name = value; }
-            }
-
-            private string _name;
+            get { return _name; }
+            set { _name = value; }
         }
 
-        [Serializable]
-        private class ThrowingWithinConstructorException : TestException
+        private string _name;
+    }
+
+    [Serializable]
+    private class ThrowingWithinConstructorException : TestException
+    {
+        public ThrowingWithinConstructorException()
         {
-            public ThrowingWithinConstructorException()
-            {}
-
-            public ThrowingWithinConstructorException(string message) : base(message)
-            {}
-
-            public ThrowingWithinConstructorException(string message, Exception inner) : base(message, inner)
-            {}
-
-            protected ThrowingWithinConstructorException(SerializationInfo info, StreamingContext context) : base(info, context)
-            {}
         }
 
-        public class ThrowingWithinConstructor
+        public ThrowingWithinConstructorException(string message) : base(message)
         {
-            public ThrowingWithinConstructor()
-            {
-                throw new ThrowingWithinConstructorException();
-            }
         }
-        #endregion
+
+        public ThrowingWithinConstructorException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected ThrowingWithinConstructorException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+
+    public class ThrowingWithinConstructor
+    {
+        public ThrowingWithinConstructor()
+        {
+            throw new ThrowingWithinConstructorException();
+        }
     }
 }

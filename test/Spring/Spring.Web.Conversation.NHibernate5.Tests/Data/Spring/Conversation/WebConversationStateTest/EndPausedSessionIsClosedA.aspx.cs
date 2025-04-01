@@ -1,13 +1,11 @@
-using System;
-
 using Spring.Web.Conversation;
 using Spring.Entities;
 using NHibernate;
 
 public partial class EndPausedSessionIsClosedA : System.Web.UI.Page
 {
-
     private IConversationState conversation;
+
     /// <summary>
     /// <see cref="IConversationState"/>
     /// </summary>

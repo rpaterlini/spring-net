@@ -1,7 +1,6 @@
 using System;
-using System.Collections;
 using System.Threading;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Spring.Messaging.Core;
 
 
@@ -9,7 +8,7 @@ namespace Spring.MsmqQuickStart.Server.Gateways
 {
     public class MarketDataServiceGateway : MessageQueueGatewaySupport, IMarketDataService
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (MarketDataServiceGateway));
+        private static readonly ILogger log = LogManager.GetLogger(typeof (MarketDataServiceGateway));
 
         private readonly Random random;
         private TimeSpan sleepTimeInSeconds = new TimeSpan(0,0,0,10,0);
@@ -30,9 +29,9 @@ namespace Spring.MsmqQuickStart.Server.Gateways
             while (true)
             {
                 string data = GenerateFakeMarketData();
-                log.Info("Sending market data.");
+                log.LogInformation("Sending market data.");
                 MessageQueueTemplate.ConvertAndSend(data);
-                log.Info("Sleeping " + sleepTimeInSeconds + " seconds before sending more market data.");
+                log.LogInformation("Sleeping {SleepTimeSeconds} seconds before sending more market data.", sleepTimeInSeconds);
                 Thread.Sleep(sleepTimeInSeconds);
             }
         }

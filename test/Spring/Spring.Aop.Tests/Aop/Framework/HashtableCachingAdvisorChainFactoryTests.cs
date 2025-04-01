@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright © 2002-2011 the original author or authors.
  *
@@ -16,66 +14,51 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Aop.Framework;
 
-namespace Spring.Aop.Framework
+/// <summary>
+/// Unit tests for the HashtableCachingAdvisorChainFactory class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class HashtableCachingAdvisorChainFactoryTests
 {
-	/// <summary>
-	/// Unit tests for the HashtableCachingAdvisorChainFactory class.
+    /// <summary>
+    /// The setup logic executed before the execution of this test fixture.
     /// </summary>
-    /// <author>Rick Evans</author>
-	[TestFixture]
-    public sealed class HashtableCachingAdvisorChainFactoryTests
+    [OneTimeSetUp]
+    public void FixtureSetUp()
     {
-        #region SetUp
-        
-        /// <summary>
-        /// The setup logic executed before the execution of this test fixture.
-        /// </summary>
-        [OneTimeSetUp]
-        public void FixtureSetUp()
-        {
-        }
+    }
 
-        /// <summary>
-        /// The setup logic executed before the execution of each individual test.
-        /// </summary>
-        [SetUp]
-        public void SetUp()
-        {
-        }
-        
-        #endregion
+    /// <summary>
+    /// The setup logic executed before the execution of each individual test.
+    /// </summary>
+    [SetUp]
+    public void SetUp()
+    {
+    }
 
-        #region TearDown
-        
-        /// <summary>
-        /// The tear down logic executed after the execution of each individual test.
-        /// </summary>
-        [TearDown]
-        public void TearDown()
-        {
-        }
+    /// <summary>
+    /// The tear down logic executed after the execution of each individual test.
+    /// </summary>
+    [TearDown]
+    public void TearDown()
+    {
+    }
 
-        /// <summary>
-        /// The tear down logic executed after the entire test fixture has executed.
-        /// </summary>
-        [OneTimeTearDown]
-        public void FixtureTearDown()
-        {
-        }
-        
-        #endregion
+    /// <summary>
+    /// The tear down logic executed after the entire test fixture has executed.
+    /// </summary>
+    [OneTimeTearDown]
+    public void FixtureTearDown()
+    {
+    }
 
-        [Test]
-        public void Instantiation() {
-
-        }
-	}
+    [Test]
+    public void Instantiation()
+    {
+    }
 }

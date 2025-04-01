@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +14,43 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Support;
 
-namespace Spring.Objects.Factory.Support
+/// <summary>
+/// The possible object scope values.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+public enum ObjectScope
 {
+    ///<summary>
+    ///
+    ///</summary>
+    Singleton = 0,
+
     /// <summary>
-    /// The possible object scope values.
+    /// Application scope.
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    public enum ObjectScope
-    {
-        ///<summary>
-        /// 
-        ///</summary>
-        Singleton = 0,
+    Application = Singleton,
 
-        /// <summary>
-        /// Application scope.
-        /// </summary>
-        Application = Singleton,
+    /// <summary>
+    /// Session scope.
+    /// </summary>
+    Session = 1,
 
-        /// <summary>
-        /// Session scope.
-        /// </summary>
-        Session = 1,
+    /// <summary>
+    /// Request scope.
+    /// </summary>
+    Request = 2,
 
-        /// <summary>
-        /// Request scope.
-        /// </summary>
-        Request = 2,
+    /// <summary>
+    ///
+    /// </summary>
+    Prototype = -1,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Prototype = -1,
-
-        /// <summary>
-        /// Default scope (currently
-        /// <see cref="Spring.Objects.Factory.Support.ObjectScope.Application"/>).
-        /// </summary>
-        /// <seealso cref="Spring.Objects.Factory.Support.ObjectScope.Application"/>
-        Default = Application
-    }
+    /// <summary>
+    /// Default scope (currently
+    /// <see cref="Spring.Objects.Factory.Support.ObjectScope.Application"/>).
+    /// </summary>
+    /// <seealso cref="Spring.Objects.Factory.Support.ObjectScope.Application"/>
+    Default = Application
 }

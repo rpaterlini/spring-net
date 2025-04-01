@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,35 +14,26 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Core;
 
-#region Imports
-
-
-
-#endregion
-
-namespace Spring.Core
+/// <summary>
+/// The criteria for an arbitrary filter.
+/// </summary>
+/// <author>Rick Evans</author>
+public interface ICriteria
 {
     /// <summary>
-    /// The criteria for an arbitrary filter.
+    /// Does the supplied <paramref name="datum"/> satisfy the criteria
+    /// encapsulated by this instance?
     /// </summary>
-    /// <author>Rick Evans</author>
-    public interface ICriteria 
-    {
-        /// <summary>
-        /// Does the supplied <paramref name="datum"/> satisfy the criteria
-        /// encapsulated by this instance?
-        /// </summary>
-        /// <param name="datum">
-        /// The datum to be checked by this criteria instance.
-        /// </param>
-        /// <returns>
-        /// <see langword="true"/> if the supplied <paramref name="datum"/>
-        /// satisfies the criteria encapsulated by this instance;
-        /// <see langword="false"/> if not, or the supplied
-        /// <paramref name="datum"/> is <see langword="null"/>.
-        /// </returns>
-        bool IsSatisfied (object datum);
-    }
+    /// <param name="datum">
+    /// The datum to be checked by this criteria instance.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the supplied <paramref name="datum"/>
+    /// satisfies the criteria encapsulated by this instance;
+    /// <see langword="false"/> if not, or the supplied
+    /// <paramref name="datum"/> is <see langword="null"/>.
+    /// </returns>
+    bool IsSatisfied(object datum);
 }

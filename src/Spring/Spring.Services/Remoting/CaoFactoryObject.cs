@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,140 +14,115 @@
  * limitations under the License.
  */
 
-#endregion
-
+using Microsoft.Extensions.Logging;
 using Spring.Objects.Factory;
 using Spring.Remoting.Support;
 
-namespace Spring.Remoting
+namespace Spring.Remoting;
+
+/// <summary>
+/// Factory for creating a reference to a
+/// client activated object (CAO).
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+/// <author>Mark Pollack</author>
+/// <author>Bruno Baia</author>
+public class CaoFactoryObject : IFactoryObject, IInitializingObject
 {
+    private static readonly ILogger<CaoFactoryObject> LOG = LogManager.GetLogger<CaoFactoryObject>();
+
+    private string remoteTargetName;
+    private string serviceUrl;
+    private object[] constructorArguments;
+
     /// <summary>
-    /// Factory for creating a reference to a
-    /// client activated object (CAO).
+    /// The remote target name to activate.
     /// </summary>
-	/// <author>Aleksandar Seovic</author>
-	/// <author>Mark Pollack</author>
-	/// <author>Bruno Baia</author>
-    public class CaoFactoryObject : IFactoryObject, IInitializingObject
+    public string RemoteTargetName
     {
-        #region Logging
+        get { return remoteTargetName; }
+        set { remoteTargetName = value; }
+    }
 
-        private static readonly Common.Logging.ILog LOG = Common.Logging.LogManager.GetLogger(typeof(CaoFactoryObject));
+    /// <summary>
+    /// The Uri of the remote type.
+    /// </summary>
+    public string ServiceUrl
+    {
+        get { return serviceUrl; }
+        set { serviceUrl = value; }
+    }
 
-        #endregion
+    /// <summary>
+    /// Argument list used to call the CAO constructor.
+    /// </summary>
+    public object[] ConstructorArguments
+    {
+        get { return constructorArguments; }
+        set { constructorArguments = value; }
+    }
 
-		#region Fields
+    /// <summary>
+    /// Creates a new instance of the <see cref="CaoFactoryObject"/> class.
+    /// </summary>
+    public CaoFactoryObject()
+    {
+    }
 
-        private string remoteTargetName;
-        private string serviceUrl;
-		private object[] constructorArguments;
-
-		#endregion
-
-        #region Properties
-
-        /// <summary>
-        /// The remote target name to activate.
-        /// </summary>
-        public string RemoteTargetName
+    /// <summary>
+    /// Callback method called once all factory properties have been set.
+    /// </summary>
+    /// <exception cref="System.Exception">if an error occured</exception>
+    public void AfterPropertiesSet()
+    {
+        if (RemoteTargetName == null)
         {
-            get { return remoteTargetName; }
-            set { remoteTargetName = value; }
+            throw new ArgumentException("The RemoteTargetName property is required.");
         }
 
-        /// <summary>
-        /// The Uri of the remote type.
-        /// </summary>
-        public string ServiceUrl
+        if (ServiceUrl == null)
         {
-            get { return serviceUrl; }
-            set { serviceUrl = value; }
+            throw new ArgumentException("The ServiceUrl property is required.");
+        }
+    }
+
+    /// <summary>
+    /// Always return false.
+    /// </summary>
+    public bool IsSingleton
+    {
+        get { return false; }
+    }
+
+    /// <summary>
+    /// The type of object to be created.
+    /// </summary>
+    public Type ObjectType
+    {
+        get { return typeof(MarshalByRefObject); }
+    }
+
+    /// <summary>
+    /// Return the CAO proxy.
+    /// </summary>
+    /// <returns>the CAO proxy</returns>
+    public object GetObject()
+    {
+        string url = serviceUrl.TrimEnd('/') + '/' + remoteTargetName;
+        if (LOG.IsEnabled(LogLevel.Debug))
+        {
+            LOG.LogDebug("Accessing CAO object of type ICaoRemoteFactory object at url = [" + url + "]");
         }
 
-		/// <summary>
-		/// Argument list used to call the CAO constructor.
-		/// </summary>
-		public object[] ConstructorArguments
-		{
-			get { return constructorArguments; }
-			set { constructorArguments = value; }
-		}
+        ICaoRemoteFactory remoteFactory = (ICaoRemoteFactory) Activator.GetObject(typeof(ICaoRemoteFactory), url);
 
-        #endregion
-
-		#region Constructor(s) / Destructor
-
-		/// <summary>
-		/// Creates a new instance of the <see cref="CaoFactoryObject"/> class.
-		/// </summary>
-		public CaoFactoryObject()
-		{
-		}
-
-		#endregion
-
-		#region IInitializingObject Members
-
-        /// <summary>
-        /// Callback method called once all factory properties have been set.
-        /// </summary>
-        /// <exception cref="System.Exception">if an error occured</exception>
-        public void AfterPropertiesSet()
+        if (constructorArguments != null)
         {
-			if (RemoteTargetName == null)
-			{
-				throw new ArgumentException("The RemoteTargetName property is required.");
-			}
-
-            if (ServiceUrl == null)
-            {
-                throw new ArgumentException("The ServiceUrl property is required.");
-            }
+            return remoteFactory.GetObject(constructorArguments);
         }
-
-		#endregion
-
-		#region IFactoryObject Members
-
-		/// <summary>
-		/// Always return false.
-		/// </summary>
-		public bool IsSingleton
-		{
-			get { return false; }
-		}
-
-		/// <summary>
-		/// The type of object to be created.
-		/// </summary>
-		public Type ObjectType
-		{
-			get { return typeof(MarshalByRefObject); }
-		}
-
-		/// <summary>
-		/// Return the CAO proxy.
-		/// </summary>
-		/// <returns>the CAO proxy</returns>
-		public object GetObject()
-		{
-		    string url = serviceUrl.TrimEnd('/') + '/' + remoteTargetName;
-            if (LOG.IsDebugEnabled)
-            {
-                LOG.Debug("Accessing CAO object of type ICaoRemoteFactory object at url = [" + url + "]");
-            }
-			ICaoRemoteFactory remoteFactory = (ICaoRemoteFactory) Activator.GetObject(typeof(ICaoRemoteFactory), url);
-
-			if (constructorArguments != null)
-			{
-				return remoteFactory.GetObject(constructorArguments);
-			}
-			else
-			{
-				return remoteFactory.GetObject();
-			}
-		}
-
-		#endregion
+        else
+        {
+            return remoteFactory.GetObject();
+        }
     }
 }

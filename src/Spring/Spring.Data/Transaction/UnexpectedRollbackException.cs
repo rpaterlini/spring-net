@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,50 +14,51 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 
-namespace Spring.Transaction
+namespace Spring.Transaction;
+
+/// <summary>
+/// Thrown when an attempt to commit a transaction resulted in an unexpected rollback.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Griffin Caprio (.NET)</author>
+[Serializable]
+public class UnexpectedRollbackException : TransactionException
 {
-	/// <summary>
-	/// Thrown when an attempt to commit a transaction resulted in an unexpected rollback.
-	/// </summary>
-	/// <author>Rod Johnson</author>
-	/// <author>Griffin Caprio (.NET)</author>
-	[Serializable]
-	public class UnexpectedRollbackException : TransactionException
-	{
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Transaction.UnexpectedRollbackException"/> class.
-		/// </summary>
-		public UnexpectedRollbackException( ) {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Transaction.UnexpectedRollbackException"/> class.
+    /// </summary>
+    public UnexpectedRollbackException() { }
 
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Transaction.UnexpectedRollbackException"/> class.
-		/// </summary>
-		/// <param name="message">
-		/// A message about the exception.
-		/// </param>
-		public UnexpectedRollbackException( String message ) : base(message) {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Transaction.UnexpectedRollbackException"/> class.
+    /// </summary>
+    /// <param name="message">
+    /// A message about the exception.
+    /// </param>
+    public UnexpectedRollbackException(String message) : base(message) { }
 
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Transaction.UnexpectedRollbackException"/> class.
-		/// </summary>
-		/// <param name="message">
-		/// A message about the exception.
-		/// </param>
-		/// <param name="rootCause">
-		/// The root exception that is being wrapped.
-		/// </param>
-		public UnexpectedRollbackException(string message, Exception rootCause)
-			: base(message, rootCause) {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Transaction.UnexpectedRollbackException"/> class.
+    /// </summary>
+    /// <param name="message">
+    /// A message about the exception.
+    /// </param>
+    /// <param name="rootCause">
+    /// The root exception that is being wrapped.
+    /// </param>
+    public UnexpectedRollbackException(string message, Exception rootCause)
+        : base(message, rootCause)
+    {
+    }
 
-		/// <inheritdoc />
-		protected UnexpectedRollbackException(
-			SerializationInfo info, StreamingContext context ) : base( info, context ) {}
-	}
+    /// <inheritdoc />
+    protected UnexpectedRollbackException(
+        SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 }

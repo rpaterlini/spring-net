@@ -1,14 +1,12 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +14,7 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Data;
-using log4net;
-
 using NHibernate;
 using NUnit.Framework;
 using Spring.Context;
@@ -32,13 +23,9 @@ using Spring.Data.Common;
 using Spring.Transaction;
 using Spring.Transaction.Interceptor;
 using System.Transactions;
-using System.Collections.Generic;
 using Spring.Core.IO;
 using NHibernate.Cfg;
 using System.Diagnostics;
-using System.Threading;
-
-#endregion
 
 namespace Spring.Data.NHibernate
 {
@@ -50,12 +37,6 @@ namespace Spring.Data.NHibernate
     [Ignore("Bug Fix in Progress...unignore once resolved and tests are cleaned up")]
     public class HibernateTxScopeTransactionManagerTests
     {
-        /// <summary>
-        /// The shared <see cref="log4net.ILog"/> instance for this class (and derived classes). 
-        /// </summary>
-        protected static readonly ILog log =
-            LogManager.GetLogger(typeof(HibernateTxScopeTransactionManagerTests));
-
         private IApplicationContext ctx;
 
         private IDbProvider dbProvider;
@@ -126,19 +107,16 @@ namespace Spring.Data.NHibernate
 
             for (int i = 0; i < counter; i++)
             {
-
                 using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
                 {
-                    using (ISession session = ((ISessionFactory)ctx["SessionFactory"]).OpenSession())
+                    using (ISession session = ((ISessionFactory) ctx["SessionFactory"]).OpenSession())
                     {
                         IList<TestObject> to = session.CreateCriteria<TestObject>().List<TestObject>();
                     }
 
                     //because scope.Complete() is never called, the Transaction is rolled back and this results in the orpahned connections
                 }
-
             }
-
         }
 
         /// <summary>
@@ -151,10 +129,9 @@ namespace Spring.Data.NHibernate
 
             for (int i = 0; i < counter; i++)
             {
-
                 using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
                 {
-                    using (ISession session = ((ISessionFactory)ctx["SessionFactory"]).OpenSession())
+                    using (ISession session = ((ISessionFactory) ctx["SessionFactory"]).OpenSession())
                     {
                         using (ITransaction tx = session.BeginTransaction())
                         {
@@ -162,7 +139,6 @@ namespace Spring.Data.NHibernate
                             {
                                 IList<TestObject> to = session.CreateCriteria<TestObject>().List<TestObject>();
                                 throw new Exception("this exception simulates something going wrong!");
-
                             }
                             catch (Exception)
                             {
@@ -182,7 +158,7 @@ namespace Spring.Data.NHibernate
         {
             using (TransactionScope tx = new TransactionScope())
             {
-                ISession s = ((ISessionFactory)ctx["SessionFactory"]).OpenSession();
+                ISession s = ((ISessionFactory) ctx["SessionFactory"]).OpenSession();
 
                 TestObject to = new TestObject();
                 to.Name = "George";
@@ -194,7 +170,6 @@ namespace Spring.Data.NHibernate
 
                 tx.Complete();
             }
-
         }
 
         private static void ExecuteSql(IDbConnection conn, string sql)
@@ -217,21 +192,19 @@ namespace Spring.Data.NHibernate
                 }
                 catch (Exception)
                 {
-
                 }
             }
         }
 
         private void zzzExecuteDaoOperations()
         {
-            ITestObjectDao dao = (ITestObjectDao)ctx["SimpleTestDao"];
+            ITestObjectDao dao = (ITestObjectDao) ctx["SimpleTestDao"];
 
             TestObject toGeorge = new TestObject();
             toGeorge.Name = "George";
             toGeorge.Age = 33;
             dao.Create(toGeorge);
         }
-
 
         //private void MethodForThread()
         //{
@@ -241,7 +214,7 @@ namespace Spring.Data.NHibernate
 
         private void MethodForThread(object taskCounter)
         {
-            int counter = (int)taskCounter;
+            int counter = (int) taskCounter;
 
             for (int i = 0; i < 200; i++)
             {
@@ -252,13 +225,11 @@ namespace Spring.Data.NHibernate
                 }
                 catch (Exception)
                 {
-
                 }
             }
 
             Debug.WriteLine(String.Format("\n---------\nCompleting Task Number {0}\n---------\n", taskCounter));
         }
-
 
         [Test]
         public void Test()
@@ -281,7 +252,6 @@ namespace Spring.Data.NHibernate
                 Thread t = new Thread(MethodForThread);
                 threads.Add(t);
                 t.Start(taskCounter);
-
             }
 
             foreach (Thread thread in threads)
@@ -300,20 +270,16 @@ namespace Spring.Data.NHibernate
             ISessionFactory sf = c.BuildSessionFactory();
         }
 
-
-
         [Test]
         public void LeaksConnectionSampleCodeFromBlogPost()
         {
-
             int counter = 200;
 
             for (int i = 0; i < counter; i++)
             {
-
                 using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
                 {
-                    using (ISession session = ((ISessionFactory)ctx["SessionFactory"]).OpenSession())
+                    using (ISession session = ((ISessionFactory) ctx["SessionFactory"]).OpenSession())
                     {
                         /*
                         IQuery q = session.CreateQuery("from Spring.Data.NHibernate.TestObject");
@@ -326,14 +292,9 @@ namespace Spring.Data.NHibernate
                             q.List();
                             //transaction.Rollback();
                         }
-
                     }
                 }
-
             }
-
         }
-
     }
-
 }

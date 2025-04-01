@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,69 +14,64 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
-using System.Threading.Tasks;
 using Apache.NMS;
 
-namespace Spring.Messaging.Nms.Connections
+namespace Spring.Messaging.Nms.Connections;
+
+public class TestMessageConsumer : IMessageConsumer
 {
-    public class TestMessageConsumer : IMessageConsumer
+    public string MessageSelector { get; }
+    public event MessageListener Listener;
+
+    private void InvokeListener(IMessage message)
     {
-        public string MessageSelector { get; }
-        public event MessageListener Listener;
+        MessageListener listener = Listener;
+        if (listener != null) listener(message);
+    }
 
-        private void InvokeListener(IMessage message)
-        {
-            MessageListener listener = Listener;
-            if (listener != null) listener(message);
-        }
+    public IMessage Receive()
+    {
+        throw new NotImplementedException();
+    }
 
-        public IMessage Receive()
-        {
-            throw new NotImplementedException();
-        }
+    public Task<IMessage> ReceiveAsync()
+    {
+        throw new NotImplementedException();
+    }
 
-        public Task<IMessage> ReceiveAsync()
-        {
-            throw new NotImplementedException();
-        }
+    public IMessage Receive(TimeSpan timeout)
+    {
+        throw new NotImplementedException();
+    }
 
-        public IMessage Receive(TimeSpan timeout)
-        {
-            throw new NotImplementedException();
-        }
+    public Task<IMessage> ReceiveAsync(TimeSpan timeout)
+    {
+        throw new NotImplementedException();
+    }
 
-        public Task<IMessage> ReceiveAsync(TimeSpan timeout)
-        {
-            throw new NotImplementedException();
-        }
+    public IMessage ReceiveNoWait()
+    {
+        throw new NotImplementedException();
+    }
 
-        public IMessage ReceiveNoWait()
-        {
-            throw new NotImplementedException();
-        }
+    public void Close()
+    {
+        throw new NotImplementedException();
+    }
 
-        public void Close()
-        {
-            throw new NotImplementedException();
-        }
+    public Task CloseAsync()
+    {
+        throw new NotImplementedException();
+    }
 
-        public Task CloseAsync()
-        {
-            throw new NotImplementedException();
-        }
+    public ConsumerTransformerDelegate ConsumerTransformer
+    {
+        get { throw new NotImplementedException(); }
+        set { throw new NotImplementedException(); }
+    }
 
-        public ConsumerTransformerDelegate ConsumerTransformer
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+    public void Dispose()
+    {
+        throw new NotImplementedException();
     }
 }

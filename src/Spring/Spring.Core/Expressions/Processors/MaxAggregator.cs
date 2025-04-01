@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +14,40 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Collections;
 using Spring.Util;
 
-namespace Spring.Expressions.Processors
+namespace Spring.Expressions.Processors;
+
+/// <summary>
+/// Implementation of the maximum aggregator.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+public class MaxAggregator : ICollectionProcessor
 {
     /// <summary>
-    /// Implementation of the maximum aggregator.
+    /// Returns the largest item in the source collection.
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    public class MaxAggregator : ICollectionProcessor
+    /// <param name="source">
+    /// The source collection to process.
+    /// </param>
+    /// <param name="args">
+    /// Ignored.
+    /// </param>
+    /// <returns>
+    /// The largest item in the source collection.
+    /// </returns>
+    public object Process(ICollection source, object[] args)
     {
-        /// <summary>
-        /// Returns the largest item in the source collection.
-        /// </summary>
-        /// <param name="source">
-        /// The source collection to process.
-        /// </param>
-        /// <param name="args">
-        /// Ignored.
-        /// </param>
-        /// <returns>
-        /// The largest item in the source collection.
-        /// </returns>
-        public object Process(ICollection source, object[] args)
+        object maxItem = null;
+        foreach (object item in source)
         {
-            object maxItem = null;
-            foreach (object item in source)
+            if (CompareUtils.Compare(maxItem, item) < 0)
             {
-                if (CompareUtils.Compare(maxItem, item) < 0)
-                {
-                    maxItem = item;
-                }
+                maxItem = item;
             }
-            return maxItem;
         }
+
+        return maxItem;
     }
 }

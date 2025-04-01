@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2010 the original author or authors.
  *
@@ -16,193 +14,185 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Common
+public class EmsSession : ISession
 {
-    public class EmsSession : ISession
+    private Session nativeSession;
+
+    public EmsSession(Session session)
     {
-        private Session nativeSession;
+        this.nativeSession = session;
+    }
 
-        public EmsSession(Session session)
-        {
-            this.nativeSession = session;
-        }
+    public Session NativeSession
+    {
+        get { return this.nativeSession; }
+    }
 
-        #region Implementation of ISession
+    public void Close()
+    {
+        nativeSession.Close();
+    }
 
-        public Session NativeSession
-        {
-            get { return this.nativeSession; }
-        }
+    public void Commit()
+    {
+        nativeSession.Commit();
+    }
 
-        public void Close()
-        {
-            nativeSession.Close();
-        }
+    public QueueBrowser CreateBrowser(Queue queue)
+    {
+        return nativeSession.CreateBrowser(queue);
+    }
 
-        public void Commit()
-        {
-            nativeSession.Commit();
-        }
+    public QueueBrowser CreateBrowser(Queue queue, string messageSelector)
+    {
+        return nativeSession.CreateBrowser(queue, messageSelector);
+    }
 
-        public QueueBrowser CreateBrowser(Queue queue)
-        {
-            return nativeSession.CreateBrowser(queue);
-        }
+    public BytesMessage CreateBytesMessage()
+    {
+        return nativeSession.CreateBytesMessage();
+    }
 
-        public QueueBrowser CreateBrowser(Queue queue, string messageSelector)
-        {
-            return nativeSession.CreateBrowser(queue, messageSelector);
-        }
+    public IMessageConsumer CreateConsumer(Destination dest)
+    {
+        return new EmsMessageConsumer(nativeSession.CreateConsumer(dest));
+    }
 
-        public BytesMessage CreateBytesMessage()
-        {
-            return nativeSession.CreateBytesMessage();
-        }
+    public IMessageConsumer CreateConsumer(Destination dest, string messageSelector)
+    {
+        return new EmsMessageConsumer(nativeSession.CreateConsumer(dest, messageSelector));
+    }
 
-        public IMessageConsumer CreateConsumer(Destination dest)
-        {
-            return new EmsMessageConsumer(nativeSession.CreateConsumer(dest));
+    public IMessageConsumer CreateConsumer(Destination dest, string messageSelector, bool noLocal)
+    {
+        return new EmsMessageConsumer(nativeSession.CreateConsumer(dest, messageSelector, noLocal));
+    }
 
-        }
+    public ITopicSubscriber CreateDurableSubscriber(Topic topic, string name)
+    {
+        return new EmsTopicSubscriber(nativeSession.CreateDurableSubscriber(topic, name));
+    }
 
-        public IMessageConsumer CreateConsumer(Destination dest, string messageSelector)
-        {
-            return new EmsMessageConsumer(nativeSession.CreateConsumer(dest, messageSelector));
-        }
+    public ITopicSubscriber CreateDurableSubscriber(Topic topic, string name, string messageSelector, bool noLocal)
+    {
+        return new EmsTopicSubscriber(nativeSession.CreateDurableSubscriber(topic, name, messageSelector, noLocal));
+    }
 
-        public IMessageConsumer CreateConsumer(Destination dest, string messageSelector, bool noLocal)
-        {
-            return new EmsMessageConsumer(nativeSession.CreateConsumer(dest, messageSelector, noLocal));
-        }
+    public MapMessage CreateMapMessage()
+    {
+        return nativeSession.CreateMapMessage();
+    }
 
-        public ITopicSubscriber CreateDurableSubscriber(Topic topic, string name)
-        {
-            return new EmsTopicSubscriber(nativeSession.CreateDurableSubscriber(topic, name));
-        }
+    public Message CreateMessage()
+    {
+        return nativeSession.CreateMessage();
+    }
 
-        public ITopicSubscriber CreateDurableSubscriber(Topic topic, string name, string messageSelector, bool noLocal)
-        {
-            return new EmsTopicSubscriber(nativeSession.CreateDurableSubscriber(topic, name, messageSelector, noLocal));
-        }
+    public ObjectMessage CreateObjectMessage()
+    {
+        return nativeSession.CreateObjectMessage();
+    }
 
-        public MapMessage CreateMapMessage()
-        {
-            return nativeSession.CreateMapMessage();
-        }
+    public ObjectMessage CreateObjectMessage(object obj)
+    {
+        return nativeSession.CreateObjectMessage(obj);
+    }
 
-        public Message CreateMessage()
-        {
-            return nativeSession.CreateMessage();
-        }
+    public IMessageProducer CreateProducer(Destination dest)
+    {
+        return new EmsMessageProducer(nativeSession.CreateProducer(dest));
+    }
 
-        public ObjectMessage CreateObjectMessage()
-        {
-            return nativeSession.CreateObjectMessage();
-        }
+    public Queue CreateQueue(string queueName)
+    {
+        return nativeSession.CreateQueue(queueName);
+    }
 
-        public ObjectMessage CreateObjectMessage(object obj)
-        {
-            return nativeSession.CreateObjectMessage(obj);
-        }
+    public StreamMessage CreateStreamMessage()
+    {
+        return nativeSession.CreateStreamMessage();
+    }
 
-        public IMessageProducer CreateProducer(Destination dest)
-        {
-            return new EmsMessageProducer(nativeSession.CreateProducer(dest));
-        }
+    public TemporaryQueue CreateTemporaryQueue()
+    {
+        return nativeSession.CreateTemporaryQueue();
+    }
 
-        public Queue CreateQueue(string queueName)
-        {
-            return nativeSession.CreateQueue(queueName);
-        }
+    public TemporaryTopic CreateTemporaryTopic()
+    {
+        return nativeSession.CreateTemporaryTopic();
+    }
 
-        public StreamMessage CreateStreamMessage()
-        {
-            return nativeSession.CreateStreamMessage();
-        }
+    public TextMessage CreateTextMessage()
+    {
+        return nativeSession.CreateTextMessage();
+    }
 
-        public TemporaryQueue CreateTemporaryQueue()
-        {
-            return nativeSession.CreateTemporaryQueue();
-        }
+    public TextMessage CreateTextMessage(string text)
+    {
+        return nativeSession.CreateTextMessage(text);
+    }
 
-        public TemporaryTopic CreateTemporaryTopic()
-        {
-            return nativeSession.CreateTemporaryTopic();
-        }
+    public Topic CreateTopic(string topicName)
+    {
+        return nativeSession.CreateTopic(topicName);
+    }
 
-        public TextMessage CreateTextMessage()
-        {
-            return nativeSession.CreateTextMessage();
-        }
+    public void Recover()
+    {
+        nativeSession.Recover();
+    }
 
-        public TextMessage CreateTextMessage(string text)
-        {
-            return nativeSession.CreateTextMessage(text);
-        }
+    public void Rollback()
+    {
+        nativeSession.Rollback();
+    }
 
-        public Topic CreateTopic(string topicName)
-        {
-            return nativeSession.CreateTopic(topicName);
-        }
+    public void Run()
+    {
+        nativeSession.Run();
+    }
 
-        public void Recover()
-        {
-            nativeSession.Recover();
-        }
+    public void Unsubscribe(string name)
+    {
+        nativeSession.Unsubscribe(name);
+    }
 
-        public void Rollback()
-        {
-            nativeSession.Rollback();
-        }
+    public int AcknowledgeMode
+    {
+        get { return nativeSession.AcknowledgeMode; }
+    }
 
-        public void Run()
-        {
-            nativeSession.Run();
-        }
+    // TODO
+    public Connection Connection
+    {
+        get { return nativeSession.Connection; }
+    }
 
-        public void Unsubscribe(string name)
-        {
-            nativeSession.Unsubscribe(name);
-        }
+    public bool IsClosed
+    {
+        get { return nativeSession.IsClosed; }
+    }
 
-        public int AcknowledgeMode
-        {
-            get { return nativeSession.AcknowledgeMode; }
-        }
+    public bool IsTransacted
+    {
+        get { return nativeSession.IsTransacted; }
+    }
 
-        // TODO
-        public Connection Connection
-        {
-            get { return nativeSession.Connection; }
-        }
+    public long SessID
+    {
+        get { return nativeSession.SessID; }
+    }
 
-        public bool IsClosed
-        {
-            get { return nativeSession.IsClosed; }
-        }
+    public SessionMode SessionAcknowledgeMode
+    {
+        get { return nativeSession.SessionAcknowledgeMode; }
+    }
 
-        public bool IsTransacted
-        {
-            get { return nativeSession.IsTransacted; }
-        }
-
-        public long SessID
-        {
-            get { return nativeSession.SessID; }
-        }
-
-        public SessionMode SessionAcknowledgeMode
-        {
-            get { return nativeSession.SessionAcknowledgeMode; }
-        }
-
-        public bool Transacted
-        {
-            get { return nativeSession.Transacted; }
-        }
-
-        #endregion
+    public bool Transacted
+    {
+        get { return nativeSession.Transacted; }
     }
 }

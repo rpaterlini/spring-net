@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,73 +14,68 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 
-namespace Spring.Objects.Factory.Support
+namespace Spring.Objects.Factory.Support;
+
+/// <summary>
+/// Thrown when the validation of an object definition failed.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Rick Evans (.NET)</author>
+[Serializable]
+public class ObjectDefinitionValidationException : FatalObjectException
 {
     /// <summary>
-    /// Thrown when the validation of an object definition failed.
+    /// Creates a new instance of the
+    /// <see cref="Spring.Objects.Factory.Support.ObjectDefinitionValidationException"/>
+    /// class.
     /// </summary>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Rick Evans (.NET)</author>
-    [Serializable]
-    public class ObjectDefinitionValidationException : FatalObjectException
+    public ObjectDefinitionValidationException()
     {
-        #region Constructor (s) / Destructor
-        /// <summary>
-        /// Creates a new instance of the
-        /// <see cref="Spring.Objects.Factory.Support.ObjectDefinitionValidationException"/>
-        /// class.
-        /// </summary>
-        public ObjectDefinitionValidationException ()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Creates a new instance of the
-        /// <see cref="Spring.Objects.Factory.Support.ObjectDefinitionValidationException"/>
-        /// class.
-        /// </summary>
-        /// <param name="message">The detail message.</param>
-        public ObjectDefinitionValidationException (string message)
-            : base (message)
-        {
-        }
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Objects.Factory.Support.ObjectDefinitionValidationException"/>
+    /// class.
+    /// </summary>
+    /// <param name="message">The detail message.</param>
+    public ObjectDefinitionValidationException(string message)
+        : base(message)
+    {
+    }
 
-        /// <summary>
-        /// Creates a new instance of the
-        /// <see cref="Spring.Objects.Factory.Support.ObjectDefinitionValidationException"/>
-        /// class.
-        /// </summary>
-        /// <param name="message">
-        /// The detail message.
-        /// </param>
-        /// <param name="rootCause">
-        /// The root exception that is being wrapped.
-        /// </param>
-        public ObjectDefinitionValidationException (string message, Exception rootCause)
-            : base (message, rootCause)
-        {
-        }
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Objects.Factory.Support.ObjectDefinitionValidationException"/>
+    /// class.
+    /// </summary>
+    /// <param name="message">
+    /// The detail message.
+    /// </param>
+    /// <param name="rootCause">
+    /// The root exception that is being wrapped.
+    /// </param>
+    public ObjectDefinitionValidationException(string message, Exception rootCause)
+        : base(message, rootCause)
+    {
+    }
 
-        /// <summary>
-        /// Creates a new instance of the ObjectDefinitionValidationException class.
-        /// </summary>
-        /// <param name="info">
-        /// The <see cref="System.Runtime.Serialization.SerializationInfo"/>
-        /// that holds the serialized object data about the exception being thrown.
-        /// </param>
-        /// <param name="context">
-        /// The <see cref="System.Runtime.Serialization.StreamingContext"/>
-        /// that contains contextual information about the source or destination.
-        /// </param>
-        protected ObjectDefinitionValidationException (
-            SerializationInfo info, StreamingContext context)
-            : base (info, context)
-        {
-        }
-        #endregion
+    /// <summary>
+    /// Creates a new instance of the ObjectDefinitionValidationException class.
+    /// </summary>
+    /// <param name="info">
+    /// The <see cref="System.Runtime.Serialization.SerializationInfo"/>
+    /// that holds the serialized object data about the exception being thrown.
+    /// </param>
+    /// <param name="context">
+    /// The <see cref="System.Runtime.Serialization.StreamingContext"/>
+    /// that contains contextual information about the source or destination.
+    /// </param>
+    protected ObjectDefinitionValidationException(
+        SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
     }
 }

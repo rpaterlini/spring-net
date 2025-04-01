@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +14,21 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Reflection;
 using System.Collections;
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Aop.Framework;
 
-namespace Spring.Aop.Framework
+/// <summary>
+/// Unit tests for the DynamicMethodInvocation class.
+/// </summary>
+/// <author>Bruno Baia</author>
+[TestFixture]
+public class DynamicMethodInvocationTests : AbstractMethodInvocationTests
 {
-	/// <summary>
-	/// Unit tests for the DynamicMethodInvocation class.
-	/// </summary>
-    /// <author>Bruno Baia</author>
-	[TestFixture]
-    public class DynamicMethodInvocationTests : AbstractMethodInvocationTests
-	{
-        protected override AbstractMethodInvocation CreateMethodInvocation(object proxy, object target, MethodInfo method, MethodInfo onProxyMethod, object[] arguments, Type targetType, IList interceptors)
-        {
-            return new DynamicMethodInvocation(proxy, target, method, onProxyMethod, arguments, targetType, interceptors);
-        }
-	}
+    protected override AbstractMethodInvocation CreateMethodInvocation(object proxy, object target, MethodInfo method, MethodInfo onProxyMethod, object[] arguments, Type targetType, IList interceptors)
+    {
+        return new DynamicMethodInvocation(proxy, target, method, onProxyMethod, arguments, targetType, interceptors);
+    }
 }

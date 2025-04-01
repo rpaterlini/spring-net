@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,76 +14,68 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Collections;
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Threading;
 
-namespace Spring.Threading
+/// <summary>
+/// Test behaviour of LogicalThreadContext
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class LogicalThreadContextTest
 {
-    /// <summary>
-    /// Test behaviour of LogicalThreadContext
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class LogicalThreadContextTest
+    private class MockStorage : IThreadStorage
     {
-        private class MockStorage : IThreadStorage
+        internal Hashtable data = new Hashtable();
+
+        public object GetData(string name)
         {
-            internal Hashtable data = new Hashtable();
-
-            public object GetData(string name)
-            {
-                return data[name];
-            }
-
-            public void SetData(string name, object value)
-            {
-                data[name] = value;
-            }
-
-            public void FreeNamedDataSlot(string name)
-            {
-                data.Remove(name);
-            }
+            return data[name];
         }
 
-        [Test]
-        public void StorageMustNotBeNull()
+        public void SetData(string name, object value)
         {
-            Assert.Throws<ArgumentNullException>(() => LogicalThreadContext.SetStorage(null));
+            data[name] = value;
         }
 
-        [Test]
-        public void StorageMayBeSetMoreThanOnce()
+        public void FreeNamedDataSlot(string name)
         {
-            LogicalThreadContext.SetStorage(new MockStorage());
-            LogicalThreadContext.SetStorage(new MockStorage());
-            LogicalThreadContext.SetStorage(new MockStorage());
+            data.Remove(name);
         }
+    }
 
-        [Test]
-        public void StorageIsUsedByFacadeMethods()
-        {
-            MockStorage storage = new MockStorage();
-            LogicalThreadContext.SetStorage(storage);
+    [Test]
+    public void StorageMustNotBeNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => LogicalThreadContext.SetStorage(null));
+    }
 
-            object value = new object();
+    [Test]
+    public void StorageMayBeSetMoreThanOnce()
+    {
+        LogicalThreadContext.SetStorage(new MockStorage());
+        LogicalThreadContext.SetStorage(new MockStorage());
+        LogicalThreadContext.SetStorage(new MockStorage());
+    }
 
-            LogicalThreadContext.SetData("key", value);
-            Assert.AreSame( value, storage.data["key"] );
+    [Test]
+    public void StorageIsUsedByFacadeMethods()
+    {
+        MockStorage storage = new MockStorage();
+        LogicalThreadContext.SetStorage(storage);
 
-            object data = LogicalThreadContext.GetData("key");
-            Assert.AreSame(value, data);
+        object value = new object();
 
-            LogicalThreadContext.FreeNamedDataSlot("key");
+        LogicalThreadContext.SetData("key", value);
+        Assert.AreSame(value, storage.data["key"]);
 
-            Assert.IsFalse( storage.data.ContainsKey("key") );
-        }
+        object data = LogicalThreadContext.GetData("key");
+        Assert.AreSame(value, data);
+
+        LogicalThreadContext.FreeNamedDataSlot("key");
+
+        Assert.IsFalse(storage.data.ContainsKey("key"));
     }
 }

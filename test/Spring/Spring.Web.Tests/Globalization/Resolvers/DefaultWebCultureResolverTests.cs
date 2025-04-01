@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,103 +14,92 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Globalization;
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Globalization.Resolvers;
 
-namespace Spring.Globalization.Resolvers
+/// <summary>
+/// Tests DefaultWebCultureResolver behaviour.
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class DefaultWebCultureResolverTests
 {
     /// <summary>
-    /// Tests DefaultWebCultureResolver behaviour.
+    /// Override GetRequestLanguage() to return test language instead of HttpRequest.UserLanguages[0]
     /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class DefaultWebCultureResolverTests
+    public class TestDefaultWebCultureResolver : DefaultWebCultureResolver
     {
-        #region TestDefaultWebCultureResolver utility class
+        private string _requestLanguage;
 
-        /// <summary>
-        /// Override GetRequestLanguage() to return test language instead of HttpRequest.UserLanguages[0]
-        /// </summary>
-        public class TestDefaultWebCultureResolver : DefaultWebCultureResolver
+        // convenience setter method
+        public TestDefaultWebCultureResolver SetRequestLanguage(string requestLanguage)
         {
-            private string _requestLanguage;
-
-            // convenience setter method
-            public TestDefaultWebCultureResolver SetRequestLanguage(string requestLanguage)
-            {
-                _requestLanguage = requestLanguage;
-                return this;
-            }
-
-            // override to return our test language instead of HttpRequest.UserLanguages[0]!
-            protected override string GetRequestLanguage()
-            {
-                return _requestLanguage;
-            }
+            _requestLanguage = requestLanguage;
+            return this;
         }
 
-        #endregion
-
-        private readonly CultureInfo EXPECTED_NEUTRALCULTURE = new CultureInfo("fr");
-
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
+        // override to return our test language instead of HttpRequest.UserLanguages[0]!
+        protected override string GetRequestLanguage()
         {
-            // ensure, uiCulture and culture are set to different cultures
-            CultureTestScope.Set();
+            return _requestLanguage;
         }
+    }
 
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            CultureTestScope.Reset();
-        }
+    private readonly CultureInfo EXPECTED_NEUTRALCULTURE = new CultureInfo("fr");
 
-        [Test]
-        public void DefaultCultureDefaultsToNull()
-        {
-            TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
-            Assert.IsNull(r.DefaultCulture);
-        }
+    [OneTimeSetUp]
+    public void TestFixtureSetUp()
+    {
+        // ensure, uiCulture and culture are set to different cultures
+        CultureTestScope.Set();
+    }
 
-        [Test]
-        public void AlwaysReturnsDefaultCultureIfDefaultCultureIsSet()
-        {
-            TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
-            r.DefaultCulture = EXPECTED_NEUTRALCULTURE;
+    [OneTimeTearDown]
+    public void TestFixtureTearDown()
+    {
+        CultureTestScope.Reset();
+    }
 
-            r.SetRequestLanguage(null);
-            Assert.AreEqual(EXPECTED_NEUTRALCULTURE, r.ResolveCulture());
+    [Test]
+    public void DefaultCultureDefaultsToNull()
+    {
+        TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
+        Assert.IsNull(r.DefaultCulture);
+    }
 
-            r.SetRequestLanguage("de");
-            Assert.AreEqual(EXPECTED_NEUTRALCULTURE, r.ResolveCulture());
-        }
+    [Test]
+    public void AlwaysReturnsDefaultCultureIfDefaultCultureIsSet()
+    {
+        TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
+        r.DefaultCulture = EXPECTED_NEUTRALCULTURE;
 
-        [Test]
-        public void ReturnsRequestCultureIfNoDefaultCulture()
-        {
-            TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
-            
-            r.SetRequestLanguage(EXPECTED_NEUTRALCULTURE.Name);
-            Assert.AreEqual(EXPECTED_NEUTRALCULTURE, r.ResolveCulture());
-        }
+        r.SetRequestLanguage(null);
+        Assert.AreEqual(EXPECTED_NEUTRALCULTURE, r.ResolveCulture());
 
-        [Test]
-        public void ReturnsCurrentUICultureIfNoDefaultCultureIsSetAndNoOrInvalidRequestLanguage()
-        {
-            TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
+        r.SetRequestLanguage("de");
+        Assert.AreEqual(EXPECTED_NEUTRALCULTURE, r.ResolveCulture());
+    }
 
-            r.SetRequestLanguage(null);
-            Assert.AreEqual(CultureInfo.CurrentUICulture, r.ResolveCulture());
-            
-            r.SetRequestLanguage("invalid culture name");
-            Assert.AreEqual(CultureInfo.CurrentUICulture, r.ResolveCulture());
-        }
+    [Test]
+    public void ReturnsRequestCultureIfNoDefaultCulture()
+    {
+        TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
+
+        r.SetRequestLanguage(EXPECTED_NEUTRALCULTURE.Name);
+        Assert.AreEqual(EXPECTED_NEUTRALCULTURE, r.ResolveCulture());
+    }
+
+    [Test]
+    public void ReturnsCurrentUICultureIfNoDefaultCultureIsSetAndNoOrInvalidRequestLanguage()
+    {
+        TestDefaultWebCultureResolver r = new TestDefaultWebCultureResolver();
+
+        r.SetRequestLanguage(null);
+        Assert.AreEqual(CultureInfo.CurrentUICulture, r.ResolveCulture());
+
+        r.SetRequestLanguage("invalid culture name");
+        Assert.AreEqual(CultureInfo.CurrentUICulture, r.ResolveCulture());
     }
 }

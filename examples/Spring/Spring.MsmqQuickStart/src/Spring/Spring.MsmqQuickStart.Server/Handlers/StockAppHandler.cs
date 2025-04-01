@@ -2,7 +2,7 @@
 
 using System.Collections;
 using System.Threading;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Spring.MsmqQuickStart.Common.Data;
 using Spring.MsmqQuickStart.Server.Services;
 using Spring.Util;
@@ -11,7 +11,7 @@ namespace Spring.MsmqQuickStart.Server.Handlers
 {
     public class StockAppHandler
     {
-        private readonly ILog log = LogManager.GetLogger(typeof(StockAppHandler));
+        private readonly ILogger log = LogManager.GetLogger(typeof(StockAppHandler));
 
         private readonly IExecutionVenueService executionVenueService;
         private readonly ICreditCheckService creditCheckService;
@@ -26,7 +26,7 @@ namespace Spring.MsmqQuickStart.Server.Handlers
 
         public TradeResponse Handle(TradeRequest tradeRequest)
         {
-            log.Info("received trade request - sleeping 2s to simulate long-running task");
+            log.LogInformation("received trade request - sleeping 2s to simulate long-running task");
             TradeResponse tradeResponse;
             ArrayList errors = new ArrayList();
             if (creditCheckService.CanExecute(tradeRequest, errors))

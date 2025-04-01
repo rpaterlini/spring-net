@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,52 +14,50 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 
-namespace Spring.Expressions
+namespace Spring.Expressions;
+
+/// <summary>
+/// Represents logical IS operator.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[Serializable]
+public class OpIs : BinaryOperator
 {
     /// <summary>
-    /// Represents logical IS operator.
+    /// Create a new instance
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [Serializable]
-    public class OpIs : BinaryOperator
+    public OpIs() : base()
     {
-        /// <summary>
-        /// Create a new instance
-        /// </summary>
-        public OpIs():base()
+    }
+
+    /// <summary>
+    /// Create a new instance from SerializationInfo
+    /// </summary>
+    protected OpIs(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
+
+    /// <summary>
+    /// Returns a value for the logical IS operator node.
+    /// </summary>
+    /// <param name="context">Context to evaluate expressions against.</param>
+    /// <param name="evalContext">Current expression evaluation context.</param>
+    /// <returns>
+    /// true if the left operand is contained within the right operand, false otherwise.
+    /// </returns>
+    protected override object Get(object context, EvaluationContext evalContext)
+    {
+        object instance = GetLeftValue(context, evalContext);
+        Type type = GetRightValue(context, evalContext) as Type;
+
+        if (instance == null || type == null)
         {
+            return false;
         }
 
-        /// <summary>
-        /// Create a new instance from SerializationInfo
-        /// </summary>
-        protected OpIs(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        /// <summary>
-        /// Returns a value for the logical IS operator node.
-        /// </summary>
-        /// <param name="context">Context to evaluate expressions against.</param>
-        /// <param name="evalContext">Current expression evaluation context.</param>
-        /// <returns>
-        /// true if the left operand is contained within the right operand, false otherwise.
-        /// </returns>
-        protected override object Get(object context, EvaluationContext evalContext)
-        {
-            object instance = GetLeftValue( context, evalContext );
-            Type type = GetRightValue( context, evalContext ) as Type;
-
-            if (instance == null || type == null)
-            {
-                return false;
-            }
-            return type.IsAssignableFrom(instance.GetType());
-        }
+        return type.IsAssignableFrom(instance.GetType());
     }
 }

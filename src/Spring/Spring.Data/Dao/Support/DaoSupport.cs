@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,94 +14,68 @@
  * limitations under the License.
  */
 
-#endregion
-
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Spring.Objects.Factory;
 
-namespace Spring.Dao.Support
+namespace Spring.Dao.Support;
+
+/// <summary>
+/// Generic base class for DAOs, defining template methods for DAO initialization.
+/// </summary>
+/// <remarks>
+/// Extended by Spring's specific DAO support classes, such as:
+///  AdoDaoSupport, HibernateDaoSupport, etc.
+/// </remarks>
+/// <author>Mark Pollack (.NET)</author>
+public abstract class DaoSupport : IInitializingObject
 {
-	/// <summary>
-	/// Generic base class for DAOs, defining template methods for DAO initialization.
-	/// </summary>
-	/// <remarks>
-    /// Extended by Spring's specific DAO support classes, such as:
-    ///  AdoDaoSupport, HibernateDaoSupport, etc.
-	/// </remarks>
-	/// <author>Mark Pollack (.NET)</author>
-	public abstract class DaoSupport : IInitializingObject
-	{
-		#region Fields
+    /// <summary>
+    /// The shared <see cref="ILogger"/> instance for this class (and derived classes).
+    /// </summary>
+    protected static readonly ILogger log = LogManager.GetLogger(typeof(DaoSupport));
 
-		#endregion
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DaoSupport"/> class.
+    /// </summary>
+    public DaoSupport()
+    {
+    }
 
-		#region Constants
+    /// <summary>
+    /// Abstract subclasses must override this to check their configuration.
+    /// </summary>
+    /// <remarks>
+    /// <p>Implementors should be marked as <code>sealed</code>, to make it clear that
+    /// concrete subclasses are not supposed to override this template method themselves.
+    /// </p>
+    /// </remarks>
+    protected abstract void CheckDaoConfig();
 
-		/// <summary>
-		/// The shared <see cref="Common.Logging.ILog"/> instance for this class (and derived classes).
-		/// </summary>
-		protected static readonly ILog log =
-			LogManager.GetLogger(typeof (DaoSupport));
+    /// <summary>
+    /// Concrete subclasses can override this for custom initialization behavior.
+    /// </summary>
+    /// <remarks>
+    /// Gets called after population of this instance's object properties.
+    /// Exception thrown if InitDao fails will be rethrown as
+    /// a ObjectInitializationException.
+    /// </remarks>
+    protected virtual void InitDao()
+    {
+    }
 
-		#endregion
+    public void AfterPropertiesSet()
+    {
+        // Let abstract subclasses check their configuration.
+        CheckDaoConfig();
 
-		#region Constructor (s)
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DaoSupport"/> class.
-                /// </summary>
-		public 	DaoSupport()
-		{
-
-		}
-
-		#endregion
-
-		#region Properties
-
-		#endregion
-
-		#region Methods
-
-        /// <summary>
-        /// Abstract subclasses must override this to check their configuration.
-        /// </summary>
-        /// <remarks>
-        /// <p>Implementors should be marked as <code>sealed</code>, to make it clear that
-        /// concrete subclasses are not supposed to override this template method themselves.
-        /// </p>
-        /// </remarks>
-        protected abstract void CheckDaoConfig();
-
-        /// <summary>
-        /// Concrete subclasses can override this for custom initialization behavior.
-        /// </summary>
-        /// <remarks>
-        /// Gets called after population of this instance's object properties.
-        /// Exception thrown if InitDao fails will be rethrown as
-        /// a ObjectInitializationException.
-        /// </remarks>
-        protected virtual void InitDao()
+        // Let concrete implementations initialize themselves.
+        try
         {
-
+            InitDao();
         }
-
-
-		#endregion
-
-	    public void AfterPropertiesSet()
-	    {
-            // Let abstract subclasses check their configuration.
-            CheckDaoConfig();
-
-            // Let concrete implementations initialize themselves.
-            try
-            {
-                InitDao();
-            }
-            catch (Exception ex)
-            {
-                throw new ObjectInitializationException("Initialization of DAO failed: " + ex.Message, ex);
-            }
-	    }
-	}
+        catch (Exception ex)
+        {
+            throw new ObjectInitializationException("Initialization of DAO failed: " + ex.Message, ex);
+        }
+    }
 }

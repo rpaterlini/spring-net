@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,62 +14,41 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Xml;
 
-#region Imports
-
-
-
-#endregion
-
-namespace Spring.Objects.Factory.Xml
+/// <summary>
+/// Simple object used to check dependency checking.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Rick Evans (.NET)</author>
+public class DependenciesObject
 {
-	/// <summary>
-	/// Simple object used to check dependency checking.
-	/// </summary>
-	/// <author>Rod Johnson</author>
-	/// <author>Rick Evans (.NET)</author>
-	public class DependenciesObject
-	{
-		#region Constructor (s) / Destructor
+    /// <summary>
+    /// Creates a new instance of the  DependenciesObject class.
+    /// </summary>
+    public DependenciesObject()
+    {
+    }
 
-		/// <summary>
-		/// Creates a new instance of the  DependenciesObject class.
-		/// </summary>
-		public DependenciesObject()
-		{
-		}
+    public int Age
+    {
+        get { return age; }
+        set { this.age = value; }
+    }
 
-		#endregion
+    public string Name
+    {
+        get { return name; }
+        set { this.name = value; }
+    }
 
-		#region Properties
+    public ITestObject Spouse
+    {
+        get { return spouse; }
+        set { this.spouse = value; }
+    }
 
-		public int Age
-		{
-			get { return age; }
-			set { this.age = value; }
-		}
-
-		public string Name
-		{
-			get { return name; }
-			set { this.name = value; }
-		}
-
-		public ITestObject Spouse
-		{
-			get { return spouse; }
-			set { this.spouse = value; }
-		}
-
-		#endregion
-
-		#region Fields
-
-		private int age;
-		private string name;
-		private ITestObject spouse;
-
-		#endregion
-	}
+    private int age;
+    private string name;
+    private ITestObject spouse;
 }

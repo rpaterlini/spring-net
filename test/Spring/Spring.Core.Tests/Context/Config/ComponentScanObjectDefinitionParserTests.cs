@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +14,6 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System.Linq;
 using NUnit.Framework;
 using Spring.Context.Attributes;
 using Spring.Context.Support;
@@ -48,7 +43,7 @@ namespace Spring.Context.Config
             _applicationContext = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("ConfigFiles.ComponentScan1.xml", GetType()));
             var objectDefinitionNames = _applicationContext.ObjectFactory.GetObjectDefinitionNames();
 
-            Assert.That(objectDefinitionNames.Count, Is.EqualTo(5+4));
+            Assert.That(objectDefinitionNames.Count, Is.EqualTo(5 + 4));
             Assert.That(_applicationContext.GetObject(prefix + "ComponentImpl"), Is.Not.Null);
             Assert.That(_applicationContext.GetObject(prefix + "ServiceImpl"), Is.Not.Null);
             Assert.That(_applicationContext.GetObject(prefix + "RepositoryImpl"), Is.Not.Null);
@@ -88,6 +83,7 @@ namespace Spring.Context.Config
             Assert.That(objectDefinitionNames.Contains("prototype"), Is.False);
             Assert.That(objectDefinitionNames.Contains("ComponentScan.NameGenerator.Prototype"), Is.True);
         }
+
         [Test]
         public void ComponentsLazyLoaded()
         {
@@ -123,10 +119,10 @@ namespace Spring.Context.Config
         [Test]
         public void ComponentsUseDefaultAutoWire()
         {
-           _applicationContext = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("ConfigFiles.ComponentScan5.xml", GetType()));
-           var prototypeDef = _applicationContext.ObjectFactory.GetObjectDefinition("Prototype");
+            _applicationContext = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("ConfigFiles.ComponentScan5.xml", GetType()));
+            var prototypeDef = _applicationContext.ObjectFactory.GetObjectDefinition("Prototype");
 
-           Assert.That(prototypeDef.AutowireMode == AutoWiringMode.ByName);
+            Assert.That(prototypeDef.AutowireMode == AutoWiringMode.ByName);
         }
 
         [Test]
@@ -137,7 +133,7 @@ namespace Spring.Context.Config
 
             Assert.That(objectDef.HasQualifier(typeof(QualifierAttribute).Name), Is.True);
 
-            var attr = objectDef.GetQualifier(typeof (QualifierAttribute).Name).GetAttribute(AutowireCandidateQualifier.VALUE_KEY);
+            var attr = objectDef.GetQualifier(typeof(QualifierAttribute).Name).GetAttribute(AutowireCandidateQualifier.VALUE_KEY);
             Assert.That(attr, Is.EqualTo("action"));
         }
 
@@ -146,7 +142,7 @@ namespace Spring.Context.Config
         {
             _applicationContext = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("ConfigFiles.ComponentScan6.xml", GetType()));
             var objectDef = _applicationContext.ObjectFactory.GetObjectDefinition("Attribute") as ScannedGenericObjectDefinition;
-            var qualifier = objectDef.GetQualifier(typeof (MyQualifier).Name);
+            var qualifier = objectDef.GetQualifier(typeof(MyQualifier).Name);
 
             Assert.That(qualifier, Is.Not.Null);
 
@@ -180,7 +176,6 @@ namespace Spring.Context.Config
             Assert.That(objectDefintionNames.Contains(AttributeConfigUtils.REQUIRED_ATTRIBUTE_PROCESSOR_OBJECT_NAME), Is.True);
             Assert.That(objectDefintionNames.Contains(AttributeConfigUtils.INITDESTROY_ATTRIBUTE_PROCESSOR_OBJECT_NAME), Is.True);
         }
-
     }
 }
 
@@ -278,7 +273,7 @@ namespace ComponentScan.ComponentsUseDefaults
     public interface IFoo
     {
     }
-    
+
     [Component("Prototype")]
     public class PrototypeImpl : IFoo
     {
@@ -303,11 +298,10 @@ namespace ComponentScan.Qualifier
     }
 
     [Component("Attribute")]
-    [MyQualifier(Foo="Funny")]
+    [MyQualifier(Foo = "Funny")]
     public class QualifierAttributeImpl : IFoo
     {
     }
-
 }
 
 namespace ComponentScan.NameGenerator

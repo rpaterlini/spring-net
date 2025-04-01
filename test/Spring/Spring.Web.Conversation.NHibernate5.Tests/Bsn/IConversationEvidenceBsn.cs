@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Bsn;
 
-using System;
-
-namespace Spring.Bsn
+/// <summary>
+/// Simulates a business infrastructure in order to demonstrate the end of
+/// the conversation.
+/// </summary>
+public interface IConversationEvidenceBsn
 {
     /// <summary>
-    /// Simulates a business infrastructure in order to demonstrate the end of 
-    /// the conversation.
+    /// Return a unique id per instance.
     /// </summary>
-    public interface IConversationEvidenceBsn
-    {
-        /// <summary>
-        /// Return a unique id per instance.
-        /// </summary>
-        /// <returns></returns>
-        String UniqueId();
-    }
+    /// <returns></returns>
+    String UniqueId();
 }

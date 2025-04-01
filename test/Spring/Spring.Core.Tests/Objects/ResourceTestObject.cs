@@ -1,6 +1,5 @@
-#region License
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,44 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#endregion
-#region Imports
 
-using System.IO;
 using Spring.Core.IO;
-#endregion
-namespace Spring.Objects
+
+namespace Spring.Objects;
+
+/// <summary>
+/// Object for testing IResource instances.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Mark Pollack (.NET)</author>
+public class ResourceTestObject
 {
-    /// <summary>
-    /// Object for testing IResource instances.
-    /// </summary>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Mark Pollack (.NET)</author>
-    public class ResourceTestObject
+    private IResource resource;
+    private Stream inputStream;
+
+    public ResourceTestObject()
     {
-        private IResource resource;
-        private Stream inputStream;
-        public ResourceTestObject()
-        {
-        }
-        public ResourceTestObject(IResource resource)
-        {
-            this.resource = resource;
-        }
-        public ResourceTestObject(IResource resource, Stream inputStream)
-        {
-            this.resource = resource;
-            this.inputStream = inputStream;
-        }
-        public IResource Resource
-        {
-            get { return this.resource; }
-            set { this.resource = value; }
-        }
-        public Stream InputStream
-        {
-            get { return this.inputStream; }
-            set { this.inputStream = value; }
-        }
+    }
+
+    public ResourceTestObject(IResource resource)
+    {
+        this.resource = resource;
+    }
+
+    public ResourceTestObject(IResource resource, Stream inputStream)
+    {
+        this.resource = resource;
+        this.inputStream = inputStream;
+    }
+
+    public IResource Resource
+    {
+        get { return this.resource; }
+        set { this.resource = value; }
+    }
+
+    public Stream InputStream
+    {
+        get { return this.inputStream; }
+        set { this.inputStream = value; }
     }
 }

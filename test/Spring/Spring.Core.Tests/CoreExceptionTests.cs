@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,29 +14,22 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Reflection;
 using NUnit.Framework;
 using Spring.Objects;
 
-#endregion
+namespace Spring;
 
-namespace Spring
+/// <summary>
+/// Unit tests for all of the exception classes in the Spring.Core library...
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class CoreExceptionTests : ExceptionsTest
 {
-    /// <summary>
-    /// Unit tests for all of the exception classes in the Spring.Core library...
-    /// </summary>
-    /// <author>Rick Evans</author>
-    [TestFixture]
-    public sealed class CoreExceptionTests : ExceptionsTest
+    [OneTimeSetUp]
+    public void FixtureSetUp()
     {
-        [OneTimeSetUp]
-        public void FixtureSetUp()
-        {
-            AssemblyToCheck = Assembly.GetAssembly(typeof (ObjectsException));
-        }
+        AssemblyToCheck = Assembly.GetAssembly(typeof(ObjectsException));
     }
 }

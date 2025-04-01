@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,52 +14,53 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 
-namespace Spring.Dao
+namespace Spring.Dao;
+
+/// <summary>
+/// Exception thrown on mismatch between CLS type and database type:
+/// for example on an attempt to set an object of the wrong type
+/// in an RDBMS column.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Griffin Caprio (.NET)</author>
+[Serializable]
+public class TypeMismatchDataAccessException : InvalidDataAccessResourceUsageException
 {
-	/// <summary>
-	/// Exception thrown on mismatch between CLS type and database type:
-	/// for example on an attempt to set an object of the wrong type
-	/// in an RDBMS column.
-	/// </summary>
-	/// <author>Rod Johnson</author>
-	/// <author>Griffin Caprio (.NET)</author>
-	[Serializable]
-	public class TypeMismatchDataAccessException : InvalidDataAccessResourceUsageException
-	{
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Dao.TypeMismatchDataAccessException"/> class.
-		/// </summary>
-		public TypeMismatchDataAccessException() {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Dao.TypeMismatchDataAccessException"/> class.
+    /// </summary>
+    public TypeMismatchDataAccessException() { }
 
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Dao.TypeMismatchDataAccessException"/> class.
-		/// </summary>
-		/// <param name="message">
-		/// A message about the exception.
-		/// </param>
-		public TypeMismatchDataAccessException( string message ) : base( message ) {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Dao.TypeMismatchDataAccessException"/> class.
+    /// </summary>
+    /// <param name="message">
+    /// A message about the exception.
+    /// </param>
+    public TypeMismatchDataAccessException(string message) : base(message) { }
 
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Dao.TypeMismatchDataAccessException"/> class.
-		/// </summary>
-		/// <param name="message">
-		/// A message about the exception.
-		/// </param>
-		/// <param name="rootCause">
-		/// The root exception (from the underlying data access API, such as ADO.NET).
-		/// </param>
-		public TypeMismatchDataAccessException( string message, Exception rootCause)
-			: base( message , rootCause ) {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Dao.TypeMismatchDataAccessException"/> class.
+    /// </summary>
+    /// <param name="message">
+    /// A message about the exception.
+    /// </param>
+    /// <param name="rootCause">
+    /// The root exception (from the underlying data access API, such as ADO.NET).
+    /// </param>
+    public TypeMismatchDataAccessException(string message, Exception rootCause)
+        : base(message, rootCause)
+    {
+    }
 
-		/// <inheritdoc />
-		protected TypeMismatchDataAccessException(
-			SerializationInfo info, StreamingContext context ) : base( info, context ) {}
-	}
+    /// <inheritdoc />
+    protected TypeMismatchDataAccessException(
+        SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 }

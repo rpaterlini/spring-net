@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +14,16 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Objects.Support;
 
-namespace Spring.Objects.Support
+/// <summary>
+///
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class ByTypeSharedStateProviderTests
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class ByTypeSharedStateProviderTests
-    {
-         // TODO
-    }
+    // TODO
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2010 the original author or authors.
  *
@@ -16,20 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Common
+public interface IMessageConsumer
 {
-    public interface IMessageConsumer
-    {
-        MessageConsumer NativeMessageConsumer { get; }
-        event EMSMessageHandler MessageHandler;
-        IMessageListener MessageListener { get; set; }
-        string MessageSelector { get; }
-        void Close();
-        Message Receive();
-        Message Receive(long timeout);
-        Message ReceiveNoWait();
-        string ToString();
-    }
+    MessageConsumer NativeMessageConsumer { get; }
+    event EMSMessageHandler MessageHandler;
+    IMessageListener MessageListener { get; set; }
+    string MessageSelector { get; }
+    void Close();
+    Message Receive();
+    Message Receive(long timeout);
+    Message ReceiveNoWait();
+    string ToString();
 }

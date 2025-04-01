@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +14,20 @@
  * limitations under the License.
  */
 
-#endregion
-
 using NUnit.Framework;
-
 using Spring.Objects.Factory.Support;
 
-namespace Spring.Context.Attributes
+namespace Spring.Context.Attributes;
+
+[TestFixture]
+public class ConfigurationClassObjectDefinitionReaderTests
 {
-    [TestFixture]
-    public class ConfigurationClassObjectDefinitionReaderTests
+    [Test]
+    public void ShouldNotTryToResolveAbstractDefinitionsToType()
     {
-        [Test]
-        public void ShouldNotTryToResolveAbstractDefinitionsToType()
-        {
-            GenericObjectDefinition definition = new GenericObjectDefinition();
-            definition.ObjectTypeName = "~/Default.aspx";
-            definition.IsAbstract = true;
-            Assert.That(ConfigurationClassObjectDefinitionReader.CheckConfigurationClassCandidate(definition), Is.False);
-        }
+        GenericObjectDefinition definition = new GenericObjectDefinition();
+        definition.ObjectTypeName = "~/Default.aspx";
+        definition.IsAbstract = true;
+        Assert.That(ConfigurationClassObjectDefinitionReader.CheckConfigurationClassCandidate(definition), Is.False);
     }
 }

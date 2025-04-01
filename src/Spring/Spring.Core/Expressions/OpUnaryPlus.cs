@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,51 +14,49 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 using Spring.Util;
 
-namespace Spring.Expressions
+namespace Spring.Expressions;
+
+/// <summary>
+/// Represents unary plus operator.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[Serializable]
+public class OpUnaryPlus : UnaryOperator
 {
     /// <summary>
-    /// Represents unary plus operator.
+    /// Create a new instance
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [Serializable]
-    public class OpUnaryPlus : UnaryOperator
+    public OpUnaryPlus() : base()
     {
-        /// <summary>
-        /// Create a new instance
-        /// </summary>
-        public OpUnaryPlus():base()
+    }
+
+    /// <summary>
+    /// Create a new instance from SerializationInfo
+    /// </summary>
+    protected OpUnaryPlus(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
+
+    /// <summary>
+    /// Returns a value for the unary plus operator node.
+    /// </summary>
+    /// <param name="context">Context to evaluate expressions against.</param>
+    /// <param name="evalContext">Current expression evaluation context.</param>
+    /// <returns>Node's value.</returns>
+    protected override object Get(object context, EvaluationContext evalContext)
+    {
+        object n = GetValue(Operand, context, evalContext);
+
+        if (!NumberUtils.IsNumber(n))
         {
+            throw new ArgumentException(
+                "Specified operand is not a number. Only numbers support unary plus operator.");
         }
 
-        /// <summary>
-        /// Create a new instance from SerializationInfo
-        /// </summary>
-        protected OpUnaryPlus(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        /// <summary>
-        /// Returns a value for the unary plus operator node.
-        /// </summary>
-        /// <param name="context">Context to evaluate expressions against.</param>
-        /// <param name="evalContext">Current expression evaluation context.</param>
-        /// <returns>Node's value.</returns>
-        protected override object Get(object context, EvaluationContext evalContext)
-        {
-            object n = GetValue(Operand, context, evalContext);
-
-            if (!NumberUtils.IsNumber(n))
-            {
-                throw new ArgumentException(
-                    "Specified operand is not a number. Only numbers support unary plus operator.");
-            }
-            return n;
-        }
+        return n;
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,27 +14,20 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Aop;
 
-#region Imports
-
-#endregion
-
-namespace Spring.Aop
+/// <summary>
+/// AOP Aspect abstraction, holding a list of <see cref="Spring.Aop.IAdvisor"/>s
+/// </summary>
+/// <seealso cref="IAdvisor"/>
+/// <author>Aleksandar Seovic (.NET)</author>
+public interface IAdvisors
 {
-	/// <summary>
-	/// AOP Aspect abstraction, holding a list of <see cref="Spring.Aop.IAdvisor"/>s
-	/// </summary>
-    /// <seealso cref="IAdvisor"/>
-    /// <author>Aleksandar Seovic (.NET)</author>
-	public interface IAdvisors
-	{
-        /// <summary>
-        /// Gets or sets a list of advisors.
-        /// </summary>
-        /// <value>
-        /// A list of advisors.
-        /// </value>
-		IList<IAdvisor> Advisors { get; set; }
-	}
+    /// <summary>
+    /// Gets or sets a list of advisors.
+    /// </summary>
+    /// <value>
+    /// A list of advisors.
+    /// </value>
+    IList<IAdvisor> Advisors { get; set; }
 }

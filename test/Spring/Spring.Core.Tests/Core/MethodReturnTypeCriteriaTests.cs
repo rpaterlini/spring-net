@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,48 +14,42 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Reflection;
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Core;
 
-namespace Spring.Core
+/// <summary>
+/// Unit tests for the MethodReturnTypeCriteria class.
+/// </summary>
+[TestFixture]
+public sealed class MethodReturnTypeCriteriaTests
 {
-	/// <summary>
-	/// Unit tests for the MethodReturnTypeCriteria class.
-    /// </summary>
-	[TestFixture]
-    public sealed class MethodReturnTypeCriteriaTests
+    [Test]
+    public void IsSatisfied()
     {
-        [Test]
-        public void IsSatisfied () {
-            MethodReturnTypeCriteria criteria = new MethodReturnTypeCriteria (typeof (bool));
-            MethodInfo method = GetType ().GetMethod ("SomeKindOfWonderful", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.IsTrue (criteria.IsSatisfied (method));
-        }
+        MethodReturnTypeCriteria criteria = new MethodReturnTypeCriteria(typeof(bool));
+        MethodInfo method = GetType().GetMethod("SomeKindOfWonderful", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsTrue(criteria.IsSatisfied(method));
+    }
 
-        private bool SomeKindOfWonderful () 
-        {
-            return true;
-        }
+    private bool SomeKindOfWonderful()
+    {
+        return true;
+    }
 
-        [Test]
-        public void IsSatisfiedWithVoidByDefault () 
-        {
-            MethodReturnTypeCriteria criteria = new MethodReturnTypeCriteria ();
-            MethodInfo method = GetType ().GetMethod ("IsSatisfied");
-            Assert.IsTrue (criteria.IsSatisfied (method));
-        }
-        
-        [Test]
-        public void IsNotSatisfiedWithNull () {
-            MethodReturnTypeCriteria criteria = new MethodReturnTypeCriteria ();
-            Assert.IsFalse (criteria.IsSatisfied (null));
-        }
-	}
+    [Test]
+    public void IsSatisfiedWithVoidByDefault()
+    {
+        MethodReturnTypeCriteria criteria = new MethodReturnTypeCriteria();
+        MethodInfo method = GetType().GetMethod("IsSatisfied");
+        Assert.IsTrue(criteria.IsSatisfied(method));
+    }
+
+    [Test]
+    public void IsNotSatisfiedWithNull()
+    {
+        MethodReturnTypeCriteria criteria = new MethodReturnTypeCriteria();
+        Assert.IsFalse(criteria.IsSatisfied(null));
+    }
 }

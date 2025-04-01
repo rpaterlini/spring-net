@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,25 +14,20 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Util;
 
-namespace Spring.Util
+/// <summary>
+/// A strategy for handling errors.  This is especially useful for handling
+/// errors that occur during asynchronous execution as in such cases it may not be
+/// possible to throw the error to the original caller.
+/// </summary>
+/// <author>Mark Fisher</author>
+/// <author>Mark Pollack (.NET)</author>
+public interface IErrorHandler
 {
     /// <summary>
-    /// A strategy for handling errors.  This is especially useful for handling
-    /// errors that occur during asynchronous execution as in such cases it may not be
-    /// possible to throw the error to the original caller.
+    /// Handles the error.
     /// </summary>
-    /// <author>Mark Fisher</author>
-    /// <author>Mark Pollack (.NET)</author>
-    public interface IErrorHandler
-    {
-        /// <summary>
-        /// Handles the error.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        void HandleError(Exception exception);
-
-    }
-
+    /// <param name="exception">The exception.</param>
+    void HandleError(Exception exception);
 }

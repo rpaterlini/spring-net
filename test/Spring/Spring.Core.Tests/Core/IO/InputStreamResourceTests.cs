@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,95 +14,87 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
-using System.IO;
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Core.IO;
 
-namespace Spring.Core.IO
+/// <summary>
+/// Unit tests for the InputStreamResource class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class InputStreamResourceTests
 {
-	/// <summary>
-	/// Unit tests for the InputStreamResource class.
-    /// </summary>
-    /// <author>Rick Evans</author>
-	[TestFixture]
-    public sealed class InputStreamResourceTests
+    [Test]
+    public void Instantiation()
     {
-        [Test]
-        public void Instantiation () 
+        FileInfo file = null;
+        Stream stream = null;
+        try
         {
-            FileInfo file = null;
-            Stream stream = null;
-            try 
+            file = new FileInfo("Instantiation");
+            stream = file.Create();
+            InputStreamResource res = new InputStreamResource(stream, "A temporary resource.");
+            Assert.IsTrue(res.IsOpen);
+            Assert.IsTrue(res.Exists);
+            Assert.IsNotNull(res.InputStream);
+        }
+        finally
+        {
+            try
             {
-                file = new FileInfo ("Instantiation");
-                stream = file.Create ();
-                InputStreamResource res = new InputStreamResource (stream, "A temporary resource.");
-                Assert.IsTrue (res.IsOpen);
-                Assert.IsTrue (res.Exists);
-                Assert.IsNotNull (res.InputStream);
-            } 
-            finally 
-            {
-                try 
+                if (stream != null)
                 {
-                    if (stream != null) 
-                    {
-                        stream.Close ();
-                    }
-                    if (file != null
-                        && file.Exists) 
-                    {
-                        file.Delete ();
-                    }
-                } 
-                catch {}
-            }
-        }
+                    stream.Close();
+                }
 
-        [Test]
-        public void InstantiationWithNull ()
-        {
-            Assert.Throws<ArgumentNullException>(() => new InputStreamResource (null, "A null resource."));
-        }
-
-        [Test]
-        public void ReadStreamMultipleTimes () 
-        {
-            FileInfo file = null;
-            Stream stream = null;
-            try 
-            {
-                file = new FileInfo ("ReadStreamMultipleTimes");
-                stream = file.Create ();
-                // attempting to read this stream twice is an error...
-                InputStreamResource res = new InputStreamResource (stream, "A temporary resource.");
-                Stream streamOne = res.InputStream;
-                Stream streamTwo;
-                Assert.Throws<InvalidOperationException>(() => streamTwo = res.InputStream); // should bail here
-            } 
-            finally 
-            {
-                try 
+                if (file != null
+                    && file.Exists)
                 {
-                    if (stream != null) 
-                    {
-                        stream.Close ();
-                    }
-                    if (file != null
-                        && file.Exists) 
-                    {
-                        file.Delete ();
-                    }
-                } 
-                catch {}
+                    file.Delete();
+                }
             }
+            catch { }
         }
-	}
+    }
+
+    [Test]
+    public void InstantiationWithNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => new InputStreamResource(null, "A null resource."));
+    }
+
+    [Test]
+    public void ReadStreamMultipleTimes()
+    {
+        FileInfo file = null;
+        Stream stream = null;
+        try
+        {
+            file = new FileInfo("ReadStreamMultipleTimes");
+            stream = file.Create();
+            // attempting to read this stream twice is an error...
+            InputStreamResource res = new InputStreamResource(stream, "A temporary resource.");
+            Stream streamOne = res.InputStream;
+            Stream streamTwo;
+            Assert.Throws<InvalidOperationException>(() => streamTwo = res.InputStream); // should bail here
+        }
+        finally
+        {
+            try
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+
+                if (file != null
+                    && file.Exists)
+                {
+                    file.Delete();
+                }
+            }
+            catch { }
+        }
+    }
 }

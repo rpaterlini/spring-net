@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,32 +14,23 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Objects.Factory;
 
-namespace Spring.Context.Support
+namespace Spring.Context.Support;
+
+/// <author>Mark Pollack</author>
+public class Logic : IObjectNameAware
 {
-    /// <author>Mark Pollack</author>
-    public class Logic : IObjectNameAware
+    private string objectName;
+    private Assembler assembler;
+
+    public Assembler Assembler
     {
-        
-        private string objectName;
-        private Assembler assembler;
+        set { assembler = value; }
+    }
 
-
-        public Assembler Assembler
-        {
-            set { assembler = value; }
-        }
-
-        #region IObjectNameAware Members
-
-        public string ObjectName
-        {
-            set { objectName = value; }
-        }
-
-        #endregion
+    public string ObjectName
+    {
+        set { objectName = value; }
     }
 }

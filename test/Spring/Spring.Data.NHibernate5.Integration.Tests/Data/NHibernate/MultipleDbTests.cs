@@ -1,14 +1,12 @@
-#region License
-
 /*
  * Copyright © 2002-2011 the original author or authors.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,18 +14,11 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using log4net;
 using NHibernate;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 using Spring.Data.NHibernate.Support;
-
-#endregion
 
 namespace Spring.Data.NHibernate
 {
@@ -39,34 +30,14 @@ namespace Spring.Data.NHibernate
     [Ignore("Trouble running on Appveyor")]
     public class MultipleDbTests
     {
-        #region Fields
-
         private IApplicationContext ctx;
-
-        #endregion
-
-
-        #region Constants
-
-        /// <summary>
-        /// The shared <see cref="log4net.ILog"/> instance for this class (and derived classes). 
-        /// </summary>
-        protected static readonly ILog log =
-            LogManager.GetLogger(typeof(TemplateTests));
-
-        #endregion
-
-        #region Constructor (s)
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipleDbTests"/> class.
         /// </summary>
         public MultipleDbTests()
         {
-
         }
-
-        #endregion
 
         [SetUp]
         public void SetUp()
@@ -92,8 +63,8 @@ namespace Spring.Data.NHibernate
         [Test]
         public void MultipleDBAccessUsingMultipleSessionScopes()
         {
-            SessionScope scope1 = new SessionScope( (ISessionFactory) ctx["SessionFactory1"], false );
-            SessionScope scope2 = new SessionScope( (ISessionFactory) ctx["SessionFactory2"], false );
+            SessionScope scope1 = new SessionScope((ISessionFactory) ctx["SessionFactory1"], false);
+            SessionScope scope2 = new SessionScope((ISessionFactory) ctx["SessionFactory2"], false);
 
             scope1.Open();
             scope2.Open();
@@ -104,6 +75,5 @@ namespace Spring.Data.NHibernate
             scope1.Close();
             scope2.Close();
         }
-
     }
 }

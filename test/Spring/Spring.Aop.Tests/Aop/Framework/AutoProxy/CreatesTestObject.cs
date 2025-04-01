@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,66 +14,61 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
 using Spring.Objects;
 using Spring.Objects.Factory;
 
-namespace Spring.Aop.Framework.AutoProxy
+namespace Spring.Aop.Framework.AutoProxy;
+
+/// <summary>
+/// This is simple implementation of IFactoryObject that creates a TestObject.
+/// </summary>
+/// <author>Mark Pollack</author>
+public class CreatesTestObject : IFactoryObject, IInitializingObject
 {
-    /// <summary>
-    /// This is simple implementation of IFactoryObject that creates a TestObject.
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    public class CreatesTestObject : IFactoryObject, IInitializingObject
+    private bool initialized = false;
+    private ITestObject testObject;
+
+    public CreatesTestObject()
     {
-        private bool initialized = false;
-        private ITestObject testObject;
+    }
 
-        public CreatesTestObject()
+    public object GetObject()
+    {
+        // return product only, if factory has been fully initialized!
+        if (!initialized)
         {
+            return null;
         }
-
-
-        public object GetObject()
+        else
         {
-            // return product only, if factory has been fully initialized!
+            return testObject;
+        }
+    }
+
+    public Type ObjectType
+    {
+        get
+        {
+            // return type only if we are ready to deliver our product!
             if (!initialized)
             {
                 return null;
             }
             else
             {
-                return testObject;
+                return typeof(ITestObject);
             }
         }
+    }
 
-        public Type ObjectType
-        {
-            get
-            {
-                // return type only if we are ready to deliver our product!
-                if (!initialized)
-                {
-                    return null;
-                }
-                else
-                {
-                    return typeof(ITestObject);
-                }
-            }
-        }
+    public bool IsSingleton
+    {
+        get { return true; }
+    }
 
-        public bool IsSingleton
-        {
-            get { return true; }
-        }
-
-        public void AfterPropertiesSet()
-        {
-            testObject = new TestObject();
-            initialized = true;
-        }
+    public void AfterPropertiesSet()
+    {
+        testObject = new TestObject();
+        initialized = true;
     }
 }

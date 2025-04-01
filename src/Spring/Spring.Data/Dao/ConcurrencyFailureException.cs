@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,58 +14,59 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 
-namespace Spring.Dao
+namespace Spring.Dao;
+
+/// <summary>
+/// Exception thrown on concurrency failure. This exception should be
+/// sublassed to indicate the type of failure - optimistic locking,
+/// failure to acquire lock, etc.
+/// </summary>
+/// <remarks>
+/// <p>
+/// This exception will be thrown either by O/R mapping tools or by custom DAO
+/// implementations.
+/// </p>
+/// </remarks>
+/// <author>Thomas Risberg</author>
+/// <author>Griffin Caprio (.NET)</author>
+[Serializable]
+public class ConcurrencyFailureException : TransientDataAccessException
 {
     /// <summary>
-    /// Exception thrown on concurrency failure. This exception should be
-    /// sublassed to indicate the type of failure - optimistic locking,
-    /// failure to acquire lock, etc.
+    /// Creates a new instance of the
+    /// <see cref="Spring.Dao.ConcurrencyFailureException"/> class.
     /// </summary>
-    /// <remarks>
-    /// <p>
-    /// This exception will be thrown either by O/R mapping tools or by custom DAO
-    /// implementations.
-    /// </p>
-    /// </remarks>
-    /// <author>Thomas Risberg</author>
-    /// <author>Griffin Caprio (.NET)</author>
-	[Serializable]
-	public class ConcurrencyFailureException : TransientDataAccessException
-	{
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Dao.ConcurrencyFailureException"/> class.
-		/// </summary>
-		public ConcurrencyFailureException() : base("No Exception Message") {}
+    public ConcurrencyFailureException() : base("No Exception Message") { }
 
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Dao.ConcurrencyFailureException"/> class.
-		/// </summary>
-		/// <param name="message">
-		/// A message about the exception.
-		/// </param>
-		public ConcurrencyFailureException( string message ) : base( message ) {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Dao.ConcurrencyFailureException"/> class.
+    /// </summary>
+    /// <param name="message">
+    /// A message about the exception.
+    /// </param>
+    public ConcurrencyFailureException(string message) : base(message) { }
 
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Dao.ConcurrencyFailureException"/> class.
-		/// </summary>
-		/// <param name="message">
-		/// A message about the exception.
-		/// </param>
-		/// <param name="rootCause">
-		/// The root exception (from the underlying data access API, such as ADO.NET).
-		/// </param>
-		public ConcurrencyFailureException( string message, Exception rootCause)
-			: base( message , rootCause ) {}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Dao.ConcurrencyFailureException"/> class.
+    /// </summary>
+    /// <param name="message">
+    /// A message about the exception.
+    /// </param>
+    /// <param name="rootCause">
+    /// The root exception (from the underlying data access API, such as ADO.NET).
+    /// </param>
+    public ConcurrencyFailureException(string message, Exception rootCause)
+        : base(message, rootCause)
+    {
+    }
 
-		/// <inheritdoc />
-        protected ConcurrencyFailureException(
-			SerializationInfo info, StreamingContext context ) : base( info, context ) {}
-	}
+    /// <inheritdoc />
+    protected ConcurrencyFailureException(
+        SerializationInfo info, StreamingContext context) : base(info, context)
+    {
+    }
 }

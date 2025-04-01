@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,56 +14,53 @@
  * limitations under the License.
  */
 
-#endregion
-
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using NVelocity.Runtime;
 using NVelocity.Runtime.Log;
-using LogLevel=NVelocity.Runtime.Log.LogLevel;
-using LogManager=Common.Logging.LogManager;
+using LogLevel = NVelocity.Runtime.Log.LogLevel;
 
-namespace Spring.Template.Velocity
+namespace Spring.Template.Velocity;
+
+/// <summary>
+/// NVelocity LogSystem implementation for Commons Logging.
+/// </summary>
+/// <author>Erez Mazor</author>
+public class CommonsLoggingLogSystem : ILogSystem
 {
     /// <summary>
-    /// NVelocity LogSystem implementation for Commons Logging.
+    /// Shared logger instance.
     /// </summary>
-    /// <author>Erez Mazor</author>
-    public class CommonsLoggingLogSystem : ILogSystem {
+    protected static readonly ILogger<CommonsLoggingLogSystem> log = LogManager.GetLogger<CommonsLoggingLogSystem>();
 
-        /// <summary>
-        /// Shared logger instance.
-        /// </summary>
-        protected static readonly ILog log = LogManager.GetLogger(typeof(CommonsLoggingLogSystem));
+    /// <summary>
+    /// Initializes the specified runtime services.  No-op in current implementatin
+    /// </summary>
+    /// <param name="runtimeServices">the runtime services.</param>
+    public void Init(IRuntimeServices runtimeServices)
+    {
+    }
 
-        /// <summary>
-        /// Initializes the specified runtime services.  No-op in current implementatin
-        /// </summary>
-        /// <param name="runtimeServices">the runtime services.</param>
-        public void Init(IRuntimeServices runtimeServices)
+    /// <summary>
+    /// Log a NVelocity message using the commons logging system
+    /// </summary>
+    /// <param name="level">LogLevel to match</param>
+    /// <param name="message">message to log</param>
+    public void LogVelocityMessage(LogLevel level, string message)
+    {
+        switch (level)
         {
-        }
-
-        /// <summary>
-        /// Log a NVelocity message using the commons logging system
-        /// </summary>
-        /// <param name="level">LogLevel to match</param>
-        /// <param name="message">message to log</param>
-        public void LogVelocityMessage(LogLevel level, string message)
-        {
-            switch (level) {
-                case LogLevel.Error:
-                    log.Error(message);
-                    break;
-                case LogLevel.Warn:
-                    log.Warn(message);
-                    break;
-                case LogLevel.Info:
-                    log.Info(message);
-                    break;
-                case LogLevel.Debug:
-                    log.Debug(message);
-                    break;
-            }
+            case LogLevel.Error:
+                log.LogError(message);
+                break;
+            case LogLevel.Warn:
+                log.LogWarning(message);
+                break;
+            case LogLevel.Info:
+                log.LogInformation(message);
+                break;
+            case LogLevel.Debug:
+                log.LogDebug(message);
+                break;
         }
     }
 }

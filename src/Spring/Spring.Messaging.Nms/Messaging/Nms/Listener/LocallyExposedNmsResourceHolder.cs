@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,28 +14,24 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Apache.NMS;
 using Spring.Messaging.Nms.Connections;
 
-namespace Spring.Messaging.Nms.Listener
+namespace Spring.Messaging.Nms.Listener;
+
+/// <summary>
+/// MessageResourceHolder marker subclass that indicates local exposure,
+/// i.e. that does not indicate an externally managed transaction.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Mark Pollack (.NET)</author>
+public class LocallyExposedNmsResourceHolder : NmsResourceHolder
 {
     /// <summary>
-    /// MessageResourceHolder marker subclass that indicates local exposure,
-    /// i.e. that does not indicate an externally managed transaction.
+    /// Initializes a new instance of the <see cref="LocallyExposedNmsResourceHolder"/> class.
     /// </summary>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Mark Pollack (.NET)</author>
-    public class LocallyExposedNmsResourceHolder : NmsResourceHolder
+    /// <param name="session">The session.</param>
+    public LocallyExposedNmsResourceHolder(ISession session) : base(session)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocallyExposedNmsResourceHolder"/> class.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        public LocallyExposedNmsResourceHolder(ISession session) : base(session)
-        {
-            
-        }
     }
 }

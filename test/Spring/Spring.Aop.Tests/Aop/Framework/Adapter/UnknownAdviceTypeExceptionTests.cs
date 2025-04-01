@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,23 +14,20 @@
  * limitations under the License.
  */
 
-#endregion
-
 using NUnit.Framework;
 
-namespace Spring.Aop.Framework.Adapter
+namespace Spring.Aop.Framework.Adapter;
+
+/// <summary>
+/// Unit tests for the UnknownAdviceTypeException class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class UnknownAdviceTypeExceptionTests
 {
-	/// <summary>
-	/// Unit tests for the UnknownAdviceTypeException class.
-    /// </summary>
-    /// <author>Rick Evans</author>
-	[TestFixture]
-    public sealed class UnknownAdviceTypeExceptionTests
+    [Test]
+    public void InstantiationWithNullAdviceDoesNotThrowAnotherException()
     {
-        [Test]
-        public void InstantiationWithNullAdviceDoesNotThrowAnotherException()
-        {
-            new UnknownAdviceTypeException(null);
-        }
-	}
+        new UnknownAdviceTypeException(null);
+    }
 }

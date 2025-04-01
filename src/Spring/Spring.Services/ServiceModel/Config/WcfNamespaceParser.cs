@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,34 +14,31 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Objects.Factory.Xml;
 
-namespace Spring.ServiceModel.Config
-{
-    /// <summary>
-    /// Namespace parser for the WCF namespace.
-    /// </summary>
-    /// <author>Bruno Baia</author>
-    [
-        NamespaceParser(
-            Namespace = "http://www.springframework.net/wcf",
-            SchemaLocationAssemblyHint = typeof(WcfNamespaceParser),
-            SchemaLocation = "/Spring.ServiceModel.Config/spring-wcf-1.3.xsd")
-    ]
-    public sealed class WcfNamespaceParser : NamespaceParserSupport
-    {
-        private const string ChannelFactoryElement = "channelFactory";
-        private const string ServiceHostElement = "serviceHost";
-        private const string ServiceExporterElement = "serviceExporter";
+namespace Spring.ServiceModel.Config;
 
-        /// <summary>
-        /// Register the <see cref="IObjectDefinitionParser"/> for the WCF tags.
-        /// </summary>
-        public override void Init()
-        {
-            RegisterObjectDefinitionParser(ChannelFactoryElement, new ChannelFactoryObjectDefinitionParser());
-        }
+/// <summary>
+/// Namespace parser for the WCF namespace.
+/// </summary>
+/// <author>Bruno Baia</author>
+[
+    NamespaceParser(
+        Namespace = "http://www.springframework.net/wcf",
+        SchemaLocationAssemblyHint = typeof(WcfNamespaceParser),
+        SchemaLocation = "/Spring.ServiceModel.Config/spring-wcf-1.3.xsd")
+]
+public sealed class WcfNamespaceParser : NamespaceParserSupport
+{
+    private const string ChannelFactoryElement = "channelFactory";
+    private const string ServiceHostElement = "serviceHost";
+    private const string ServiceExporterElement = "serviceExporter";
+
+    /// <summary>
+    /// Register the <see cref="IObjectDefinitionParser"/> for the WCF tags.
+    /// </summary>
+    public override void Init()
+    {
+        RegisterObjectDefinitionParser(ChannelFactoryElement, new ChannelFactoryObjectDefinitionParser());
     }
 }

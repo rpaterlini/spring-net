@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,39 +14,36 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Objects.Factory.Xml;
 
-namespace Spring.Aop.Config
+namespace Spring.Aop.Config;
+
+/// <summary>
+/// Namespace parser for the aop namespace.
+/// </summary>
+/// <remarks>
+/// Using the <code>advisor</code> tag you can configure an <see cref="IAdvisor"/> and have it
+/// applied to all the relevant objects in your application context automatically.  The
+/// <code>advisor</code> tag supports only referenced <see cref="IPointcut"/>s.
+/// </remarks>
+/// <author>Rob harrop</author>
+/// <author>Adrian Colyer</author>
+/// <author>Rod Johnson</author>
+/// <author>Mark Pollack (.NET)</author>
+[
+    NamespaceParser(
+        Namespace = "http://www.springframework.net/aop",
+        SchemaLocationAssemblyHint = typeof(AopNamespaceParser),
+        SchemaLocation = "/Spring.Aop.Config/spring-aop-1.1.xsd"
+    )
+]
+public class AopNamespaceParser : NamespaceParserSupport
 {
     /// <summary>
-    /// Namespace parser for the aop namespace.
+    /// Register the <see cref="IObjectDefinitionParser"/> for the '<code>config</code>' tag.
     /// </summary>
-    /// <remarks>
-    /// Using the <code>advisor</code> tag you can configure an <see cref="IAdvisor"/> and have it
-    /// applied to all the relevant objects in your application context automatically.  The
-    /// <code>advisor</code> tag supports only referenced <see cref="IPointcut"/>s.
-    /// </remarks>
-    /// <author>Rob harrop</author>
-    /// <author>Adrian Colyer</author>
-    /// <author>Rod Johnson</author>
-    /// <author>Mark Pollack (.NET)</author>
-    [
-        NamespaceParser(
-            Namespace = "http://www.springframework.net/aop",
-            SchemaLocationAssemblyHint = typeof (AopNamespaceParser),
-            SchemaLocation = "/Spring.Aop.Config/spring-aop-1.1.xsd"
-            )
-    ]
-    public class AopNamespaceParser : NamespaceParserSupport
+    public override void Init()
     {
-        /// <summary>
-        /// Register the <see cref="IObjectDefinitionParser"/> for the '<code>config</code>' tag.
-        /// </summary>
-        public override void Init()
-        {
-            RegisterObjectDefinitionParser("config", new ConfigObjectDefinitionParser());
-        }
+        RegisterObjectDefinitionParser("config", new ConfigObjectDefinitionParser());
     }
 }

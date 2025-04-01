@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2010-2011 the original author or authors.
+ * Copyright ï¿½ 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +14,13 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Example.Scannable;
 
-namespace Spring.Example.Scannable
+/// <summary>
+///
+/// </summary>
+/// <author>Mark Pollack</author>
+public interface IFooDao
 {
-    /// <summary>
-    ///  
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    public interface IFooDao
-    {
-        string FindFoo(string id);
-    }
-
+    string FindFoo(string id);
 }

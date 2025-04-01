@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,53 +14,50 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.CompilerServices;
 using System.Security;
 
-namespace Spring.Util
+namespace Spring.Util;
+
+/// <summary>
+/// Utility class to be used from within this assembly for executing security critical code
+/// NEVER EVER MAKE THIS PUBLIC!
+/// </summary>
+/// <author>Erich Eichinger</author>
+internal class SecurityCritical
 {
-    /// <summary>
-    /// Utility class to be used from within this assembly for executing security critical code 
-    /// NEVER EVER MAKE THIS PUBLIC!
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    internal class SecurityCritical
-    {
-        internal delegate void PrivilegedCallback();
+    internal delegate void PrivilegedCallback();
 
 #pragma warning disable 618
-        [SecurityCritical, SecurityTreatAsSafe]
+    [SecurityCritical, SecurityTreatAsSafe]
 #pragma warning restore 618
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void ExecutePrivileged(IStackWalk permission, PrivilegedCallback callback)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    internal static void ExecutePrivileged(IStackWalk permission, PrivilegedCallback callback)
+    {
+        permission.Assert();
+        try
         {
-            permission.Assert();
-            try
-            {
-                callback();
-            }
-            finally
-            {
-                CodeAccessPermission.RevertAssert();
-            }
+            callback();
         }
-
-        //        internal delegate TResult PrivilegedCallback<TResult>();
-        //
-        //        [SecurityCritical, SecurityTreatAsSafe]
-        //        internal static TResult ExecutePrivileged<TResult>(IStackWalk permission, PrivilegedCallback<TResult> callback)
-        //        {
-        //            permission.Assert();
-        //            try
-        //            {
-        //                return callback();
-        //            }
-        //            finally
-        //            {
-        //                CodeAccessPermission.RevertAssert();
-        //            }
-        //        }
+        finally
+        {
+            CodeAccessPermission.RevertAssert();
+        }
     }
+
+    //        internal delegate TResult PrivilegedCallback<TResult>();
+    //
+    //        [SecurityCritical, SecurityTreatAsSafe]
+    //        internal static TResult ExecutePrivileged<TResult>(IStackWalk permission, PrivilegedCallback<TResult> callback)
+    //        {
+    //            permission.Assert();
+    //            try
+    //            {
+    //                return callback();
+    //            }
+    //            finally
+    //            {
+    //                CodeAccessPermission.RevertAssert();
+    //            }
+    //        }
 }

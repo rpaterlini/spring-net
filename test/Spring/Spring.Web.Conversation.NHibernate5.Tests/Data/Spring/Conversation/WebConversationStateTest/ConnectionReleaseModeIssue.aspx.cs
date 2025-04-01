@@ -1,17 +1,13 @@
-using System;
 using System.Reflection;
-
 using Spring.Data.NHibernate.Support;
 using Spring.Bsn;
 using Spring.Entities;
 using Spring.Spring.Data.Common;
 using Spring.Context;
 using Spring.Web.Conversation;
-
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Impl;
-
 using NUnit.Framework;
 
 /// <summary>
@@ -248,14 +244,10 @@ public partial class ConnectionReleaseModeIssue : System.Web.UI.Page, IApplicati
         pInfoConnectionReleaseMode.SetValue(settings, mode, null);
     }
 
-    #region IApplicationContextAware Members
-
     private IApplicationContext applicationContext;
 
     public IApplicationContext ApplicationContext
     {
         set { this.applicationContext = value; }
     }
-
-    #endregion
 }

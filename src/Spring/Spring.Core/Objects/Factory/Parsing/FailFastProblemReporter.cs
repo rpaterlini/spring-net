@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,38 +14,33 @@
  * limitations under the License.
  */
 
-#endregion
+using Microsoft.Extensions.Logging;
 
-using Common.Logging;
+namespace Spring.Objects.Factory.Parsing;
 
-namespace Spring.Objects.Factory.Parsing
+public class FailFastProblemReporter : IProblemReporter
 {
-    public class FailFastProblemReporter : IProblemReporter
+    private static readonly ILogger<FailFastProblemReporter> _logger = LogManager.GetLogger<FailFastProblemReporter>();
+
+    public ILogger Logger
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof(FailFastProblemReporter));
+        get { return _logger; }
+    }
 
-        public ILog Logger
-        {
-            get { return _logger; }
-        }
+    public void Error(Problem problem)
+    {
+        _logger.LogError(problem.Message);
+        throw new ObjectDefinitionParsingException(problem);
+    }
 
-        public void Error(Problem problem)
-        {
-            _logger.Error(problem.Message);
-            throw new ObjectDefinitionParsingException(problem);
-        }
+    public void Fatal(Problem problem)
+    {
+        _logger.LogCritical(problem.Message);
+        throw new ObjectDefinitionParsingException(problem);
+    }
 
-        public void Fatal(Problem problem)
-        {
-            _logger.Fatal(problem.Message);
-            throw new ObjectDefinitionParsingException(problem);
-        }
-
-        public void Warning(Problem problem)
-        {
-            _logger.Warn(problem.Message);
-
-        }
-
+    public void Warning(Problem problem)
+    {
+        _logger.LogWarning(problem.Message);
     }
 }

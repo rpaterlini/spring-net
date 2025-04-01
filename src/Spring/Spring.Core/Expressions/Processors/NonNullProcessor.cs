@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +14,44 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Collections;
 
-namespace Spring.Expressions.Processors
+namespace Spring.Expressions.Processors;
+
+/// <summary>
+/// Implementation of the non-null processor.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+public class NonNullProcessor : ICollectionProcessor
 {
     /// <summary>
-    /// Implementation of the non-null processor.
+    /// Returns non-null items from the collection.
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    public class NonNullProcessor : ICollectionProcessor
+    /// <param name="source">
+    /// The source collection to process.
+    /// </param>
+    /// <param name="args">
+    /// Ignored.
+    /// </param>
+    /// <returns>
+    /// A collection containing non-null source collection elements.
+    /// </returns>
+    public object Process(ICollection source, object[] args)
     {
-        /// <summary>
-        /// Returns non-null items from the collection.
-        /// </summary>
-        /// <param name="source">
-        /// The source collection to process.
-        /// </param>
-        /// <param name="args">
-        /// Ignored.
-        /// </param>
-        /// <returns>
-        /// A collection containing non-null source collection elements.
-        /// </returns>
-        public object Process(ICollection source, object[] args)
+        if (source == null)
         {
-            if (source == null)
-            {
-                return null;
-            }
-
-            ArrayList list = new ArrayList();
-            foreach (object item in source)
-            {
-                if (item != null)
-                {
-                    list.Add(item);
-                }
-            }
-            return list.ToArray();
+            return null;
         }
+
+        ArrayList list = new ArrayList();
+        foreach (object item in source)
+        {
+            if (item != null)
+            {
+                list.Add(item);
+            }
+        }
+
+        return list.ToArray();
     }
 }

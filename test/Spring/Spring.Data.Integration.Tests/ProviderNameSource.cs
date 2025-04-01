@@ -1,6 +1,4 @@
-﻿#region License
-
-// /*
+﻿// /*
 //  * Copyright 2018 the original author or authors.
 //  *
 //  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,34 +14,27 @@
 //  * limitations under the License.
 //  */
 
-#endregion
-
-#region using
-
 using Spring.Objects.Factory.Config;
 
-#endregion
+namespace Spring;
 
-namespace Spring
+public class ProviderNameSource : IVariableSource
 {
-    public class ProviderNameSource : IVariableSource
+    public bool CanResolveVariable(string name)
     {
-        public bool CanResolveVariable(string name)
-        {
-            return name.ToLower() == "providername";
-        }
+        return name.ToLower() == "providername";
+    }
 
-        public string ResolveVariable(string name)
+    public string ResolveVariable(string name)
+    {
+        if (name.ToLower() != "providername")
         {
-            if (name.ToLower() != "providername")
-            {
-                return null;
-            }
+            return null;
+        }
 #if NETCOREAPP
             return "SqlServer";
 #else
-            return "SqlServer-2.0";
+        return "SqlServer-2.0";
 #endif
-        }
     }
 }

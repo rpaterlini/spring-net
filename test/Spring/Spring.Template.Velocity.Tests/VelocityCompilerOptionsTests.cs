@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004-2009 the original author or authors.
  *
@@ -16,31 +14,24 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Reflection;
 using NUnit.Framework;
 using Spring.Template.Velocity;
 
-#endregion
+namespace Spring;
 
-namespace Spring
+/// <summary>Test that the assembly is built with the correct DebugAttributes in release and debug builds.
+/// </summary>
+/// <author>Mark Pollack</author>
+[TestFixture]
+public sealed class VelocityCompilerOptionTests : CompilerOptionsTests
 {
-    /// <summary>Test that the assembly is built with the correct DebugAttributes in release and debug builds.
+    /// <summary>
+    /// Setup for entiry test fixture.
     /// </summary>
-    /// <author>Mark Pollack</author>
-    [TestFixture]
-    public sealed class VelocityCompilerOptionTests : CompilerOptionsTests
+    [OneTimeSetUp]
+    public void FixtureSetUp()
     {
-        /// <summary>
-        /// Setup for entiry test fixture.
-        /// </summary>
-        [OneTimeSetUp]
-        public void FixtureSetUp()
-        {
-            AssemblyToCheck = Assembly.GetAssembly(typeof (VelocityEngineFactory));
-        }
+        AssemblyToCheck = Assembly.GetAssembly(typeof(VelocityEngineFactory));
     }
 }

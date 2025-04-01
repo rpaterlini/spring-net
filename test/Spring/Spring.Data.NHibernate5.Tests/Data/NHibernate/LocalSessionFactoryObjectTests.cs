@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +14,15 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System.Collections.Generic;
-using System.IO;
-
 using NHibernate;
-using NHibernate.Cfg;
 using NHibernate.Connection;
 using NHibernate.Dialect;
 using NHibernate.Driver;
-
 using Spring.Context.Support;
 using Spring.Data.Common;
 using Spring.Data.NHibernate.Bytecode;
-
 using NUnit.Framework;
+using Environment = NHibernate.Cfg.Environment;
 
 namespace Spring.Data.NHibernate
 {
@@ -42,7 +33,6 @@ namespace Spring.Data.NHibernate
     [TestFixture]
     public class LocalSessionFactoryObjectTests
     {
-
         [Test]
         public void LocalSessionFactoryObjectWithDbProviderAndProperties()
         {
@@ -69,11 +59,11 @@ namespace Spring.Data.NHibernate
             Assert.AreEqual(sfo.Configuration.Properties[Environment.Dialect], typeof(MsSql2000Dialect).AssemblyQualifiedName);
 
             Assert.Throws<KeyNotFoundException>(() =>
-                                                    {
-                                                        var x =
-                                                          sfo.Configuration.Properties[Environment.ProxyFactoryFactoryClass];
-                                                    }, "ProxyFactoryFactory should not be explicitly set!");
-            
+            {
+                var x =
+                    sfo.Configuration.Properties[Environment.ProxyFactoryFactoryClass];
+            }, "ProxyFactoryFactory should not be explicitly set!");
+
             Assert.AreNotEqual(typeof(BytecodeProvider), Environment.BytecodeProvider.GetType(), "default IBytecodeProvider should not be Spring's BytecodeProvider!");
         }
 
@@ -83,7 +73,6 @@ namespace Spring.Data.NHibernate
             LocalSessionFactoryObject sfo = new LocalSessionFactoryObject();
             sfo.MappingResources = new string[] { "mapping.hbm.xml" };
             Assert.Throws<FileNotFoundException>(() => sfo.AfterPropertiesSet());
-
         }
 
         [Test]

@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +14,20 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Aop.Support;
 
-namespace Spring.Aop.Support
+/// <summary>
+/// Unit tests for the RootTypeFilter class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class RootTypeFilterTests
 {
-	/// <summary>
-	/// Unit tests for the RootTypeFilter class.
-    /// </summary>
-    /// <author>Rick Evans</author>
-	[TestFixture]
-    public sealed class RootTypeFilterTests
+    [Test]
+    public void InstantiationWithNullRootType()
     {
-        [Test]
-		public void InstantiationWithNullRootType()
-		{
-            Assert.Throws<ArgumentNullException>(() => new RootTypeFilter(null));
-        }
-	}
+        Assert.Throws<ArgumentNullException>(() => new RootTypeFilter(null));
+    }
 }

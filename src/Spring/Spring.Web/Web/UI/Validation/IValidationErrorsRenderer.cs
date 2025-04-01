@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,38 +14,34 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Web.UI;
-
 using Spring.Web.UI.Controls;
 
-namespace Spring.Web.UI.Validation
+namespace Spring.Web.UI.Validation;
+
+/// <summary>
+/// This interface should be implemented by all validation errors renderers.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Validation errors renderers are used to decouple rendering behavior from the
+/// validation errors controls such as <see cref="ValidationError"/> and
+/// <see cref="ValidationSummary"/>.
+/// </para>
+/// <para>
+/// This allows users to change how validation errors are rendered by simply pluggin in
+/// appropriate renderer implementation into the validation errors controls using
+/// Spring.NET dependency injection.
+/// </para>
+/// </remarks>
+/// <author>Aleksandar Seovic</author>
+public interface IValidationErrorsRenderer
 {
     /// <summary>
-    /// This interface should be implemented by all validation errors renderers.
+    /// Renders validation errors using specified <see cref="HtmlTextWriter"/>.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Validation errors renderers are used to decouple rendering behavior from the
-    /// validation errors controls such as <see cref="ValidationError"/> and
-    /// <see cref="ValidationSummary"/>.
-    /// </para>
-    /// <para>
-    /// This allows users to change how validation errors are rendered by simply pluggin in
-    /// appropriate renderer implementation into the validation errors controls using
-    /// Spring.NET dependency injection.
-    /// </para>
-    /// </remarks>
-    /// <author>Aleksandar Seovic</author>
-    public interface IValidationErrorsRenderer
-    {
-        /// <summary>
-        /// Renders validation errors using specified <see cref="HtmlTextWriter"/>.
-        /// </summary>
-        /// <param name="page">Web form instance.</param>
-        /// <param name="writer">An HTML writer to use.</param>
-        /// <param name="errors">The list of validation errors.</param>
-        void RenderErrors(Page page, HtmlTextWriter writer, IList<string> errors);
-    }
+    /// <param name="page">Web form instance.</param>
+    /// <param name="writer">An HTML writer to use.</param>
+    /// <param name="errors">The list of validation errors.</param>
+    void RenderErrors(Page page, HtmlTextWriter writer, IList<string> errors);
 }

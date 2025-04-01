@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,73 +14,64 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Data;
 
-#endregion
+namespace Spring.Objects.Factory.Xml;
 
-namespace Spring.Objects.Factory.Xml
+/// <summary>
+/// Test class for Spring.NET's ability to create objects using static
+/// factory methods, rather than constructors.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Rick Evans</author>
+public class InstanceFactory
 {
-	/// <summary>
-    /// Test class for Spring.NET's ability to create objects using static
-    /// factory methods, rather than constructors.
-    /// </summary>
-    /// <author>Rod Johnson</author>
-    /// <author>Rick Evans</author>
-    public class InstanceFactory 
+    private string _factoryObjectProperty;
+
+    public string FactoryObjectProperty
     {
-        private string _factoryObjectProperty;
-	
-        public string FactoryObjectProperty 
+        get
         {
-            get 
-            {
-                return _factoryObjectProperty;
+            return _factoryObjectProperty;
+        }
+        set
+        {
+            _factoryObjectProperty = value;
+        }
+    }
 
-            }
-            set 
-            {
-                _factoryObjectProperty = value;
-            }
-        }
-	
-        public FactoryMethods DefaultInstance() 
-        {
-            TestObject to = new TestObject();
-            to.Name = FactoryObjectProperty;
-            return FactoryMethods.NewInstance (to);
-        }
+    public FactoryMethods DefaultInstance()
+    {
+        TestObject to = new TestObject();
+        to.Name = FactoryObjectProperty;
+        return FactoryMethods.NewInstance(to);
+    }
 
-        /// <summary>
-        /// Note that overloaded methods are supported.
-        /// </summary>
-        public FactoryMethods NewInstance (TestObject to) 
-        {
-            return FactoryMethods.NewInstance (to);
-        }
-	
-        public FactoryMethods NewInstance (TestObject to, int num, string name) 
-        {
-            return FactoryMethods.NewInstance (to, name, num);
-        }
+    /// <summary>
+    /// Note that overloaded methods are supported.
+    /// </summary>
+    public FactoryMethods NewInstance(TestObject to)
+    {
+        return FactoryMethods.NewInstance(to);
+    }
 
-        public FactoryMethods CreateInstance()
-        {
-            return FactoryMethods.NewInstance(new TestObject(), "DefaultCtor", 0);
-        }
+    public FactoryMethods NewInstance(TestObject to, int num, string name)
+    {
+        return FactoryMethods.NewInstance(to, name, num);
+    }
 
-        public FactoryMethods CreateInstance(DataRow dr)
-        {
-            return FactoryMethods.NewInstance(new TestObject(), "DataRowCtor", 0);
-        }
+    public FactoryMethods CreateInstance()
+    {
+        return FactoryMethods.NewInstance(new TestObject(), "DefaultCtor", 0);
+    }
 
-        public FactoryMethods CreateInstance(IDataRecord dr)
-        {
-            return FactoryMethods.NewInstance(new TestObject(), "DataRecordCtor", 0);
-        }
+    public FactoryMethods CreateInstance(DataRow dr)
+    {
+        return FactoryMethods.NewInstance(new TestObject(), "DataRowCtor", 0);
+    }
 
-	}
+    public FactoryMethods CreateInstance(IDataRecord dr)
+    {
+        return FactoryMethods.NewInstance(new TestObject(), "DataRecordCtor", 0);
+    }
 }

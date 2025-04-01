@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,109 +14,100 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.ComponentModel;
 using NUnit.Framework;
 using Spring.Util;
 
-#endregion
+namespace Spring.Core.TypeConversion;
 
-namespace Spring.Core.TypeConversion
+/// <summary>
+/// Tests <see cref="UniqueKeyConverter"/> functionality.
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class UniqueKeyConverterTests
 {
-    /// <summary>
-    /// Tests <see cref="UniqueKeyConverter"/> functionality.
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class UniqueKeyConverterTests
+    [Test]
+    public void CanConvertFromStringOnly()
     {
-        [Test]
-        public void CanConvertFromStringOnly()
+        TypeConverter c = new UniqueKeyConverter();
+        Assert.IsTrue(c.CanConvertFrom(typeof(string)));
+        Assert.IsFalse(c.CanConvertFrom(typeof(object)));
+    }
+
+    [Test]
+    public void CanConvertToStringOnly()
+    {
+        TypeConverter c = new UniqueKeyConverter();
+        Assert.IsTrue(c.CanConvertTo(typeof(string)));
+        Assert.IsFalse(c.CanConvertTo(typeof(object)));
+    }
+
+    [Test]
+    public void ConvertToStringOrUniqueKeyOnly()
+    {
+        TypeConverter c = new UniqueKeyConverter();
+        UniqueKey key = UniqueKey.GetInstanceScoped(new object(), "PartialKey");
+
+        c.ConvertTo(key, typeof(UniqueKey));
+        c.ConvertTo(key, typeof(string));
+        try
         {
-            TypeConverter c = new UniqueKeyConverter();
-            Assert.IsTrue(c.CanConvertFrom(typeof(string)));
-            Assert.IsFalse(c.CanConvertFrom(typeof(object)));
+            c.ConvertTo(key, typeof(object));
+            Assert.Fail();
         }
+        catch (NotSupportedException) { }
+    }
 
-        [Test]
-        public void CanConvertToStringOnly()
+    [Test]
+    public void ConvertFromStringOrUniqueKeyOnly()
+    {
+        TypeConverter c = new UniqueKeyConverter();
+        UniqueKey key = UniqueKey.GetInstanceScoped(new object(), "PartialKey");
+        c.ConvertFrom(key);
+        c.ConvertFrom(key.ToString());
+        try
         {
-            TypeConverter c = new UniqueKeyConverter();
-            Assert.IsTrue(c.CanConvertTo(typeof(string)));
-            Assert.IsFalse(c.CanConvertTo(typeof(object)));
+            c.ConvertFrom(new object());
+            Assert.Fail();
         }
+        catch (NotSupportedException) { }
+    }
 
-        [Test]
-        public void ConvertToStringOrUniqueKeyOnly()
-        {
-            TypeConverter c = new UniqueKeyConverter();
-            UniqueKey key = UniqueKey.GetInstanceScoped(new object(), "PartialKey");
+    [Test]
+    public void ConvertFromReturnsNullIfInputNull()
+    {
+        TypeConverter c = new UniqueKeyConverter();
+        Assert.IsNull(c.ConvertFrom(null));
+    }
 
-            c.ConvertTo(key, typeof(UniqueKey));
-            c.ConvertTo(key, typeof(string));
-            try
-            {
-                c.ConvertTo(key, typeof(object));
-                Assert.Fail();
-            }
-            catch(NotSupportedException) {}
-        }
+    [Test]
+    public void ConvertToReturnsNullIfInputNull()
+    {
+        TypeConverter c = new UniqueKeyConverter();
+        Assert.IsNull(c.ConvertTo(null, typeof(string)));
+    }
 
-        [Test]
-        public void ConvertFromStringOrUniqueKeyOnly()
-        {
-            TypeConverter c = new UniqueKeyConverter();
-            UniqueKey key = UniqueKey.GetInstanceScoped(new object(), "PartialKey");
-            c.ConvertFrom(key);
-            c.ConvertFrom(key.ToString());
-            try
-            {
-                c.ConvertFrom(new object());
-                Assert.Fail();
-            }
-            catch(NotSupportedException) {}
-        }
+    [Test]
+    public void ConvertToEqualsToString()
+    {
+        object testObject = new object();
+        UniqueKey key = UniqueKey.GetInstanceScoped(testObject, "PartialKey");
 
-        [Test]
-        public void ConvertFromReturnsNullIfInputNull()
-        {
-            TypeConverter c = new UniqueKeyConverter();
-            Assert.IsNull(c.ConvertFrom(null)); 
-        }
+        TypeConverter c = new UniqueKeyConverter();
+        string stringKey = (string) c.ConvertTo(key, typeof(string));
+        Assert.AreEqual(key.ToString(), stringKey);
+    }
 
-        [Test]
-        public void ConvertToReturnsNullIfInputNull()
-        {
-            TypeConverter c = new UniqueKeyConverter();
-            Assert.IsNull(c.ConvertTo(null, typeof(string)));
-        }
+    [Test]
+    public void ConvertToAndFromAreInSync()
+    {
+        object testObject = new object();
+        UniqueKey expectedKey = UniqueKey.GetInstanceScoped(testObject, "PartialKey");
 
-        [Test]
-        public void ConvertToEqualsToString()
-        {
-            object testObject = new object();
-            UniqueKey key = UniqueKey.GetInstanceScoped(testObject, "PartialKey");
-
-            TypeConverter c = new UniqueKeyConverter();
-            string stringKey = (string) c.ConvertTo(key, typeof(string));
-            Assert.AreEqual(key.ToString(), stringKey);
-        }
-
-        [Test]
-        public void ConvertToAndFromAreInSync()
-        {
-            object testObject = new object();
-            UniqueKey expectedKey = UniqueKey.GetInstanceScoped(testObject, "PartialKey");
-
-            TypeConverter c = new UniqueKeyConverter();
-            string stringKey = (string)c.ConvertTo(expectedKey, typeof(string));
-            UniqueKey key2 = (UniqueKey) c.ConvertFrom(stringKey);
-            Assert.AreEqual( expectedKey, key2 );
-        }
-
+        TypeConverter c = new UniqueKeyConverter();
+        string stringKey = (string) c.ConvertTo(expectedKey, typeof(string));
+        UniqueKey key2 = (UniqueKey) c.ConvertFrom(stringKey);
+        Assert.AreEqual(expectedKey, key2);
     }
 }

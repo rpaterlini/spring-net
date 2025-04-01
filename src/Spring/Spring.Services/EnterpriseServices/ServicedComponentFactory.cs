@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,165 +14,139 @@
  * limitations under the License.
  */
 
-#endregion
-
 #if !MONO
 
 using System.Reflection;
 using Spring.Objects.Factory;
 using Spring.Objects.Factory.Config;
 
-namespace Spring.EnterpriseServices
+namespace Spring.EnterpriseServices;
+
+/// <summary>
+/// Factory Object that instantiates and configures ServicedComponent.
+/// </summary>
+/// <remarks>
+/// <p>
+/// This factory object should be used to instantiate and configure
+/// serviced components created by <see cref="ServicedComponentExporter"/>.
+/// </p>
+/// </remarks>
+/// <author>Aleksandar Seovic</author>
+public class ServicedComponentFactory : IConfigurableFactoryObject, IInitializingObject
 {
+    private string name;
+    private string server;
+
+    private bool isSingleton;
+    private IObjectDefinition productTemplate;
+
+    private Type componentType;
+    private object singletonInstance;
+
     /// <summary>
-    /// Factory Object that instantiates and configures ServicedComponent.
+    /// Creates new instance of serviced component factory.
     /// </summary>
-    /// <remarks>
-    /// <p>
-    /// This factory object should be used to instantiate and configure
-    /// serviced components created by <see cref="ServicedComponentExporter"/>.
-    /// </p>
-    /// </remarks>
-    /// <author>Aleksandar Seovic</author>
-    public class ServicedComponentFactory : IConfigurableFactoryObject, IInitializingObject
+    public ServicedComponentFactory()
     {
-        #region Fields
+        this.isSingleton = false;
+    }
 
-        private string name;
-        private string server;
+    /// <summary>
+    /// Gets or sets component name, as registered with COM+ Services.
+    /// </summary>
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
 
-        private bool isSingleton;
-        private IObjectDefinition productTemplate;
+    /// <summary>
+    /// Gets or sets name of the remote server that COM+ component is registered with.
+    /// </summary>
+    public string Server
+    {
+        get { return server; }
+        set { server = value; }
+    }
 
-        private Type componentType;
-        private object singletonInstance;
-
-        #endregion
-
-        #region Constructor(s) / Destructor
-
-        /// <summary>
-        /// Creates new instance of serviced component factory.
-        /// </summary>
-        public ServicedComponentFactory()
+    /// <summary>
+    /// Returns configured instance of the serviced component.
+    /// </summary>
+    /// <returns>Configured instance of the serviced component.</returns>
+    public object GetObject()
+    {
+        if (IsSingleton)
         {
-            this.isSingleton = false;
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets component name, as registered with COM+ Services.
-        /// </summary>
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets name of the remote server that COM+ component is registered with.
-        /// </summary>
-        public string Server
-        {
-            get { return server; }
-            set { server = value; }
-        }
-
-        #endregion
-
-        #region IConfigurableFactoryObject Members
-
-        /// <summary>
-        /// Returns configured instance of the serviced component.
-        /// </summary>
-        /// <returns>Configured instance of the serviced component.</returns>
-        public object GetObject()
-        {
-            if (IsSingleton)
+            if (singletonInstance == null)
             {
-                if (singletonInstance == null)
-                {
-                    singletonInstance = CreateInstance();
-                }
-                return singletonInstance;
+                singletonInstance = CreateInstance();
             }
-            else
-            {
-                return CreateInstance();
-            }
-        }
 
-        /// <summary>
-        /// Returns type of serviced component.
-        /// </summary>
-        public Type ObjectType
+            return singletonInstance;
+        }
+        else
         {
-            get { return componentType; }
+            return CreateInstance();
         }
+    }
 
-        /// <summary>
-        /// Gets or sets whether serviced component should be treated as singleton. Default is <b>false</b>.
-        /// </summary>
-        public bool IsSingleton
+    /// <summary>
+    /// Returns type of serviced component.
+    /// </summary>
+    public Type ObjectType
+    {
+        get { return componentType; }
+    }
+
+    /// <summary>
+    /// Gets or sets whether serviced component should be treated as singleton. Default is <b>false</b>.
+    /// </summary>
+    public bool IsSingleton
+    {
+        get { return isSingleton; }
+        set { isSingleton = value; }
+    }
+
+    /// <summary>
+    /// Gets or sets the template object definition
+    /// that should be used to configure proxy instance.
+    /// </summary>
+    public IObjectDefinition ProductTemplate
+    {
+        get { return productTemplate; }
+        set { productTemplate = value; }
+    }
+
+    /// <summary>
+    /// Initializes factory object.
+    /// </summary>
+    public void AfterPropertiesSet()
+    {
+        ValidateConfiguration();
+        componentType = Type.GetTypeFromProgID(Name, Server);
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+    }
+
+    private void ValidateConfiguration()
+    {
+        if (Name == null)
         {
-            get { return isSingleton; }
-            set { isSingleton = value; }
+            throw new ArgumentException("The Name property is required.");
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the template object definition
-        /// that should be used to configure proxy instance.
-        /// </summary>
-        public IObjectDefinition ProductTemplate
-        {
-            get { return productTemplate; }
-            set { productTemplate = value; }
-        }
+    /// <summary>
+    /// Creates new instance of serviced component.
+    /// </summary>
+    /// <returns>New instance of serviced component.</returns>
+    private object CreateInstance()
+    {
+        return Activator.CreateInstance(componentType);
+    }
 
-        #endregion
-
-        #region IInitializingObject Members
-
-        /// <summary>
-        /// Initializes factory object.
-        /// </summary>
-        public void AfterPropertiesSet()
-        {
-            ValidateConfiguration();
-            componentType = Type.GetTypeFromProgID(Name, Server);
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private void ValidateConfiguration()
-        {
-            if (Name == null)
-            {
-                throw new ArgumentException("The Name property is required.");
-            }
-        }
-
-        /// <summary>
-        /// Creates new instance of serviced component.
-        /// </summary>
-        /// <returns>New instance of serviced component.</returns>
-        private object CreateInstance()
-        {
-            return Activator.CreateInstance(componentType);
-        }
-
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            return Assembly.LoadFrom(componentType.Assembly.CodeBase);
-        }
-
-        #endregion
+    private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+    {
+        return Assembly.LoadFrom(componentType.Assembly.CodeBase);
     }
 }
 

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,21 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Xml;
 
-namespace Spring.Objects.Factory.Xml
+/// <summary>
+/// Convenient base class for when there exists a one-to-one mapping
+/// between attribute names on the element that is to be parsed and
+/// the property names on the Type being configured.
+/// </summary>
+/// <remarks>
+///
+/// </remarks>
+/// <author>Mark Pollack</author>
+public class AbstractSimpleObjectDefinitionParser : AbstractSingleObjectDefinitionParser
 {
-    /// <summary>
-    /// Convenient base class for when there exists a one-to-one mapping
-    /// between attribute names on the element that is to be parsed and
-    /// the property names on the Type being configured. 
-    /// </summary>
-    /// <remarks>
-    ///
-    /// </remarks>
-    /// <author>Mark Pollack</author>
-    public class AbstractSimpleObjectDefinitionParser : AbstractSingleObjectDefinitionParser
-    {
-        
-    }
 }

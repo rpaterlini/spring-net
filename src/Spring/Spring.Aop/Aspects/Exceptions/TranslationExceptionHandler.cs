@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,61 +14,61 @@
  * limitations under the License.
  */
 
-#endregion
-
+using Microsoft.Extensions.Logging;
 using Spring.Expressions;
 
-namespace Spring.Aspects.Exceptions
+namespace Spring.Aspects.Exceptions;
+
+/// <summary>
+/// Translates from one exception to another based.  My wrap or replace exception depending on the expression.
+/// </summary>
+/// <author>Mark Pollack</author>
+public class TranslationExceptionHandler : AbstractExceptionHandler
 {
     /// <summary>
-    /// Translates from one exception to another based.  My wrap or replace exception depending on the expression.
+    /// Initializes a new instance of the <see cref="TranslationExceptionHandler"/> class.
     /// </summary>
-    /// <author>Mark Pollack</author>
-    public class TranslationExceptionHandler : AbstractExceptionHandler
+    public TranslationExceptionHandler()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TranslationExceptionHandler"/> class.
-        /// </summary>
-        public TranslationExceptionHandler()
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TranslationExceptionHandler"/> class.
+    /// </summary>
+    /// <param name="exceptionNames">The exception names.</param>
+    public TranslationExceptionHandler(string[] exceptionNames) : base(exceptionNames)
+    {
+    }
+
+    /// <summary>
+    /// Handles the exception.
+    /// </summary>
+    /// <returns>The return value from handling the exception, if not rethrown or a new exception is thrown.</returns>
+    public override object HandleException(IDictionary<string, object> callContextDictionary)
+    {
+        object o = null;
+        try
         {
+            IExpression expression = Expression.Parse(ActionExpressionText);
+            o = expression.GetValue(null, callContextDictionary);
+        }
+        catch (Exception e)
+        {
+            string message = "Was not able to evaluate action expression [" + ActionExpressionText + "]";
+            log.LogWarning(e, message);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TranslationExceptionHandler"/> class.
-        /// </summary>
-        /// <param name="exceptionNames">The exception names.</param>
-        public TranslationExceptionHandler(string[] exceptionNames) : base(exceptionNames)
+        Exception translatedException = o as Exception;
+        if (translatedException != null)
         {
+            ThrowTranslatedException(translatedException);
         }
 
+        return null;
+    }
 
-
-        /// <summary>
-        /// Handles the exception.
-        /// </summary>
-        /// <returns>The return value from handling the exception, if not rethrown or a new exception is thrown.</returns>
-        public override object HandleException(IDictionary<string, object> callContextDictionary)
-        {
-            object o = null;
-            try {
-                IExpression expression = Expression.Parse(ActionExpressionText);
-                o = expression.GetValue(null, callContextDictionary);
-            }
-            catch (Exception e)
-            {
-                log.Warn("Was not able to evaluate action expression [" + ActionExpressionText + "]", e);
-            }
-            Exception translatedException = o as Exception;
-            if (translatedException != null)
-            {
-                ThrowTranslatedException(translatedException);
-            }
-            return null;
-        }
-
-        private void ThrowTranslatedException(Exception exception)
-        {
-            throw exception;
-        }
+    private void ThrowTranslatedException(Exception exception)
+    {
+        throw exception;
     }
 }

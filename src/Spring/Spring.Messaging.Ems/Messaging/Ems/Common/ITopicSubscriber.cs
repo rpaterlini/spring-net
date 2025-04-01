@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2010 the original author or authors.
  *
@@ -16,13 +14,10 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Common
+public interface ITopicSubscriber : IMessageConsumer
 {
-    public interface ITopicSubscriber : IMessageConsumer
-    {
-        bool NoLocal { get; }
-        Topic Topic { get; }
-    }
+    bool NoLocal { get; }
+    Topic Topic { get; }
 }

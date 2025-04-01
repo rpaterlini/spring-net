@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2010 the original author or authors.
  *
@@ -16,60 +14,53 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Common
+public class EmsMessageConsumer : IMessageConsumer
 {
-    public class EmsMessageConsumer : IMessageConsumer
+    protected readonly MessageConsumer nativeMessageConsumer;
+
+    public EmsMessageConsumer(MessageConsumer messageConsumer)
     {
-        protected readonly MessageConsumer nativeMessageConsumer;
+        nativeMessageConsumer = messageConsumer;
+        nativeMessageConsumer.MessageHandler += MessageHandler;
+    }
 
-        public EmsMessageConsumer(MessageConsumer messageConsumer)
-        {
-            nativeMessageConsumer = messageConsumer;
-            nativeMessageConsumer.MessageHandler += MessageHandler;
-        }
+    public MessageConsumer NativeMessageConsumer
+    {
+        get { return this.nativeMessageConsumer; }
+    }
 
-        #region Implementation of IMessageConsumer
+    public event EMSMessageHandler MessageHandler;
 
-        public MessageConsumer NativeMessageConsumer
-        {
-            get { return this.nativeMessageConsumer; }
-        }
+    public IMessageListener MessageListener
+    {
+        get { return nativeMessageConsumer.MessageListener; }
+        set { nativeMessageConsumer.MessageListener = value; }
+    }
 
-        public event EMSMessageHandler MessageHandler;
+    public string MessageSelector
+    {
+        get { return nativeMessageConsumer.MessageSelector; }
+    }
 
-        public IMessageListener MessageListener
-        {
-            get { return nativeMessageConsumer.MessageListener; }
-            set { nativeMessageConsumer.MessageListener = value; }
-        }
+    public void Close()
+    {
+        nativeMessageConsumer.Close();
+    }
 
-        public string MessageSelector
-        {
-            get { return nativeMessageConsumer.MessageSelector; }
-        }
+    public Message Receive()
+    {
+        return nativeMessageConsumer.Receive();
+    }
 
-        public void Close()
-        {
-            nativeMessageConsumer.Close();
-        }
+    public Message Receive(long timeout)
+    {
+        return nativeMessageConsumer.Receive(timeout);
+    }
 
-        public Message Receive()
-        {
-            return nativeMessageConsumer.Receive();
-        }
-
-        public Message Receive(long timeout)
-        {
-            return nativeMessageConsumer.Receive(timeout);
-        }
-
-        public Message ReceiveNoWait()
-        {
-            return nativeMessageConsumer.ReceiveNoWait();
-        }
-
-        #endregion
+    public Message ReceiveNoWait()
+    {
+        return nativeMessageConsumer.ReceiveNoWait();
     }
 }

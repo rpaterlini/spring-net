@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,61 +14,54 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Core;
 
-#region Imports
-
-#endregion
-
-namespace Spring.Core
+/// <summary>
+/// Interface to be implemented by objects that can return information about
+/// the current call stack.
+/// </summary>
+/// <remarks>
+/// <p>
+/// Useful in AOP (as an expression of the AspectJ <c>cflow</c> concept) but not AOP-specific.
+/// </p>
+/// </remarks>
+/// <author>Rod Johnson</author>
+/// <author>Aleksandar Seovic (.Net)</author>
+public interface IControlFlow
 {
-	/// <summary>
-	/// Interface to be implemented by objects that can return information about
-	/// the current call stack.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// Useful in AOP (as an expression of the AspectJ <c>cflow</c> concept) but not AOP-specific.
-	/// </p>
-	/// </remarks>
-    /// <author>Rod Johnson</author>
-    /// <author>Aleksandar Seovic (.Net)</author>
-    public interface IControlFlow
-	{
-        /// <summary>
-        /// Detects whether the caller is under the supplied <see cref="System.Type"/>,
-        /// according to the current stacktrace.
-        /// </summary>
-        /// <param name="type">
-        /// The <see cref="System.Type"/> to look for.
-        /// </param>
-        /// <returns>
-		/// <see langword="true"/> if the caller is under the supplied <see cref="System.Type"/>.
-		/// </returns>
-		bool Under(Type type);
+    /// <summary>
+    /// Detects whether the caller is under the supplied <see cref="System.Type"/>,
+    /// according to the current stacktrace.
+    /// </summary>
+    /// <param name="type">
+    /// The <see cref="System.Type"/> to look for.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the caller is under the supplied <see cref="System.Type"/>.
+    /// </returns>
+    bool Under(Type type);
 
-		/// <summary>
-		/// Detects whether the caller is under the supplied <see cref="System.Type"/>
-		/// and <paramref name="methodName"/>, according to the current stacktrace.
-		/// </summary>
-		/// <param name="type">
-		/// The <see cref="System.Type"/> to look for.
-		/// </param>
-		/// <param name="methodName">The name of the method to look for.</param>
-		/// <returns>
-		/// <see langword="true"/> if the caller is under the supplied <see cref="System.Type"/>
-		/// and <paramref name="methodName"/>.
-		/// </returns>
-        bool Under(Type type, string methodName);
+    /// <summary>
+    /// Detects whether the caller is under the supplied <see cref="System.Type"/>
+    /// and <paramref name="methodName"/>, according to the current stacktrace.
+    /// </summary>
+    /// <param name="type">
+    /// The <see cref="System.Type"/> to look for.
+    /// </param>
+    /// <param name="methodName">The name of the method to look for.</param>
+    /// <returns>
+    /// <see langword="true"/> if the caller is under the supplied <see cref="System.Type"/>
+    /// and <paramref name="methodName"/>.
+    /// </returns>
+    bool Under(Type type, string methodName);
 
-        /// <summary>
-        /// Does the current stack trace contain the supplied <paramref name="token"/>?
-        /// </summary>
-        /// <param name="token">The token to match against.</param>
-        /// <returns>
-        /// <see langword="true"/> if the current stack trace contains the supplied
-        /// <paramref name="token"/>.
-        /// </returns>
-		bool UnderToken(string token);
-	}
+    /// <summary>
+    /// Does the current stack trace contain the supplied <paramref name="token"/>?
+    /// </summary>
+    /// <param name="token">The token to match against.</param>
+    /// <returns>
+    /// <see langword="true"/> if the current stack trace contains the supplied
+    /// <paramref name="token"/>.
+    /// </returns>
+    bool UnderToken(string token);
 }

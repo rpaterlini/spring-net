@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,29 +14,22 @@
  * limitations under the License.
  */
 
-#endregion
-
-
 using NUnit.Framework;
 using Spring.Context.Support;
 
-namespace Spring.Context.Attributes
+namespace Spring.Context.Attributes;
+
+[TestFixture]
+public class CodeConfigApplicationContextTests : AbstractConfigurationClassPostProcessorTests
 {
-    [TestFixture]
-    public class CodeConfigApplicationContextTests : AbstractConfigurationClassPostProcessorTests
+    protected override void CreateApplicationContext()
     {
+        GenericApplicationContext ctx = new GenericApplicationContext();
 
-        protected override void CreateApplicationContext()
-        {
-            GenericApplicationContext ctx = new GenericApplicationContext();
+        ctx.ScanAllAssemblies();
 
-            ctx.ScanAllAssemblies();
+        ctx.Refresh();
 
-            ctx.Refresh();
-
-            _ctx = ctx;
-        }
-
+        _ctx = ctx;
     }
-
 }

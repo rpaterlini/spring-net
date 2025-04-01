@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,69 +14,60 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Core.TypeConversion;
 
-namespace Spring.Core.TypeConversion
+/// <summary>
+/// Unit tests for the UriConverter class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class UriConverterTests
 {
-	/// <summary>
-	/// Unit tests for the UriConverter class.
-    /// </summary>
-    /// <author>Rick Evans</author>
-	[TestFixture]
-    public sealed class UriConverterTests
+    [Test]
+    public void CanConvertFrom()
     {
-        [Test]
-        public void CanConvertFrom () 
-        {
-            UriConverter vrt = new UriConverter ();
-            Assert.IsTrue (vrt.CanConvertFrom (typeof (string)), "Conversion from a string instance must be supported.");
-            Assert.IsFalse (vrt.CanConvertFrom (typeof (int)));
-        }
+        UriConverter vrt = new UriConverter();
+        Assert.IsTrue(vrt.CanConvertFrom(typeof(string)), "Conversion from a string instance must be supported.");
+        Assert.IsFalse(vrt.CanConvertFrom(typeof(int)));
+    }
 
-        [Test]
-        public void ConvertFrom () 
-        {
-            UriConverter vrt = new UriConverter ();
-            object actual = vrt.ConvertFrom ("svn://localhost/Spring/trunk/");
-            Assert.IsNotNull (actual);
-            Assert.AreEqual (typeof (System.Uri), actual.GetType ());
-        }
+    [Test]
+    public void ConvertFrom()
+    {
+        UriConverter vrt = new UriConverter();
+        object actual = vrt.ConvertFrom("svn://localhost/Spring/trunk/");
+        Assert.IsNotNull(actual);
+        Assert.AreEqual(typeof(System.Uri), actual.GetType());
+    }
 
-        [Test]
-        public void ConvertFromMalformedUriBails () 
+    [Test]
+    public void ConvertFromMalformedUriBails()
+    {
+        try
         {
-            try 
-            {
-                UriConverter vrt = new UriConverter ();
-                object actual = vrt.ConvertFrom ("$TheAngelGang");
-            } 
-            catch (Exception ex) 
-            {
-                // check that the inner exception was doe to the malformed URL
-                Assert.IsTrue (ex.InnerException is UriFormatException);
-            }
+            UriConverter vrt = new UriConverter();
+            object actual = vrt.ConvertFrom("$TheAngelGang");
         }
-
-        [Test]
-        public void ConvertFromNullReference () 
+        catch (Exception ex)
         {
-            UriConverter vrt = new UriConverter ();
-            Assert.Throws<NotSupportedException>(() => vrt.ConvertFrom (null));
+            // check that the inner exception was doe to the malformed URL
+            Assert.IsTrue(ex.InnerException is UriFormatException);
         }
+    }
 
-        [Test]
-        public void ConvertFromNonSupportedOptionBails () 
-        {
-            UriConverter vrt = new UriConverter ();
-            Assert.Throws<NotSupportedException>(() => vrt.ConvertFrom (12));
-        } 
-	}
+    [Test]
+    public void ConvertFromNullReference()
+    {
+        UriConverter vrt = new UriConverter();
+        Assert.Throws<NotSupportedException>(() => vrt.ConvertFrom(null));
+    }
+
+    [Test]
+    public void ConvertFromNonSupportedOptionBails()
+    {
+        UriConverter vrt = new UriConverter();
+        Assert.Throws<NotSupportedException>(() => vrt.ConvertFrom(12));
+    }
 }

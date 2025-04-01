@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +14,12 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
 using NUnit.Framework;
 using Spring.Context.Attributes;
 using Spring.Context.Attributes.TypeFilters;
 using Spring.Objects.Factory;
 using Spring.Objects.Factory.Xml;
 using Spring.Context.Support;
-
 
 namespace Spring.Context.Config
 {
@@ -133,7 +127,6 @@ namespace Spring.Context.Config
             Assert.That(_applicationContext.GetObject("SomeExcludeType"), Is.Not.Null);
             Assert.That(() => { _applicationContext.GetObject("SomeIncludeType1"); }, Throws.Exception.TypeOf<NoSuchObjectDefinitionException>());
         }
-
     }
 }
 
@@ -151,7 +144,7 @@ namespace XmlAssemblyTypeScanner.Test.Include1
         [ObjectDef]
         public virtual SomeIncludeType1 SomeIncludeType1()
         {
-            return new SomeIncludeType1();           
+            return new SomeIncludeType1();
         }
     }
 
@@ -160,8 +153,8 @@ namespace XmlAssemblyTypeScanner.Test.Include1
     }
 
     public interface IFunny
-    {}
-
+    {
+    }
 
     public class TestFilter : ITypeFilter
     {
@@ -170,7 +163,6 @@ namespace XmlAssemblyTypeScanner.Test.Include1
             return type.Name.Equals("SomeIncludeConfiguration1");
         }
     }
-
 }
 
 namespace XmlAssemblyTypeScanner.Test.Include2
@@ -208,7 +200,6 @@ namespace XmlAssemblyTypeScanner.Test.Include
     [Configuration]
     public class SomeExcludeConfiguration3
     {
-        
         [ObjectDef]
         public virtual SomeExcludeType SomeExcludeType()
         {

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,25 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Remoting;
 
-#region Imports
-
-
-#endregion
-
-namespace Spring.Remoting
+public interface ISimpleCounter
 {
-    public interface ISimpleCounter
-    {
-        /// <summary>
-        /// Gets or Sets the Counter's value.
-        /// </summary>
-        int Counter { get; set; }
+    /// <summary>
+    /// Gets or Sets the Counter's value.
+    /// </summary>
+    int Counter { get; set; }
 
-        /// <summary>
-        /// Increments the counter by one.
-        /// </summary>
-        void Count();
-    }
+    /// <summary>
+    /// Increments the counter by one.
+    /// </summary>
+    void Count();
 }

@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +14,11 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
-
 using FakeItEasy;
-
 using NHibernate;
 using NUnit.Framework;
-
 using Spring.Transaction.Support;
-
 using static FakeItEasy.A;
-
-#endregion
 
 namespace Spring.Data.NHibernate.Support
 {
@@ -148,6 +135,7 @@ namespace Spring.Data.NHibernate.Support
                 Assert.IsFalse(scope.IsOpen);
                 Assert.IsFalse(scope.IsParticipating);
             }
+
             Assert.IsFalse(scope.IsOpen);
             Assert.IsFalse(scope.IsParticipating);
 
@@ -157,6 +145,7 @@ namespace Spring.Data.NHibernate.Support
                 Assert.IsTrue(scope.IsOpen);
                 Assert.IsFalse(scope.IsParticipating);
             }
+
             // ensure dispose closes scope
             Assert.IsFalse(scope.IsOpen);
             Assert.IsFalse(scope.IsParticipating);
@@ -181,6 +170,7 @@ namespace Spring.Data.NHibernate.Support
                 Assert.IsFalse(scope.IsOpen);
                 Assert.IsFalse(scope.IsParticipating);
             }
+
             // ensure is closed
             Assert.IsFalse(scope.IsOpen);
             Assert.IsFalse(scope.IsParticipating);
@@ -202,6 +192,7 @@ namespace Spring.Data.NHibernate.Support
                 SessionHolder sessionHolder = TransactionSynchronizationManager.GetResource(expectedSessionFactory) as SessionHolder;
                 Assert.IsNotNull(sessionHolder);
             }
+
             // ensure scope is closed and sessionHolder is unregistered from TSM
             Assert.IsFalse(scope.IsOpen);
             Assert.IsFalse(TransactionSynchronizationManager.HasResource(expectedSessionFactory));
@@ -217,9 +208,10 @@ namespace Spring.Data.NHibernate.Support
             SessionScope scope = null;
             using (scope = new SessionScope(expectedSessionFactory, null, true, FlushMode.Auto, true))
             {
-                SessionHolder sessionHolder = (SessionHolder)TransactionSynchronizationManager.GetResource(expectedSessionFactory);
+                SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.GetResource(expectedSessionFactory);
                 Assert.IsTrue(sessionHolder.ContainsSession(expectedSession));
             }
+
             // ensure scope is closed and sessionHolder is unregistered from TSM
             Assert.IsFalse(scope.IsOpen);
             Assert.IsFalse(TransactionSynchronizationManager.HasResource(expectedSessionFactory));
@@ -287,7 +279,7 @@ namespace Spring.Data.NHibernate.Support
         {
             TestSessionScopeSettings sss = Fake<TestSessionScopeSettings>(options => options
                 .CallsBaseMethods()
-                .WithArgumentsForConstructor(new[] {expectedSessionFactory})
+                .WithArgumentsForConstructor(new[] { expectedSessionFactory })
             );
             ISession expectedSession = Fake<ISession>();
             sss.DefaultFlushMode = FlushMode.Never;

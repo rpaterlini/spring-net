@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,45 +14,42 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Collections;
 using System.Runtime.Serialization;
 
-namespace Spring.Expressions
+namespace Spring.Expressions;
+
+/// <summary>
+/// Represents parsed list initializer node in the navigation expression.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[Serializable]
+public class ListInitializerNode : NodeWithArguments
 {
-	/// <summary>
-	/// Represents parsed list initializer node in the navigation expression.
-	/// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [Serializable]
-    public class ListInitializerNode : NodeWithArguments
-	{
-        /// <summary>
-        /// Create a new instance
-        /// </summary>
-        public ListInitializerNode()
-        {
-        }
+    /// <summary>
+    /// Create a new instance
+    /// </summary>
+    public ListInitializerNode()
+    {
+    }
 
-        /// <summary>
-        /// Create a new instance from SerializationInfo
-        /// </summary>
-        protected ListInitializerNode(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+    /// <summary>
+    /// Create a new instance from SerializationInfo
+    /// </summary>
+    protected ListInitializerNode(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
 
-        /// <summary>
-        /// Creates new instance of the list defined by this node.
-        /// </summary>
-        /// <param name="context">Context to evaluate expressions against.</param>
-        /// <param name="evalContext">Current expression evaluation context.</param>
-        /// <returns>Node's value.</returns>
-        protected override object Get(object context, EvaluationContext evalContext)
-        {
-            object[] values = ResolveArguments(evalContext);
-            return new ArrayList(values);
-        }
+    /// <summary>
+    /// Creates new instance of the list defined by this node.
+    /// </summary>
+    /// <param name="context">Context to evaluate expressions against.</param>
+    /// <param name="evalContext">Current expression evaluation context.</param>
+    /// <returns>Node's value.</returns>
+    protected override object Get(object context, EvaluationContext evalContext)
+    {
+        object[] values = ResolveArguments(evalContext);
+        return new ArrayList(values);
     }
 }

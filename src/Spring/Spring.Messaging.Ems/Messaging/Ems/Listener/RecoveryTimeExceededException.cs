@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,37 +14,33 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Messaging.Ems.Listener.Adapter;
 
-namespace Spring.Messaging.Ems.Listener
+namespace Spring.Messaging.Ems.Listener;
+
+/// <summary>
+/// Exception thrown when the maximum connection recovery time has been exceeded.
+/// </summary>
+/// <author>Mark Pollack</author>
+public class RecoveryTimeExceededException : EMSException
 {
     /// <summary>
-    /// Exception thrown when the maximum connection recovery time has been exceeded.
+    /// Initializes a new instance of the <see cref="RecoveryTimeExceededException"/> class, with the specified message
     /// </summary>
-    /// <author>Mark Pollack</author>
-    public class RecoveryTimeExceededException : EMSException
+    /// <param name="message">The message.</param>
+    public RecoveryTimeExceededException(string message) : base(message)
     {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RecoveryTimeExceededException"/> class, with the specified message
-        /// </summary>
-        /// <param name="message">The message.</param>
-        public RecoveryTimeExceededException(string message) : base(message)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ListenerExecutionFailedException"/> class, with the specified message
-        /// and root cause exception
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="innerException">The inner exception.</param>
-        public RecoveryTimeExceededException(string message, Exception innerException)
-            : base(message)
-        {
-            LinkedException = innerException;
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ListenerExecutionFailedException"/> class, with the specified message
+    /// and root cause exception
+    /// </summary>
+    /// <param name="message">The message.</param>
+    /// <param name="innerException">The inner exception.</param>
+    public RecoveryTimeExceededException(string message, Exception innerException)
+        : base(message)
+    {
+        LinkedException = innerException;
     }
 }

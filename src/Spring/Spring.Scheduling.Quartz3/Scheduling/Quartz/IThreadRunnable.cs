@@ -1,5 +1,4 @@
-﻿#region License
-// /*
+﻿// /*
 //  * Copyright 2018 the original author or authors.
 //  *
 //  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +13,16 @@
 //  * See the License for the specific language governing permissions and
 //  * limitations under the License.
 //  */
-#endregion
 
-namespace Spring.Scheduling.Quartz
+namespace Spring.Scheduling.Quartz;
+
+/// <summary>
+/// Adapter interface as Quartz no longer has this interface.
+/// </summary>
+public interface IThreadRunnable
 {
     /// <summary>
-    /// Adapter interface as Quartz no longer has this interface.
+    /// Runs thread runnable.
     /// </summary>
-    public interface IThreadRunnable
-    {
-        /// <summary>
-        /// Runs thread runnable.
-        /// </summary>
-        Task Run();
-    }
+    Task Run();
 }

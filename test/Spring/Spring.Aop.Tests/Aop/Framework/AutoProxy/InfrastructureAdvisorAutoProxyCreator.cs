@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,72 +14,63 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
-using System.Collections.Generic;
 using AopAlliance.Aop;
 using NUnit.Framework;
 using Spring.Objects.Factory.Config;
 using Spring.Objects.Factory.Support;
 
-namespace Spring.Aop.Framework.AutoProxy
+namespace Spring.Aop.Framework.AutoProxy;
+
+/// <summary>
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class InfrastructureAdvisorAutoProxyCreatorTests
 {
-    /// <summary>
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class InfrastructureAdvisorAutoProxyCreatorTests
+    public class TestAdvisorAutoProxyCreator : InfrastructureAdvisorAutoProxyCreator
     {
-        public class TestAdvisorAutoProxyCreator : InfrastructureAdvisorAutoProxyCreator
+        public IList<object> GetAdvicesAndAdvisorsForObject(Type targetType, string targetName)
         {
-            public IList<object> GetAdvicesAndAdvisorsForObject(Type targetType, string targetName)
-            {
-                return base.GetAdvicesAndAdvisorsForObject(targetType, targetName, null);
-            }
+            return base.GetAdvicesAndAdvisorsForObject(targetType, targetName, null);
+        }
+    }
+
+    public class TestAdvisor : IAdvisor
+    {
+        public string Name;
+
+        public bool IsPerInstance
+        {
+            get { throw new NotImplementedException(); }
         }
 
-        public class TestAdvisor : IAdvisor
+        public IAdvice Advice
         {
-            public string Name;
-
-            #region Implementation of IAdvisor
-
-            public bool IsPerInstance
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public IAdvice Advice
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            #endregion
+            get { throw new NotImplementedException(); }
         }
+    }
 
-        [Test]
-        public void DoesAcceptInfrastructureAdvisorsOnlyDuringScanning()
-        {
-            DefaultListableObjectFactory of = new DefaultListableObjectFactory();
+    [Test]
+    public void DoesAcceptInfrastructureAdvisorsOnlyDuringScanning()
+    {
+        DefaultListableObjectFactory of = new DefaultListableObjectFactory();
 
-            GenericObjectDefinition infrastructureAdvisorDefinition = new GenericObjectDefinition();
-            infrastructureAdvisorDefinition.ObjectType = typeof(TestAdvisor);
-            infrastructureAdvisorDefinition.PropertyValues.Add("Name", "InfrastructureAdvisor");
-            infrastructureAdvisorDefinition.Role = ObjectRole.ROLE_INFRASTRUCTURE;
-            of.RegisterObjectDefinition("infrastructure", infrastructureAdvisorDefinition);
+        GenericObjectDefinition infrastructureAdvisorDefinition = new GenericObjectDefinition();
+        infrastructureAdvisorDefinition.ObjectType = typeof(TestAdvisor);
+        infrastructureAdvisorDefinition.PropertyValues.Add("Name", "InfrastructureAdvisor");
+        infrastructureAdvisorDefinition.Role = ObjectRole.ROLE_INFRASTRUCTURE;
+        of.RegisterObjectDefinition("infrastructure", infrastructureAdvisorDefinition);
 
-            GenericObjectDefinition regularAdvisorDefinition = new GenericObjectDefinition();
-            regularAdvisorDefinition.ObjectType = typeof(TestAdvisor);
-            regularAdvisorDefinition.PropertyValues.Add("Name", "RegularAdvisor");
-            //            regularAdvisorDefinition.Role = ObjectRole.ROLE_APPLICATION;
-            of.RegisterObjectDefinition("regular", regularAdvisorDefinition);
+        GenericObjectDefinition regularAdvisorDefinition = new GenericObjectDefinition();
+        regularAdvisorDefinition.ObjectType = typeof(TestAdvisor);
+        regularAdvisorDefinition.PropertyValues.Add("Name", "RegularAdvisor");
+        //            regularAdvisorDefinition.Role = ObjectRole.ROLE_APPLICATION;
+        of.RegisterObjectDefinition("regular", regularAdvisorDefinition);
 
-            TestAdvisorAutoProxyCreator apc = new TestAdvisorAutoProxyCreator();
-            apc.ObjectFactory = of;
-            IList<object> advisors = apc.GetAdvicesAndAdvisorsForObject(typeof(object), "dummyTarget");
-            Assert.AreEqual(1, advisors.Count);
-            Assert.AreEqual("InfrastructureAdvisor", ((TestAdvisor)advisors[0]).Name);
-        }
+        TestAdvisorAutoProxyCreator apc = new TestAdvisorAutoProxyCreator();
+        apc.ObjectFactory = of;
+        IList<object> advisors = apc.GetAdvicesAndAdvisorsForObject(typeof(object), "dummyTarget");
+        Assert.AreEqual(1, advisors.Count);
+        Assert.AreEqual("InfrastructureAdvisor", ((TestAdvisor) advisors[0]).Name);
     }
 }

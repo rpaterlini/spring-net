@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,139 +14,112 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Remoting;
-
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Spring.Core;
 using Spring.Core.IO;
 using Spring.Objects.Factory.Config;
 
-namespace Spring.Remoting
+namespace Spring.Remoting;
+
+/// <summary>
+/// Convenience class to configure remoting infrastructure from the IoC container.
+/// </summary>
+/// <author>Bruno Baia</author>
+public class RemotingConfigurer : IObjectFactoryPostProcessor, IOrdered
 {
+    private static readonly ILogger<RemotingConfigurer> log = LogManager.GetLogger<RemotingConfigurer>();
+
+    private int _order = Int32.MinValue;
+
+    private IResource _filename;
+    private bool _useConfigFile = true;
+    private bool _ensureSecurity = false;
+
     /// <summary>
-    /// Convenience class to configure remoting infrastructure from the IoC container.
+    /// Initializes a new instance of the <see cref="RemotingConfigurer"/> class.
     /// </summary>
-    /// <author>Bruno Baia</author>
-    public class RemotingConfigurer : IObjectFactoryPostProcessor, IOrdered
+    public RemotingConfigurer()
     {
-		#region Fields
+    }
 
-        private static readonly ILog log = LogManager.GetLogger(typeof(RemotingConfigurer));
+    /// <summary>
+    /// Gets or sets the name of the remoting configuration file.
+    /// </summary>
+    /// <remarks>
+    /// If filename is <see langword="null"/> or not set,
+    /// current AppDomain's configuration file will be used.
+    /// </remarks>
+    public IResource Filename
+    {
+        get { return _filename; }
+        set { _filename = value; }
+    }
 
-        private int _order = Int32.MinValue;
+    /// <summary>
+    /// Indicates whether a configuration file is used.
+    /// Default value is <see langword="true"/>.
+    /// </summary>
+    /// <remarks>
+    /// If <see langword="false"/>, default remoting configuration will be used.
+    /// </remarks>
+    public bool UseConfigFile
+    {
+        get { return _useConfigFile; }
+        set { _useConfigFile = value; }
+    }
 
-        private IResource _filename;
-        private bool _useConfigFile = true;
-        private bool _ensureSecurity = false;
+    /// <summary>
+    /// Gets or sets if security is enabled.
+    /// </summary>
+    /// <remarks>
+    /// This property is only available since .NET Framework 2.0.
+    /// </remarks>
+    public bool EnsureSecurity
+    {
+        get { return _ensureSecurity; }
+        set { _ensureSecurity = value; }
+    }
 
-		#endregion
-
-		#region Constructor(s) / Destructor
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RemotingConfigurer"/> class.
-        /// </summary>
-        public RemotingConfigurer()
-        {}
-
-		#endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the name of the remoting configuration file.
-        /// </summary>
-        /// <remarks>
-        /// If filename is <see langword="null"/> or not set,
-        /// current AppDomain's configuration file will be used.
-        /// </remarks>
-        public IResource Filename
+    /// <summary>
+    /// Modify the application context's internal object factory after its
+    /// standard initialization.
+    /// </summary>
+    /// <param name="factory">
+    /// The object factory used by the application context.
+    /// </param>
+    /// <seealso cref="Spring.Objects.Factory.Config.IObjectFactoryPostProcessor.PostProcessObjectFactory(IConfigurableListableObjectFactory)"/>
+    public void PostProcessObjectFactory(IConfigurableListableObjectFactory factory)
+    {
+        string filename = null;
+        if (UseConfigFile)
         {
-            get { return _filename; }
-            set { _filename = value; }
+            filename = (Filename == null)
+                ? AppDomain.CurrentDomain.SetupInformation.ConfigurationFile
+                : Filename.File.FullName;
         }
 
-        /// <summary>
-        /// Indicates whether a configuration file is used.
-        /// Default value is <see langword="true"/>.
-        /// </summary>
-        /// <remarks>
-        /// If <see langword="false"/>, default remoting configuration will be used.
-        /// </remarks>
-        public bool UseConfigFile
+        RemotingConfiguration.Configure(filename, EnsureSecurity);
+
+        if (log.IsEnabled(LogLevel.Debug))
         {
-            get { return _useConfigFile; }
-            set { _useConfigFile = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets if security is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This property is only available since .NET Framework 2.0.
-        /// </remarks>
-        public bool EnsureSecurity
-        {
-            get { return _ensureSecurity; }
-            set { _ensureSecurity = value; }
-        }
-
-        #endregion
-
-        #region IObjectFactoryPostProcessor Members
-
-        /// <summary>
-        /// Modify the application context's internal object factory after its
-        /// standard initialization.
-        /// </summary>
-        /// <param name="factory">
-        /// The object factory used by the application context.
-        /// </param>
-        /// <seealso cref="Spring.Objects.Factory.Config.IObjectFactoryPostProcessor.PostProcessObjectFactory(IConfigurableListableObjectFactory)"/>
-        public void PostProcessObjectFactory(IConfigurableListableObjectFactory factory)
-        {
-            string filename = null;
-            if (UseConfigFile)
+            if (filename == null)
             {
-                filename = (Filename == null)
-                    ? AppDomain.CurrentDomain.SetupInformation.ConfigurationFile
-                    : Filename.File.FullName;
+                log.LogDebug("Default remoting infrastructure loaded.");
             }
-
-            RemotingConfiguration.Configure(filename, EnsureSecurity);
-
-            #region Instrumentation
-
-            if (log.IsDebugEnabled)
+            else
             {
-                if (filename == null)
-                {
-                    log.Debug("Default remoting infrastructure loaded.");
-                }
-                else
-                {
-                    log.Debug(String.Format("Remoting infrastructure configured using file '{0}'.", filename));
-                }
+                log.LogDebug(String.Format("Remoting infrastructure configured using file '{0}'.", filename));
             }
-
-            #endregion
         }
+    }
 
-        #endregion
-
-        #region IOrdered Members
-
-        /// <summary>
-        /// Return the order value of this object,
-        /// where a higher value means greater in terms of sorting.
-        /// </summary>
-        public int Order
-        {
-            get { return _order; }
-        }
-
-        #endregion
+    /// <summary>
+    /// Return the order value of this object,
+    /// where a higher value means greater in terms of sorting.
+    /// </summary>
+    public int Order
+    {
+        get { return _order; }
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,16 +14,10 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 using Spring.Data.Common;
-
-#endregion
 
 namespace Spring.Data.NHibernate
 {
@@ -54,7 +46,7 @@ namespace Spring.Data.NHibernate
         [Ignore("Trouble running on Appveyor")]
         public void UserCredentialsDbProvider()
         {
-            ITestObjectDao dao = (ITestObjectDao)ctx["testObjectDaoTransProxy"];
+            ITestObjectDao dao = (ITestObjectDao) ctx["testObjectDaoTransProxy"];
 
             userCredentialsDbProvider.SetCredentialsForCurrentThread("User ID=springqa", "Password=springqa");
             TestObject toGeorge = new TestObject();
@@ -69,9 +61,5 @@ namespace Spring.Data.NHibernate
             toMary.Age = 34;
             dao.Create(toMary);
         }
-
-
-
-
     }
 }

@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +14,21 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
 using Spring.Messaging.Nms.Core;
 
-namespace Spring.Messaging.Nms.Connections
+namespace Spring.Messaging.Nms.Connections;
+
+public class TestExceptionListener : IExceptionListener
 {
-    public class TestExceptionListener : IExceptionListener
+    private int count = 0;
+
+    public void OnException(Exception exception)
     {
-        private int count = 0;
+        count++;
+    }
 
-        public void OnException(Exception exception)
-        {
-            count++;
-        }
-
-
-        public int Count
-        {
-            get { return count; }
-        }
+    public int Count
+    {
+        get { return count; }
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,141 +14,129 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using NUnit.Framework;
 using Spring.Objects.Factory.Config;
 
-#endregion
+namespace Spring.Objects.Factory.Support;
 
-namespace Spring.Objects.Factory.Support
+/// <summary>
+/// Unit tests for the SimpleInstantiationStrategy class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class SimpleInstantiationStrategyTests
 {
-	/// <summary>
-	/// Unit tests for the SimpleInstantiationStrategy class.
-	/// </summary>
-	/// <author>Rick Evans</author>
-	[TestFixture]
-	public sealed class SimpleInstantiationStrategyTests
-	{
-		#region SetUp
+    /// <summary>
+    /// The setup logic executed before the execution of each individual test.
+    /// </summary>
+    [SetUp]
+    public void SetUp()
+    {
+        _singletonDefinition = new RootObjectDefinition(typeof(TestObject), AutoWiringMode.No);
+        _singletonDefinitionWithFactory = new RootObjectDefinition(_singletonDefinition);
+        _singletonDefinitionWithFactory.FactoryMethodName = "GetObject";
+        _singletonDefinitionWithFactory.FactoryObjectName = "TestObjectFactoryDefinition";
+        _testObjectFactory = new RootObjectDefinition(typeof(TestObjectFactory), AutoWiringMode.No);
+        DefaultListableObjectFactory myFactory = new DefaultListableObjectFactory();
+        myFactory.RegisterObjectDefinition("SingletonObjectDefinition", SingletonDefinition);
+        myFactory.RegisterObjectDefinition("SingletonDefinitionWithFactory", SingletonDefinitionWithFactory);
+        myFactory.RegisterObjectDefinition("TestObjectFactoryDefinition", TestObjectFactoryDefinition);
+        _factory = myFactory;
+    }
 
-		/// <summary>
-		/// The setup logic executed before the execution of each individual test.
-		/// </summary>
-		[SetUp]
-		public void SetUp()
-		{
-			_singletonDefinition = new RootObjectDefinition(typeof (TestObject), AutoWiringMode.No);
-			_singletonDefinitionWithFactory = new RootObjectDefinition(_singletonDefinition);
-			_singletonDefinitionWithFactory.FactoryMethodName = "GetObject";
-			_singletonDefinitionWithFactory.FactoryObjectName = "TestObjectFactoryDefinition";
-			_testObjectFactory = new RootObjectDefinition(typeof (TestObjectFactory), AutoWiringMode.No);
-			DefaultListableObjectFactory myFactory = new DefaultListableObjectFactory();
-			myFactory.RegisterObjectDefinition("SingletonObjectDefinition", SingletonDefinition);
-			myFactory.RegisterObjectDefinition("SingletonDefinitionWithFactory", SingletonDefinitionWithFactory);
-			myFactory.RegisterObjectDefinition("TestObjectFactoryDefinition", TestObjectFactoryDefinition);
-			_factory = myFactory;
-		}
+    [Test]
+    public void InstantiateWithNulls()
+    {
+        SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
+        Assert.Throws<ArgumentNullException>(() => strategy.Instantiate(null, null, null));
+    }
 
-		#endregion
+    [Test]
+    public void InstantiateWithNullObjectName()
+    {
+        SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
+        object obj = strategy.Instantiate(SingletonDefinition, null, Factory);
+        Assert.IsNotNull(obj);
+        Assert.IsTrue(obj is ITestObject);
+        ITestObject actual = (ITestObject) obj;
+        Assert.IsNull(actual.Name);
+        Assert.AreEqual(0, actual.Age);
+    }
 
-		[Test]
-		public void InstantiateWithNulls()
-		{
-			SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
-            Assert.Throws<ArgumentNullException>(() => strategy.Instantiate(null, null, null));
-		}
+    [Test]
+    public void InstantiateWithExplicitCtor()
+    {
+        SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
+        object obj = strategy.Instantiate(
+            SingletonDefinition, null, Factory,
+            SingletonDefinition.ObjectType.GetConstructor(
+                new Type[] { typeof(string), typeof(int) }),
+            new object[] { "Rick", 19 });
+        Assert.IsNotNull(obj);
+        Assert.IsTrue(obj is ITestObject);
+        ITestObject actual = (ITestObject) obj;
+        Assert.AreEqual("Rick", actual.Name);
+        Assert.AreEqual(19, actual.Age);
+    }
 
-		[Test]
-		public void InstantiateWithNullObjectName()
-		{
-			SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
-			object obj = strategy.Instantiate(SingletonDefinition, null, Factory);
-			Assert.IsNotNull(obj);
-			Assert.IsTrue(obj is ITestObject);
-			ITestObject actual = (ITestObject) obj;
-			Assert.IsNull(actual.Name);
-			Assert.AreEqual(0, actual.Age);
-		}
+    [Test]
+    public void InstantiateWithFactoryMethod()
+    {
+        SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
+        object obj = strategy.Instantiate(SingletonDefinitionWithFactory,
+            string.Empty, Factory, typeof(TestObjectFactory).GetMethod("GetObject"), null);
+        Assert.IsNotNull(obj);
+        Assert.IsTrue(obj is ITestObject);
+        ITestObject actual = (ITestObject) obj;
+        Assert.AreEqual(TestObjectFactory.TheName, actual.Name);
+        Assert.AreEqual(TestObjectFactory.TheAge, actual.Age);
+    }
 
-		[Test]
-		public void InstantiateWithExplicitCtor()
-		{
-			SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
-			object obj = strategy.Instantiate(
-				SingletonDefinition, null, Factory,
-				SingletonDefinition.ObjectType.GetConstructor(
-					new Type[] {typeof (string), typeof (int)}),
-				new object[] {"Rick", 19});
-			Assert.IsNotNull(obj);
-			Assert.IsTrue(obj is ITestObject);
-			ITestObject actual = (ITestObject) obj;
-			Assert.AreEqual("Rick", actual.Name);
-			Assert.AreEqual(19, actual.Age);
-		}
+    [Test]
+    public void InstantiateWithDefinitionThatDoesNotHaveAResolvedObjectClass()
+    {
+        RootObjectDefinition def = new RootObjectDefinition();
+        def.ObjectTypeName = typeof(TestObject).FullName;
 
-		[Test]
-		public void InstantiateWithFactoryMethod()
-		{
-			SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
-			object obj = strategy.Instantiate(SingletonDefinitionWithFactory,
-				string.Empty, Factory, typeof (TestObjectFactory).GetMethod("GetObject"), null);
-			Assert.IsNotNull(obj);
-			Assert.IsTrue(obj is ITestObject);
-			ITestObject actual = (ITestObject) obj;
-			Assert.AreEqual(TestObjectFactory.TheName, actual.Name);
-			Assert.AreEqual(TestObjectFactory.TheAge, actual.Age);
-		}
+        SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
+        object foo = strategy.Instantiate(def, "foo", Factory);
+        Assert.IsNotNull(foo);
+        Assert.AreEqual(typeof(TestObject), foo.GetType());
+    }
 
-		[Test]
-		public void InstantiateWithDefinitionThatDoesNotHaveAResolvedObjectClass()
-		{
-			RootObjectDefinition def = new RootObjectDefinition();
-			def.ObjectTypeName = typeof(TestObject).FullName;
+    private RootObjectDefinition SingletonDefinition
+    {
+        get { return _singletonDefinition; }
+    }
 
-			SimpleInstantiationStrategy strategy = new SimpleInstantiationStrategy();
-			object foo = strategy.Instantiate(def, "foo", Factory);
-			Assert.IsNotNull(foo);
-			Assert.AreEqual(typeof(TestObject), foo.GetType());
-		}
+    private RootObjectDefinition SingletonDefinitionWithFactory
+    {
+        get { return _singletonDefinitionWithFactory; }
+    }
 
-		private RootObjectDefinition SingletonDefinition
-		{
-			get { return _singletonDefinition; }
-		}
+    private RootObjectDefinition TestObjectFactoryDefinition
+    {
+        get { return _testObjectFactory; }
+    }
 
-		private RootObjectDefinition SingletonDefinitionWithFactory
-		{
-			get { return _singletonDefinitionWithFactory; }
-		}
+    private IObjectFactory Factory
+    {
+        get { return _factory; }
+    }
 
-		private RootObjectDefinition TestObjectFactoryDefinition
-		{
-			get { return _testObjectFactory; }
-		}
+    private RootObjectDefinition _singletonDefinition;
+    private RootObjectDefinition _testObjectFactory;
+    private RootObjectDefinition _singletonDefinitionWithFactory;
+    private IObjectFactory _factory;
+}
 
-		private IObjectFactory Factory
-		{
-			get { return _factory; }
-		}
+public class TestObjectFactory
+{
+    public const string TheName = "Old Goriot";
+    public const int TheAge = 78;
 
-		private RootObjectDefinition _singletonDefinition;
-		private RootObjectDefinition _testObjectFactory;
-		private RootObjectDefinition _singletonDefinitionWithFactory;
-		private IObjectFactory _factory;
-	}
-
-	public class TestObjectFactory
-	{
-		public const string TheName = "Old Goriot";
-		public const int TheAge = 78;
-
-		public virtual object GetObject()
-		{
-			return new TestObject(TheName, TheAge);
-		}
-	}
+    public virtual object GetObject()
+    {
+        return new TestObject(TheName, TheAge);
+    }
 }

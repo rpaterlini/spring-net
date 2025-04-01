@@ -1,30 +1,30 @@
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 
-namespace Spring.Messaging.Ems.Core
+namespace Spring.Messaging.Ems.Core;
+
+public class SimpleMessageListener : IMessageListener
 {
-    public class SimpleMessageListener : IMessageListener
+    private static readonly ILogger<SimpleMessageListener> LOG = LogManager.GetLogger<SimpleMessageListener>();
+
+    private int messageCount;
+
+    public int MessageCount
     {
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(SimpleMessageListener));
+        get { return messageCount; }
+    }
 
-        private int messageCount;
-
-        public int MessageCount
+    public void OnMessage(Message message)
+    {
+        messageCount++;
+        LOG.LogDebug("Message listener count = " + messageCount);
+        TextMessage textMessage = message as TextMessage;
+        if (textMessage != null)
         {
-            get { return messageCount; }
+            LOG.LogInformation("Message Text = " + textMessage.Text);
         }
-
-        public void OnMessage(Message message)
-        {           
-            messageCount++;
-            LOG.Debug("Message listener count = " + messageCount);
-            TextMessage textMessage = message as TextMessage;
-            if (textMessage != null)
-            {
-                LOG.Info("Message Text = " + textMessage.Text);
-            } else
-            {
-                LOG.Warn("Can not process message of type " + message.GetType());
-            }
+        else
+        {
+            LOG.LogWarning("Can not process message of type " + message.GetType());
         }
     }
 }

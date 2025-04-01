@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,25 +14,19 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.DataBinding;
 
-namespace Spring.DataBinding
+/// <summary>
+/// BaseBindingManager keeps track of all registered bindings and
+/// represents an entry point for the binding and unbinding process.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+public class BaseBindingManager : BaseBindingContainer
 {
     /// <summary>
-    /// BaseBindingManager keeps track of all registered bindings and 
-    /// represents an entry point for the binding and unbinding process.
+    /// Initializes a new instance of the <see cref="BaseBindingManager"/> class.
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    public class BaseBindingManager : BaseBindingContainer
+    public BaseBindingManager()
     {
-        #region Constructor(s)
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseBindingManager"/> class.
-        /// </summary>
-        public BaseBindingManager()
-        {}
-
-        #endregion
     }
 }

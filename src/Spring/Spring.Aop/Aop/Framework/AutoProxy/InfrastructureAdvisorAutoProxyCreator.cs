@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,45 +14,42 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Objects.Factory.Config;
 
-namespace Spring.Aop.Framework.AutoProxy
+namespace Spring.Aop.Framework.AutoProxy;
+
+/// <summary>
+/// A special version of an APC that explicitely cares for infrastructure (=internal)
+/// advisors only
+/// </summary>
+/// <author>Erich Eichinger</author>
+public class InfrastructureAdvisorAutoProxyCreator : AbstractAdvisorAutoProxyCreator
 {
     /// <summary>
-    /// A special version of an APC that explicitely cares for infrastructure (=internal)
-    /// advisors only
+    /// Overridden to create a special version of an <see cref="IAdvisorRetrievalHelper"/>
+    /// that accepts only infrastructure advisor definitions
     /// </summary>
-    /// <author>Erich Eichinger</author>
-    public class InfrastructureAdvisorAutoProxyCreator : AbstractAdvisorAutoProxyCreator
+    /// <param name="objectFactory"></param>
+    /// <returns></returns>
+    protected override IAdvisorRetrievalHelper CreateAdvisorRetrievalHelper(IConfigurableListableObjectFactory objectFactory)
     {
-        /// <summary>
-        /// Overridden to create a special version of an <see cref="IAdvisorRetrievalHelper"/>
-        /// that accepts only infrastructure advisor definitions
-        /// </summary>
-        /// <param name="objectFactory"></param>
-        /// <returns></returns>
-        protected override IAdvisorRetrievalHelper CreateAdvisorRetrievalHelper(IConfigurableListableObjectFactory objectFactory)
+        return new InfrastructurAdvisorRetrievalHelper(this, objectFactory);
+    }
+
+    private class InfrastructurAdvisorRetrievalHelper : ObjectFactoryAdvisorRetrievalHelper
+    {
+        private readonly InfrastructureAdvisorAutoProxyCreator _owner;
+
+        public InfrastructurAdvisorRetrievalHelper(InfrastructureAdvisorAutoProxyCreator owner, IConfigurableListableObjectFactory objectFactory)
+            : base(objectFactory)
         {
-            return new InfrastructurAdvisorRetrievalHelper(this, objectFactory);
+            _owner = owner;
         }
 
-        private class InfrastructurAdvisorRetrievalHelper : ObjectFactoryAdvisorRetrievalHelper
+        protected override bool IsEligibleObject(string advisorName, Type objectType, string objectName)
         {
-            private readonly InfrastructureAdvisorAutoProxyCreator _owner;
-
-            public InfrastructurAdvisorRetrievalHelper(InfrastructureAdvisorAutoProxyCreator owner, IConfigurableListableObjectFactory objectFactory)
-                : base(objectFactory)
-            {
-                _owner = owner;
-            }
-
-            protected override bool IsEligibleObject(string advisorName, Type objectType, string objectName)
-            {
-                return this.ObjectFactory.ContainsObjectDefinition(advisorName)
-                       && this.ObjectFactory.GetObjectDefinition(advisorName).Role == ObjectRole.ROLE_INFRASTRUCTURE;
-            }
+            return this.ObjectFactory.ContainsObjectDefinition(advisorName)
+                   && this.ObjectFactory.GetObjectDefinition(advisorName).Role == ObjectRole.ROLE_INFRASTRUCTURE;
         }
     }
 }

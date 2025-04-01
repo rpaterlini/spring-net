@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
-
 using FakeItEasy;
-
 using NHibernate;
 using NHibernate.Cfg;
-
 using NUnit.Framework;
-
 using Spring.Dao;
 using Spring.Data.Common;
 using Spring.Data.Support;
@@ -116,7 +111,6 @@ namespace Spring.Data.NHibernate
             A.CallTo(() => transaction.Commit()).MustHaveHappenedOnceExactly();
             A.CallTo(() => session.Close()).MustHaveHappenedOnceExactly();
         }
-
 
         [Test]
         public void TransactionRollback()
@@ -518,7 +512,6 @@ namespace Spring.Data.NHibernate
         }
     }
 
-
     public class TransactionCommitTxCallback : ITransactionCallback
     {
         private ISessionFactory sfProxy;
@@ -529,7 +522,6 @@ namespace Spring.Data.NHibernate
             sfProxy = sessionFactory;
             this.provider = provider;
         }
-
 
         public object DoInTransaction(ITransactionStatus status)
         {
@@ -591,7 +583,6 @@ namespace Spring.Data.NHibernate
             this.sf = sf;
         }
 
-
         public object DoInTransaction(ITransactionStatus status)
         {
             Assert.IsTrue(TransactionSynchronizationManager.HasResource(sf), "Has thread session");
@@ -618,7 +609,6 @@ namespace Spring.Data.NHibernate
             this.sf = sf;
             this.list = list;
         }
-
 
         public object DoInTransaction(ITransactionStatus status)
         {
@@ -749,7 +739,6 @@ namespace Spring.Data.NHibernate
         }
     }
 
-
     public class ParticipatingTransactionWithWithNotSupportedTxCallback : ITransactionCallback
     {
         private TransactionTemplate tt;
@@ -835,7 +824,6 @@ namespace Spring.Data.NHibernate
             return null;
         }
     }
-
 
     public class TransactionWithPropagationSupportsAndInnerTransactionTxCallback : ITransactionCallback
     {

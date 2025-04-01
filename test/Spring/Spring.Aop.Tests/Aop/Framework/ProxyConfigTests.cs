@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,44 +14,36 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Diagnostics;
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Aop.Framework;
 
-namespace Spring.Aop.Framework
+/// <summary>
+/// Unit tests for the ProxyConfig class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class ProxyConfigTests
 {
-	/// <summary>
-	/// Unit tests for the ProxyConfig class.
-	/// </summary>
-	/// <author>Rick Evans</author>
-	[TestFixture]
-	public sealed class ProxyConfigTests
-	{
-		[Test]
-		public void Instantiation()
-		{
+    [Test]
+    public void Instantiation()
+    {
+    }
 
-		}
+    [Category("Performance")]
+    [Test, Explicit]
+    public void InstantiationPerformance()
+    {
+        int iterations = 10000;
 
-        [Category("Performance")]
-        [Test, Explicit]
-        public void InstantiationPerformance()
+        Stopwatch watch = Stopwatch.StartNew();
+        for (int i = 0; i < iterations; i++)
         {
-            int iterations = 10000;
-
-            Stopwatch watch = Stopwatch.StartNew();
-            for (int i = 0; i < iterations; i++)
-            {
-                new ProxyConfig();
-            }
-            watch.Stop();
-            Console.WriteLine("Instantiation time: {0}ms", watch.ElapsedMilliseconds);
+            new ProxyConfig();
         }
-	}
+
+        watch.Stop();
+        Console.WriteLine("Instantiation time: {0}ms", watch.ElapsedMilliseconds);
+    }
 }

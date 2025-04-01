@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,44 +14,41 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Context.Events;
 
-namespace Spring.Context.Events
+/// <summary>
+/// Simple listener that logs application events to the console.
+/// </summary>
+/// <remarks>
+/// <p>
+/// Intended for use during debugging only.
+/// </p>
+/// </remarks>
+/// <author>Rod Johnson</author>
+/// <author>Griffin Caprio (.NET)</author>
+/// <seealso cref="Spring.Context.IApplicationEventListener"/>
+public sealed class ConsoleListener : IApplicationEventListener
 {
-	/// <summary>
-	/// Simple listener that logs application events to the console.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// Intended for use during debugging only.
-	/// </p>
-	/// </remarks>
-	/// <author>Rod Johnson</author>
-	/// <author>Griffin Caprio (.NET)</author>
-	/// <seealso cref="Spring.Context.IApplicationEventListener"/>
-	public sealed class ConsoleListener : IApplicationEventListener
-	{
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Context.Events.ConsoleListener"/> class.
-		/// </summary>
-		public ConsoleListener()
-		{
-		}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Context.Events.ConsoleListener"/> class.
+    /// </summary>
+    public ConsoleListener()
+    {
+    }
 
-		/// <summary>
-		/// Handle an application event.
-		/// </summary>
-		/// <param name="sender">
-		/// The source of the event.
-		/// </param>
-		/// <param name="e">
-		/// The event that is to be handled.
-		/// </param>
-		public void HandleApplicationEvent(object sender, ApplicationEventArgs e)
-		{
-			Console.WriteLine("Source      : " + sender);
-			Console.WriteLine("Event fired : " + e.TimeStamp);
-		}
-	}
+    /// <summary>
+    /// Handle an application event.
+    /// </summary>
+    /// <param name="sender">
+    /// The source of the event.
+    /// </param>
+    /// <param name="e">
+    /// The event that is to be handled.
+    /// </param>
+    public void HandleApplicationEvent(object sender, ApplicationEventArgs e)
+    {
+        Console.WriteLine("Source      : " + sender);
+        Console.WriteLine("Event fired : " + e.TimeStamp);
+    }
 }

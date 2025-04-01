@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,52 +14,41 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Collections;
 using System.Data;
 using Spring.Data.Common;
 
-namespace Spring.Data.Objects.Generic
+namespace Spring.Data.Objects.Generic;
+
+/// <summary>
+/// Reusable query in which concrete subclasses must implement the
+/// MapRow method to map each row of a single result set into an
+/// object.
+/// </summary>
+/// <remarks>
+/// Simplifies MappingSqlQueryWithContext API by dropping parameters and
+/// context. Most subclasses won't care about parameters. If you don't use
+/// contextual information, subclass this instead of MappingSqlQueryWithContext.
+/// </remarks>
+/// <author>Mark Pollack (.NET)</author>
+public abstract class MappingAdoQuery : MappingAdoQueryWithContext
 {
     /// <summary>
-    /// Reusable query in which concrete subclasses must implement the
-    /// MapRow method to map each row of a single result set into an
-    /// object.
+    /// Initializes a new instance of the <see cref="MappingAdoQuery"/> class.
     /// </summary>
-    /// <remarks>
-    /// Simplifies MappingSqlQueryWithContext API by dropping parameters and
-    /// context. Most subclasses won't care about parameters. If you don't use
-    /// contextual information, subclass this instead of MappingSqlQueryWithContext.
-    /// </remarks>
-    /// <author>Mark Pollack (.NET)</author>
-    public abstract class MappingAdoQuery : MappingAdoQueryWithContext
+    public MappingAdoQuery()
     {
-        #region Constructor (s)
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MappingAdoQuery"/> class.
-        /// </summary>
-        public MappingAdoQuery()
-        {
-        }
-
-        public MappingAdoQuery(IDbProvider dbProvider, string sql) : base(dbProvider, sql)
-        {
-        }
-
-        #endregion
-
-        #region Methods
-
-        protected override T MapRow<T>(IDataReader reader, int rowNum, IDictionary inParams,
-                                       IDictionary callingContext)
-        {
-            return MapRow<T>(reader, rowNum);
-        }
-
-        protected abstract T MapRow<T>(IDataReader reader, int num);
-
-        #endregion
     }
+
+    public MappingAdoQuery(IDbProvider dbProvider, string sql) : base(dbProvider, sql)
+    {
+    }
+
+    protected override T MapRow<T>(IDataReader reader, int rowNum, IDictionary inParams,
+        IDictionary callingContext)
+    {
+        return MapRow<T>(reader, rowNum);
+    }
+
+    protected abstract T MapRow<T>(IDataReader reader, int num);
 }

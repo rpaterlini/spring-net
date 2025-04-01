@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,38 +14,35 @@
  * limitations under the License.
  */
 
-#endregion
-
 using NUnit.Framework;
 
-namespace Spring.Expressions
+namespace Spring.Expressions;
+
+/// <summary>
+/// Unit tests for the OpOR class.
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class OpORTests
 {
-    /// <summary>
-    /// Unit tests for the OpOR class.
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class OpORTests
+    [Test]
+    public void OrsNumbers()
     {
-        [Test]
-        public void OrsNumbers()
-        {
-            OpOR bor = new OpOR(new IntLiteralNode("2"), new IntLiteralNode("3"));
-            Assert.AreEqual(2 | 3, bor.GetValue(null, null));
-        }
+        OpOR bor = new OpOR(new IntLiteralNode("2"), new IntLiteralNode("3"));
+        Assert.AreEqual(2 | 3, bor.GetValue(null, null));
+    }
 
-        [Test]
-        public void OrsBooleans()
-        {
-            OpOR bor = new OpOR(new BooleanLiteralNode("false"), new BooleanLiteralNode("true"));
-            Assert.AreEqual(false || true , bor.GetValue(null, null));
-        }
+    [Test]
+    public void OrsBooleans()
+    {
+        OpOR bor = new OpOR(new BooleanLiteralNode("false"), new BooleanLiteralNode("true"));
+        Assert.AreEqual(false || true, bor.GetValue(null, null));
+    }
 
-        [Test(Description = "SPRNET-1381")]
-        public void TestShortcircuitOrOperator()
-        {
-            object boolean = ExpressionEvaluator.GetValue(new Inventor(), "Name == null or Name.Length == 0");
-            Assert.AreEqual(true, boolean);
-        }
+    [Test(Description = "SPRNET-1381")]
+    public void TestShortcircuitOrOperator()
+    {
+        object boolean = ExpressionEvaluator.GetValue(new Inventor(), "Name == null or Name.Length == 0");
+        Assert.AreEqual(true, boolean);
     }
 }

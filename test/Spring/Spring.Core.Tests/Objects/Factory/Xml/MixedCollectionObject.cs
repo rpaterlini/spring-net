@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,48 +14,40 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Collections;
 
-#endregion
+namespace Spring.Objects.Factory.Xml;
 
-namespace Spring.Objects.Factory.Xml {
-
-	/// <summary>
-	/// Summary description for MixedCollectionObject.
-    /// </summary>
-    /// <author>Rod Johnson</author>
-    /// <author>Rick Evans (.NET)</author>
-	public class MixedCollectionObject 
+/// <summary>
+/// Summary description for MixedCollectionObject.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Rick Evans (.NET)</author>
+public class MixedCollectionObject
+{
+    public MixedCollectionObject()
     {
+        ++nrOfInstances;
+    }
 
-        public MixedCollectionObject ()
+    public ICollection Jumble
+    {
+        get
         {
-            ++nrOfInstances;
+            return jumble;
         }
+        set
+        {
+            this.jumble = value;
+        }
+    }
 
-        public ICollection Jumble
-        {
-            get
-            {
-                return jumble;
-            }
-            set
-            {
-                this.jumble = value;
-            }
-        }
-		
-        protected internal static int nrOfInstances = 0;
-		
-        public static void ResetStaticState ()
-        {
-            nrOfInstances = 0;
-        }
-		
-        private ICollection jumble;
-	}
+    protected internal static int nrOfInstances = 0;
+
+    public static void ResetStaticState()
+    {
+        nrOfInstances = 0;
+    }
+
+    private ICollection jumble;
 }

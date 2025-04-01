@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +14,20 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using Spring.Proxy;
 
-#endregion
+namespace Spring.Aop.Framework;
 
-namespace Spring.Aop.Framework
+/// <summary>
+/// The central interface for Spring.NET based AOP proxies.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Aleksandar Seovic (.NET)</author>
+[ProxyIgnore]
+public interface IAopProxy
 {
-	/// <summary>
-	/// The central interface for Spring.NET based AOP proxies. 
-	/// </summary>
-	/// <author>Rod Johnson</author>
-	/// <author>Aleksandar Seovic (.NET)</author>
-	[ProxyIgnore]
-    public interface IAopProxy
-	{
-		/// <summary>
-		/// Creates a new proxy object.
-		/// </summary>
-		object GetProxy();
-	}
+    /// <summary>
+    /// Creates a new proxy object.
+    /// </summary>
+    object GetProxy();
 }

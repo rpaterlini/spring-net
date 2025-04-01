@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,37 +14,29 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Globalization;
 using System.Runtime.Remoting.Lifetime;
 using System.Threading;
 using NUnit.Framework;
-
 using Spring.Context;
 using Spring.Context.Support;
 using Spring.Remoting.Support;
 
-#endregion
+namespace Spring.Remoting;
 
-namespace Spring.Remoting
+/// <summary>
+/// Unit tests for the CaoExporter class.
+/// </summary>
+/// <author>Bruno Baia</author>
+[TestFixture]
+public class CaoExporterTests : BaseRemotingTestFixture
 {
-    /// <summary>
-    /// Unit tests for the CaoExporter class.
-    /// </summary>
-    /// <author>Bruno Baia</author>
-    [TestFixture]
-    public class CaoExporterTests : BaseRemotingTestFixture
+    [Test]
+    public void BailsWhenNotConfigured()
     {
-        [Test]
-        public void BailsWhenNotConfigured()
-        {
-            CaoExporter exp = new CaoExporter();
-            Assert.Throws<ArgumentException>(() => exp.AfterPropertiesSet());
-        }
+        CaoExporter exp = new CaoExporter();
+        Assert.Throws<ArgumentException>(() => exp.AfterPropertiesSet());
+    }
 
         [Test]
         public void RegistersSimpleObject()
@@ -61,26 +51,25 @@ namespace Spring.Remoting
             ICaoRemoteFactory caoFactory = Activator.GetObject(typeof(ICaoRemoteFactory), "tcp://localhost:8006/counter2") as ICaoRemoteFactory;
             Assert.IsNotNull(caoFactory, "Cao factory is null even though it has been registered.");
 
-            MarshalByRefObject cao = caoFactory.GetObject() as MarshalByRefObject;
-            Assert.IsNotNull(cao);
-        }
+        MarshalByRefObject cao = caoFactory.GetObject() as MarshalByRefObject;
+        Assert.IsNotNull(cao);
+    }
 
-        [Test]
-        public void RegistersWithLifetimeService()
-        {
-            IApplicationContext ctx = new XmlApplicationContext("assembly://Spring.Services.Tests/Spring.Data.Spring.Remoting/caoLifetimeService.xml");
-            ContextRegistry.RegisterContext(ctx);
+    [Test]
+    public void RegistersWithLifetimeService()
+    {
+        IApplicationContext ctx = new XmlApplicationContext("assembly://Spring.Services.Tests/Spring.Data.Spring.Remoting/caoLifetimeService.xml");
+        ContextRegistry.RegisterContext(ctx);
 
             ICaoRemoteFactory caoFactory = Activator.GetObject(typeof(ICaoRemoteFactory), "tcp://localhost:8006/counter2") as ICaoRemoteFactory;
             Assert.IsNotNull(caoFactory, "Cao factory is null even though it has been registered.");
 
-            MarshalByRefObject cao = caoFactory.GetObject() as MarshalByRefObject;
-            Assert.IsNotNull(cao);
+        MarshalByRefObject cao = caoFactory.GetObject() as MarshalByRefObject;
+        Assert.IsNotNull(cao);
 
-            ILease lease = (ILease) cao.GetLifetimeService();
-            Assert.AreEqual(TimeSpan.FromMilliseconds(10000), lease.InitialLeaseTime, "InitialLeaseTime");
-            Assert.AreEqual(TimeSpan.FromMilliseconds(1000), lease.RenewOnCallTime, "RenewOnCallTime");
-            Assert.AreEqual(TimeSpan.FromMilliseconds(100), lease.SponsorshipTimeout, "SponsorshipTimeout");
-        }
+        ILease lease = (ILease) cao.GetLifetimeService();
+        Assert.AreEqual(TimeSpan.FromMilliseconds(10000), lease.InitialLeaseTime, "InitialLeaseTime");
+        Assert.AreEqual(TimeSpan.FromMilliseconds(1000), lease.RenewOnCallTime, "RenewOnCallTime");
+        Assert.AreEqual(TimeSpan.FromMilliseconds(100), lease.SponsorshipTimeout, "SponsorshipTimeout");
     }
 }

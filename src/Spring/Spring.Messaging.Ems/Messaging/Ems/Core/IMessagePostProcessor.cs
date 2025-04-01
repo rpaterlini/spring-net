@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2010 the original author or authors.
  *
@@ -16,29 +14,25 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Core;
 
-namespace Spring.Messaging.Ems.Core
+/// <summary> To be used with EmsTemplate's send method that
+/// convert an object to a message.
+/// </summary>
+/// <remarks>
+/// It allows for further modification of the message after it has been processed
+/// by the converter. This is useful for setting of EMS Header and Properties.
+/// </remarks>
+/// <author>Mark Pollack</author>
+public interface IMessagePostProcessor
 {
-    /// <summary> To be used with EmsTemplate's send method that
-    /// convert an object to a message.
+    /// <summary> Apply a IMessagePostProcessor to the message. The returned message is
+    /// typically a modified version of the original.
     /// </summary>
-    /// <remarks>
-    /// It allows for further modification of the message after it has been processed
-    /// by the converter. This is useful for setting of EMS Header and Properties.
-    /// </remarks>
-    /// <author>Mark Pollack</author>
-    public interface IMessagePostProcessor
-    {
-        /// <summary> Apply a IMessagePostProcessor to the message. The returned message is
-        /// typically a modified version of the original.
-        /// </summary>
-        /// <param name="message">the EMS message from the IMessageConverter
-        /// </param>
-        /// <returns> the modified version of the Message
-        /// </returns>
-        /// <throws>EMSException if thrown by EMS API methods </throws>
-        Message PostProcessMessage(Message message);
-
-    }
+    /// <param name="message">the EMS message from the IMessageConverter
+    /// </param>
+    /// <returns> the modified version of the Message
+    /// </returns>
+    /// <throws>EMSException if thrown by EMS API methods </throws>
+    Message PostProcessMessage(Message message);
 }

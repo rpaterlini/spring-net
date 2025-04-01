@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,42 +14,38 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Config;
 
-namespace Spring.Objects.Factory.Config
+/// <summary>
+/// The various autowiring modes.
+/// </summary>
+/// <author>Rick Evans</author>
+[Serializable]
+public enum AutoWiringMode
 {
-
-	/// <summary>
-	/// The various autowiring modes.
+    /// <summary>
+    /// Do not autowire.
     /// </summary>
-    /// <author>Rick Evans</author>
-    [Serializable]
-    public enum AutoWiringMode
-    {
-        /// <summary>
-        /// Do not autowire.
-        /// </summary>
-        No = 0,
+    No = 0,
 
-        /// <summary>
-        /// Autowire by name.
-        /// </summary>
-        ByName = 1,
+    /// <summary>
+    /// Autowire by name.
+    /// </summary>
+    ByName = 1,
 
-        /// <summary>
-        /// Autowire by <see cref="System.Type"/>.
-        /// </summary>
-        ByType = 2,
+    /// <summary>
+    /// Autowire by <see cref="System.Type"/>.
+    /// </summary>
+    ByType = 2,
 
-        /// <summary>
-        /// Autowiring by constructor.
-        /// </summary>
-        Constructor = 3,
+    /// <summary>
+    /// Autowiring by constructor.
+    /// </summary>
+    Constructor = 3,
 
-        /// <summary>
-        /// The autowiring strategy is to be determined by introspection
-        /// of the object's <see cref="System.Type"/>.
-        /// </summary>
-        AutoDetect = 4
-    }
+    /// <summary>
+    /// The autowiring strategy is to be determined by introspection
+    /// of the object's <see cref="System.Type"/>.
+    /// </summary>
+    AutoDetect = 4
 }

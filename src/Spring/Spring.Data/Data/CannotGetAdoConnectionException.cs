@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,53 +14,44 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 using Spring.Dao;
 
-namespace Spring.Data
+namespace Spring.Data;
+
+/// <summary>
+/// Fatal exception thrown when we can't connect to an RDBMS using ADO.NET
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Mark Pollack (.NET)</author>
+[Serializable]
+public class CannotGetAdoConnectionException : InvalidDataAccessResourceUsageException
 {
-	/// <summary>
-    /// Fatal exception thrown when we can't connect to an RDBMS using ADO.NET
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CannotGetAdoConnectionException"/> class.
     /// </summary>
-    /// <author>Rod Johnson</author>
-	/// <author>Mark Pollack (.NET)</author>
-	[Serializable]
-	public class CannotGetAdoConnectionException : InvalidDataAccessResourceUsageException
-	{
-
-		#region Constructor (s)
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CannotGetAdoConnectionException"/> class.
-        /// </summary>
-		public CannotGetAdoConnectionException()
-		{
-		}
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CannotGetAdoConnectionException"/> class.
-        /// </summary>
-        /// <param name="message">A message about the exception.</param>
-        public CannotGetAdoConnectionException(string message): base(message)
-        {
-        }
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CannotGetAdoConnectionException"/> class.
-        /// </summary>
-        /// <param name="message">A message about the exception.</param>
-        /// <param name="inner">The inner exception.</param>
-        public CannotGetAdoConnectionException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-
-		/// <inheritdoc />
-        protected CannotGetAdoConnectionException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-
-		#endregion
-
+    public CannotGetAdoConnectionException()
+    {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CannotGetAdoConnectionException"/> class.
+    /// </summary>
+    /// <param name="message">A message about the exception.</param>
+    public CannotGetAdoConnectionException(string message) : base(message)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CannotGetAdoConnectionException"/> class.
+    /// </summary>
+    /// <param name="message">A message about the exception.</param>
+    /// <param name="inner">The inner exception.</param>
+    public CannotGetAdoConnectionException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
+
+    /// <inheritdoc />
+    protected CannotGetAdoConnectionException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,30 +14,23 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using Spring.Web.UI.Validation;
 
-#endregion
+namespace Spring.Web.UI.Controls;
 
-namespace Spring.Web.UI.Controls
+/// <summary>
+/// This control should be used to display field-level validation errors.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+/// <author>Jonathan Allenby</author>
+public class ValidationError : AbstractValidationControl
 {
     /// <summary>
-    /// This control should be used to display field-level validation errors.
+    /// Create the default <see cref="SpanValidationErrorsRenderer"/>
+    /// for this ValidationControl if none is configured.
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    /// <author>Jonathan Allenby</author>
-    public class ValidationError : AbstractValidationControl
+    protected override IValidationErrorsRenderer CreateValidationErrorsRenderer()
     {
-        /// <summary>
-        /// Create the default <see cref="SpanValidationErrorsRenderer"/> 
-        /// for this ValidationControl if none is configured.
-        /// </summary>
-        protected override IValidationErrorsRenderer CreateValidationErrorsRenderer()
-        {
-            return new SpanValidationErrorsRenderer();
-        }
+        return new SpanValidationErrorsRenderer();
     }
 }

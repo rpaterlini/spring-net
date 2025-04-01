@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +14,29 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Bsn;
 
-using System;
-
-namespace Spring.Bsn
+/// <summary>
+/// <see cref="IConversationEvidenceBsn"/>
+/// </summary>
+public class ConversationEvidenceBsnImpl : IConversationEvidenceBsn
 {
+    private String uniqueId = "";
+
+    /// <summary>
+    /// Create instance with unique id.
+    /// </summary>
+    public ConversationEvidenceBsnImpl()
+    {
+        uniqueId = Guid.NewGuid().ToString();
+    }
+
     /// <summary>
     /// <see cref="IConversationEvidenceBsn"/>
     /// </summary>
-    public class ConversationEvidenceBsnImpl: IConversationEvidenceBsn
+    /// <returns></returns>
+    public String UniqueId()
     {
-        private String uniqueId = "";
-
-        /// <summary>
-        /// Create instance with unique id.
-        /// </summary>
-        public ConversationEvidenceBsnImpl()
-        {
-            uniqueId = Guid.NewGuid().ToString();
-        }
-
-        #region IConversationEvidenceBsn Members
-
-        /// <summary>
-        /// <see cref="IConversationEvidenceBsn"/>
-        /// </summary>
-        /// <returns></returns>
-        public String UniqueId()
-        {
-            return this.uniqueId;
-        }
-
-        #endregion
+        return this.uniqueId;
     }
 }

@@ -1,20 +1,18 @@
-using System;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 
-namespace Spring.Data.Objects.Factory.Support
+namespace Spring.Data.Objects.Factory.Support;
+
+public class TestForm : Spring.Web.UI.Page
 {
-    public class TestForm : Spring.Web.UI.Page
+    private ILogger<TestForm> _log = LogManager.GetLogger<TestForm>();
+
+    public TestForm()
     {
-        private ILog _log = LogManager.GetLogger(typeof(TestForm));
+        this.Load += new EventHandler(Page_Load);
+    }
 
-        public TestForm()
-        {
-            this.Load += new EventHandler(Page_Load);
-        }
-
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            _log.Debug("loaded page!");
-        }
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        _log.LogDebug("loaded page!");
     }
 }

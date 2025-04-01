@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +14,41 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Collections;
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Dao.Support;
 
-namespace Spring.Dao.Support
+/// <summary>
+/// This class contains tests for
+/// </summary>
+/// <author>Mark Pollack</author>
+/// <version>$Id:$</version>
+[TestFixture]
+public class DataAccessUtilsTests
 {
-    /// <summary>
-    /// This class contains tests for 
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    /// <version>$Id:$</version>
-    [TestFixture]
-    public class DataAccessUtilsTests
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
-        [Test]
-        public void Test()
-        {
-        }
-
-        
     }
 
-    public class MapPersistenceExceptionTranslator : IPersistenceExceptionTranslator
+    [Test]
+    public void Test()
     {
-        #region IPersistenceExceptionTranslator Members
+    }
+}
 
-        private IDictionary translations = new Hashtable();
+public class MapPersistenceExceptionTranslator : IPersistenceExceptionTranslator
+{
+    private IDictionary translations = new Hashtable();
 
-        public void AddTranslation(Exception inException, Exception outException)
-        {
-            this.translations.Add(inException, outException);
-        }
-        public DataAccessException TranslateExceptionIfPossible(Exception ex)
-        {
-            return (DataAccessException)translations[ex];
-        }
+    public void AddTranslation(Exception inException, Exception outException)
+    {
+        this.translations.Add(inException, outException);
+    }
 
-        #endregion
+    public DataAccessException TranslateExceptionIfPossible(Exception ex)
+    {
+        return (DataAccessException) translations[ex];
     }
 }

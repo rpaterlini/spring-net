@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,165 +14,137 @@
  * limitations under the License.
  */
 
-#endregion
-
-using Common.Logging;
-
 #if NETSTANDARD
 using Experimental.System.Messaging;
 #else
 using System.Messaging;
 #endif
+using Microsoft.Extensions.Logging;
 
-namespace Spring.Messaging.Listener
+namespace Spring.Messaging.Listener;
+
+/// <summary>
+/// An implementation of a Peeking based MessageListener container that does not surround the
+/// receive operation with a transaction.
+/// </summary>
+/// <remarks>
+/// Exceptions that occur during message processing are handled by an instance
+/// of <see cref="IExceptionHandler"/>.
+/// </remarks>
+/// <author>Mark Pollack</author>
+public class NonTransactionalMessageListenerContainer : AbstractPeekingMessageListenerContainer
 {
+    private static readonly ILogger LOG = LogManager.GetLogger(typeof(NonTransactionalMessageListenerContainer));
+
+    private IExceptionHandler exceptionHandler;
+
     /// <summary>
-    /// An implementation of a Peeking based MessageListener container that does not surround the
-    /// receive operation with a transaction.
+    /// Gets or sets the exception handler.
     /// </summary>
-    /// <remarks>
-    /// Exceptions that occur during message processing are handled by an instance
-    /// of <see cref="IExceptionHandler"/>.
-    /// </remarks>
-    /// <author>Mark Pollack</author>
-    public class NonTransactionalMessageListenerContainer : AbstractPeekingMessageListenerContainer
+    /// <value>The exception handler.</value>
+    public IExceptionHandler ExceptionHandler
     {
-        #region Logging Definition
+        get { return exceptionHandler; }
+        set { exceptionHandler = value; }
+    }
 
-        private static readonly ILog LOG = LogManager.GetLogger(typeof (NonTransactionalMessageListenerContainer));
-
-        #endregion
-
-        private IExceptionHandler exceptionHandler;
-
-
-        /// <summary>
-        /// Gets or sets the exception handler.
-        /// </summary>
-        /// <value>The exception handler.</value>
-        public IExceptionHandler ExceptionHandler
+    /// <summary>
+    /// Handles the listener exception.
+    /// </summary>
+    /// <param name="e">The exception.</param>
+    /// <param name="message">The message delivered that resultd in an processing exception.</param>
+    protected virtual void HandleListenerException(Exception e, Message message)
+    {
+        IExceptionHandler exceptionHandler = ExceptionHandler;
+        if (exceptionHandler != null)
         {
-            get { return exceptionHandler; }
-            set { exceptionHandler = value; }
+            exceptionHandler.OnException(e, message);
         }
+    }
 
-
-        /// <summary>
-        /// Handles the listener exception.
-        /// </summary>
-        /// <param name="e">The exception.</param>
-        /// <param name="message">The message delivered that resultd in an processing exception.</param>
-        protected virtual void HandleListenerException(Exception e, Message message)
+    /// <summary>
+    /// Perform a receive opertion on the message queue and execute the
+    /// message listener
+    /// </summary>
+    /// <param name="mq">The MessageQueue.</param>
+    /// <returns>
+    /// true if received a message, false otherwise
+    /// </returns>
+    protected override bool DoReceiveAndExecute(MessageQueue mq)
+    {
+        Message message = null;
+        try
         {
-            IExceptionHandler exceptionHandler = ExceptionHandler;
-            if (exceptionHandler != null)
+            if (LOG.IsEnabled(LogLevel.Trace))
             {
-                exceptionHandler.OnException(e, message);
+                LOG.LogTrace("Receiving message with zero timeout for queue = [" + mq.Path + "]");
             }
+
+            BeforeMessageReceived(mq);
+            message = mq.Receive(TimeSpan.Zero);
         }
-
-        /// <summary>
-        /// Perform a receive opertion on the message queue and execute the
-        /// message listener
-        /// </summary>
-        /// <param name="mq">The MessageQueue.</param>
-        /// <returns>
-        /// true if received a message, false otherwise
-        /// </returns>
-        protected override bool DoReceiveAndExecute(MessageQueue mq)
+        catch (MessageQueueException ex)
         {
-            Message message = null;
-            try
+            if (ex.MessageQueueErrorCode == MessageQueueErrorCode.IOTimeout)
             {
-                #region Logging
+                //expected to occur occasionally
 
-                if (LOG.IsTraceEnabled)
+                if (LOG.IsEnabled(LogLevel.Trace))
                 {
-                    LOG.Trace("Receiving message with zero timeout for queue = [" + mq.Path + "]");
+                    LOG.LogTrace("MessageQueueErrorCode.IOTimeout: No message available to receive.  May have been processed by another thread.");
                 }
-
-                #endregion
-                BeforeMessageReceived(mq);
-                message = mq.Receive(TimeSpan.Zero);
-            }
-            catch (MessageQueueException ex)
-            {
-                if (ex.MessageQueueErrorCode == MessageQueueErrorCode.IOTimeout)
-                {
-                    //expected to occur occasionally
-
-                    #region Logging
-
-                    if (LOG.IsTraceEnabled)
-                    {
-                        LOG.Trace(
-                            "MessageQueueErrorCode.IOTimeout: No message available to receive.  May have been processed by another thread.");
-                    }
-
-                    #endregion
-
-                    return false; // no more peeking unless this is the last listener thread
-                }
-                else
-                {
-                    // A real issue in receiving the message
-
-                    #region Logging
-
-                    if (LOG.IsErrorEnabled)
-                    {
-                        LOG.Error("Error receiving message from MessageQueue [" + mq.Path +
-                                  "], closing queue and clearing connection cache.");
-                    }
-
-                    #endregion
-
-                    lock (messageQueueMonitor)
-                    {
-                        mq.Close();
-                        MessageQueue.ClearConnectionCache();
-                    }
-                    throw; // will log exception.
-                }
-            }
-
-            if (message == null)
-            {
-                #region Logging
-
-                if (LOG.IsTraceEnabled)
-                {
-                    LOG.Trace("Message recieved is null from Queue = [" + mq.Path + "]");
-                }
-
-                #endregion
 
                 return false; // no more peeking unless this is the last listener thread
             }
-
-            try
+            else
             {
-                #region Logging
+                // A real issue in receiving the message
 
-                if (LOG.IsDebugEnabled)
+                if (LOG.IsEnabled(LogLevel.Error))
                 {
-                    LOG.Debug("Received message [" + message.Id + "] on queue [" + mq.Path + "]");
+                    LOG.LogError("Error receiving message from MessageQueue [" + mq.Path +
+                                 "], closing queue and clearing connection cache.");
                 }
 
-                #endregion
+                lock (messageQueueMonitor)
+                {
+                    mq.Close();
+                    MessageQueue.ClearConnectionCache();
+                }
 
-                MessageReceived(message);
-                DoExecuteListener(message);
+                throw; // will log exception.
             }
-            catch (Exception ex)
-            {
-                HandleListenerException(ex, message);
-            }
-            finally
-            {
-                message.Dispose();
-            }
-            return true;
         }
+
+        if (message == null)
+        {
+            if (LOG.IsEnabled(LogLevel.Trace))
+            {
+                LOG.LogTrace("Message recieved is null from Queue = [" + mq.Path + "]");
+            }
+
+            return false; // no more peeking unless this is the last listener thread
+        }
+
+        try
+        {
+            if (LOG.IsEnabled(LogLevel.Debug))
+            {
+                LOG.LogDebug("Received message [" + message.Id + "] on queue [" + mq.Path + "]");
+            }
+
+            MessageReceived(message);
+            DoExecuteListener(message);
+        }
+        catch (Exception ex)
+        {
+            HandleListenerException(ex, message);
+        }
+        finally
+        {
+            message.Dispose();
+        }
+
+        return true;
     }
 }

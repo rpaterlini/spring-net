@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2010 the original author or authors.
  *
@@ -16,102 +14,95 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Common
+public class EmsMessageProducer : IMessageProducer
 {
-    public class EmsMessageProducer : IMessageProducer
+    private MessageProducer nativeMessageProducer;
+
+    public EmsMessageProducer(MessageProducer messageProducer)
     {
-        private MessageProducer nativeMessageProducer;
+        this.nativeMessageProducer = messageProducer;
+    }
 
-        public EmsMessageProducer(MessageProducer messageProducer)
-        {
-            this.nativeMessageProducer = messageProducer;
-        }
+    public MessageProducer NativeMessageProducer
+    {
+        get { return this.nativeMessageProducer; }
+    }
 
-        #region Implementation of IMessageProducer
+    public void Close()
+    {
+        nativeMessageProducer.Close();
+    }
 
-        public MessageProducer NativeMessageProducer
-        {
-            get { return this.nativeMessageProducer; }
-        }
+    public void Send(Message message)
+    {
+        nativeMessageProducer.Send(message);
+    }
 
-        public void Close()
-        {
-            nativeMessageProducer.Close();
-        }
+    public void Send(Destination dest, Message message)
+    {
+        nativeMessageProducer.Send(dest, message);
+    }
 
-        public void Send(Message message)
-        {
-            nativeMessageProducer.Send(message);
-        }
+    public void Send(Message message, int deliveryMode, int priority, long timeToLive)
+    {
+        nativeMessageProducer.Send(message, deliveryMode, priority, timeToLive);
+    }
 
-        public void Send(Destination dest, Message message)
-        {
-            nativeMessageProducer.Send(dest, message);
-        }
+    public void Send(Message message, MessageDeliveryMode deliveryMode, int priority, long timeToLive)
+    {
+        nativeMessageProducer.Send(message, deliveryMode, priority, timeToLive);
+    }
 
-        public void Send(Message message, int deliveryMode, int priority, long timeToLive)
-        {
-            nativeMessageProducer.Send(message, deliveryMode, priority, timeToLive);
-        }
+    public void Send(Destination dest, Message message, int deliveryMode, int priority, long timeToLive)
+    {
+        nativeMessageProducer.Send(dest, message, deliveryMode, priority, timeToLive);
+    }
 
-        public void Send(Message message, MessageDeliveryMode deliveryMode, int priority, long timeToLive)
-        {
-            nativeMessageProducer.Send(message, deliveryMode, priority, timeToLive);
-        }
+    public void Send(Destination dest, Message message, MessageDeliveryMode deliveryMode, int priority, long timeToLive)
+    {
+        nativeMessageProducer.Send(dest, message, deliveryMode, priority, timeToLive);
+    }
 
-        public void Send(Destination dest, Message message, int deliveryMode, int priority, long timeToLive)
-        {
-            nativeMessageProducer.Send(dest, message, deliveryMode, priority, timeToLive);
-        }
+    public int DeliveryMode
+    {
+        get { return nativeMessageProducer.DeliveryMode; }
+        set { nativeMessageProducer.DeliveryMode = value; }
+    }
 
-        public void Send(Destination dest, Message message, MessageDeliveryMode deliveryMode, int priority, long timeToLive)
-        {
-            nativeMessageProducer.Send(dest, message, deliveryMode, priority, timeToLive);
-        }
+    public Destination Destination
+    {
+        get { return nativeMessageProducer.Destination; }
+    }
 
-        public int DeliveryMode
-        {
-            get { return nativeMessageProducer.DeliveryMode; }
-            set { nativeMessageProducer.DeliveryMode = value; }
-        }
+    public bool DisableMessageID
+    {
+        get { return nativeMessageProducer.DisableMessageID; }
+        set { nativeMessageProducer.DisableMessageID = value; }
+    }
 
-        public Destination Destination
-        {
-            get { return nativeMessageProducer.Destination; }
-        }
+    public bool DisableMessageTimestamp
+    {
+        get { return nativeMessageProducer.DisableMessageTimestamp; }
+        set { nativeMessageProducer.DisableMessageTimestamp = value; }
+    }
 
-        public bool DisableMessageID
-        {
-            get { return nativeMessageProducer.DisableMessageID; }
-            set { nativeMessageProducer.DisableMessageID = value; }
-        }
+    public MessageDeliveryMode MsgDeliveryMode
+    {
+        get { return nativeMessageProducer.MsgDeliveryMode; }
+        set { nativeMessageProducer.MsgDeliveryMode = value; }
+    }
 
-        public bool DisableMessageTimestamp
-        {
-            get { return nativeMessageProducer.DisableMessageTimestamp; }
-            set { nativeMessageProducer.DisableMessageTimestamp = value; }
-        }
+    public int Priority
+    {
+        get { return nativeMessageProducer.Priority; }
+        set { nativeMessageProducer.Priority = value; }
+    }
 
-        public MessageDeliveryMode MsgDeliveryMode
-        {
-            get { return nativeMessageProducer.MsgDeliveryMode; }
-            set { nativeMessageProducer.MsgDeliveryMode = value; }
-        }
-
-        public int Priority
-        {
-            get { return nativeMessageProducer.Priority; }
-            set { nativeMessageProducer.Priority = value; }
-        }
-
-        public long TimeToLive
-        {
-            get { return nativeMessageProducer.TimeToLive; }
-            set { nativeMessageProducer.TimeToLive = value; }
-        }
-
-        #endregion
+    public long TimeToLive
+    {
+        get { return nativeMessageProducer.TimeToLive; }
+        set { nativeMessageProducer.TimeToLive = value; }
     }
 }

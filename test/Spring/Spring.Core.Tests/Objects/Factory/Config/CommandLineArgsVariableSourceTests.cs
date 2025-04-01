@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright © 2002-2011 the original author or authors.
  *
@@ -16,63 +14,56 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Objects.Factory.Config;
 
-namespace Spring.Objects.Factory.Config
+/// <summary>
+/// Unit tests for the CommandLineArgsVariableSource class.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[TestFixture]
+public sealed class CommandLineArgsVariableSourceTests
 {
-	/// <summary>
-    /// Unit tests for the CommandLineArgsVariableSource class.
-    /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [TestFixture]
-    public sealed class CommandLineArgsVariableSourceTests
+    [Test]
+    public void TestVariablesResolution()
     {
-        [Test]
-        public void TestVariablesResolution()
-        {
-            CommandLineArgsVariableSource vs = new CommandLineArgsVariableSource(
-                new string[] {"program.exe", "file.txt", "/name:Aleks Seovic", "/framework:Spring.NET"});
+        CommandLineArgsVariableSource vs = new CommandLineArgsVariableSource(
+            new string[] { "program.exe", "file.txt", "/name:Aleks Seovic", "/framework:Spring.NET" });
 
-            // existing vars
-            Assert.AreEqual("Spring.NET", vs.ResolveVariable("FRAMEWORK"));
-            Assert.AreEqual("Spring.NET", vs.ResolveVariable("framework"));
-            Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("name"));
-            Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("NAME"));
+        // existing vars
+        Assert.AreEqual("Spring.NET", vs.ResolveVariable("FRAMEWORK"));
+        Assert.AreEqual("Spring.NET", vs.ResolveVariable("framework"));
+        Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("name"));
+        Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("NAME"));
 
-            // non-existant variable
-            Assert.IsNull(vs.ResolveVariable("dummy"));
-        }
+        // non-existant variable
+        Assert.IsNull(vs.ResolveVariable("dummy"));
+    }
 
-        [Test]
-        public void TestVariablesResolutionWithCustomPrefixAndSeparator()
-        {
-            CommandLineArgsVariableSource vs = new CommandLineArgsVariableSource(
-                new string[] { "program.exe", "file.txt", "--Name=Aleks Seovic", "--Framework=Spring.NET" });
-            vs.ArgumentPrefix = "--";
-            vs.ValueSeparator = "=";
+    [Test]
+    public void TestVariablesResolutionWithCustomPrefixAndSeparator()
+    {
+        CommandLineArgsVariableSource vs = new CommandLineArgsVariableSource(
+            new string[] { "program.exe", "file.txt", "--Name=Aleks Seovic", "--Framework=Spring.NET" });
+        vs.ArgumentPrefix = "--";
+        vs.ValueSeparator = "=";
 
-            // existing vars
-            Assert.AreEqual("Spring.NET", vs.ResolveVariable("FRAMEWORK"));
-            Assert.AreEqual("Spring.NET", vs.ResolveVariable("framework"));
-            Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("name"));
-            Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("NAME"));
+        // existing vars
+        Assert.AreEqual("Spring.NET", vs.ResolveVariable("FRAMEWORK"));
+        Assert.AreEqual("Spring.NET", vs.ResolveVariable("framework"));
+        Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("name"));
+        Assert.AreEqual("Aleks Seovic", vs.ResolveVariable("NAME"));
 
-            // non-existant variable
-            Assert.IsNull(vs.ResolveVariable("dummy"));
-        }
+        // non-existant variable
+        Assert.IsNull(vs.ResolveVariable("dummy"));
+    }
 
-        [Test]
-        [Explicit]
-        public void TestLiveVariablesResolutionWithTestDriven()
-        {
-            CommandLineArgsVariableSource vs = new CommandLineArgsVariableSource();
-            Assert.IsTrue(vs.ResolveVariable("AssemblyName").StartsWith("TestDriven.TestRunner.Server"));
-        }
+    [Test]
+    [Explicit]
+    public void TestLiveVariablesResolutionWithTestDriven()
+    {
+        CommandLineArgsVariableSource vs = new CommandLineArgsVariableSource();
+        Assert.IsTrue(vs.ResolveVariable("AssemblyName").StartsWith("TestDriven.TestRunner.Server"));
     }
 }

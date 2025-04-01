@@ -1,23 +1,21 @@
-using System;
-
 using Spring.Web.Conversation;
 using System.Text.RegularExpressions;
 using NHibernate;
 using Spring.Data.NHibernate.Support;
-using Common.Logging;
 using Spring.Objects.Factory;
 
 public partial class IoeTests : System.Web.UI.Page
 {
-    private static readonly ILog LOG = LogManager.GetLogger(typeof(IoeTests));
-
     private IConversationState conversationA;
+
     public IConversationState ConversationA
     {
         get { return conversationA; }
         set { conversationA = value; }
     }
+
     private IConversationState conversationAA;
+
     public IConversationState ConversationAA
     {
         get { return conversationAA; }
@@ -25,6 +23,7 @@ public partial class IoeTests : System.Web.UI.Page
     }
 
     private IConversationManager conversationManager;
+
     public IConversationManager ConversationManager
     {
         get { return conversationManager; }
@@ -32,6 +31,7 @@ public partial class IoeTests : System.Web.UI.Page
     }
 
     private ISessionFactory sessionFactory;
+
     public ISessionFactory SessionFactory
     {
         get { return sessionFactory; }
@@ -354,7 +354,7 @@ public partial class IoeTests : System.Web.UI.Page
         }
         //END: NO Raise error
     }
-    
+
     private void participatingHibernateNotAlowed()
     {
         Regex msgErrorRx = new Regex(".*Participating.*Hibernate.*NOT.*ALLOWED.*");
@@ -387,6 +387,7 @@ public partial class IoeTests : System.Web.UI.Page
                 ISession session = this.SessionFactory.GetCurrentSession();
                 this.ConversationA.StartResumeConversation();
             }
+
             throw new Exception("NOT OK: No raise for 'this.ConversationA.StartResumeConversation()'");
         }
         catch (InvalidOperationException ioe)
@@ -405,7 +406,6 @@ public partial class IoeTests : System.Web.UI.Page
             this.ConversationManager.FreeEnded();
             this.ConversationManager.PauseConversations();
         }
-        
     }
 
     private void idIsDifferentFromSpringName()
@@ -418,7 +418,7 @@ public partial class IoeTests : System.Web.UI.Page
             otherConversationState = new WebConversationSpringState();
             otherConversationState.Id = "otherConversationState";
             // different name
-            ((IObjectNameAware)otherConversationState).ObjectName = "different_name";
+            ((IObjectNameAware) otherConversationState).ObjectName = "different_name";
             throw new Exception("NOT OK: No raise for '((IObjectNameAware)otherConversationState).ObjectName ='");
         }
         catch (InvalidOperationException ioe)
@@ -445,7 +445,7 @@ public partial class IoeTests : System.Web.UI.Page
             otherConversationState.Id = "otherConversationState";
             // make not new
             // different name
-            ((IObjectNameAware)otherConversationState).ObjectName = "otherConversationState";
+            ((IObjectNameAware) otherConversationState).ObjectName = "otherConversationState";
             this.Session["testResult"] = "OK";
         }
         finally

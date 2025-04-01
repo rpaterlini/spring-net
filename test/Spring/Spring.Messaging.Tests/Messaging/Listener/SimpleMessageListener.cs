@@ -1,40 +1,29 @@
-
-
 using System.Messaging;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 
-namespace Spring.Messaging.Listener
+namespace Spring.Messaging.Listener;
+
+public class SimpleMessageListener : IMessageListener
 {
-    public class SimpleMessageListener : IMessageListener
+    private static readonly ILogger<SimpleMessageListener> LOG = LogManager.GetLogger<SimpleMessageListener>();
+
+    private Message lastReceivedMessage;
+    private int messageCount;
+
+    public Message LastReceivedMessage
     {
-        #region Logging Definition
+        get { return lastReceivedMessage; }
+    }
 
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(SimpleMessageListener));
-        #endregion
+    public int MessageCount
+    {
+        get { return messageCount; }
+    }
 
-        private Message lastReceivedMessage;
-        private int messageCount;
-
-        public Message LastReceivedMessage
-        {
-            get { return lastReceivedMessage; }
-        }
-
-
-        public int MessageCount
-        {
-            get { return messageCount; }
-        }
-
-        #region IMessageListener Members
-
-        public void OnMessage(Message message)
-        {
-            lastReceivedMessage = message;
-            messageCount++;
-            LOG.Debug("Message listener count = " + messageCount);
-        }
-
-        #endregion
+    public void OnMessage(Message message)
+    {
+        lastReceivedMessage = message;
+        messageCount++;
+        LOG.LogDebug("Message listener count = " + messageCount);
     }
 }

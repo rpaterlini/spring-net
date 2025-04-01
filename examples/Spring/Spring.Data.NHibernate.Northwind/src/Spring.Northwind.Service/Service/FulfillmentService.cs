@@ -21,10 +21,8 @@
 #region Imports
 
 using System;
-using System.Collections;
 
-using Common.Logging;
-
+using Microsoft.Extensions.Logging;
 using Spring.Transaction.Interceptor;
 
 using Spring.Northwind.Dao;
@@ -38,7 +36,7 @@ namespace Spring.Northwind.Service
     {
         #region Fields
 
-        private static readonly ILog log = LogManager.GetLogger(typeof (FulfillmentService));
+        private static readonly ILogger log = LogManager.GetLogger(typeof (FulfillmentService));
 
         private IProductDao productDao;
 
@@ -92,13 +90,13 @@ namespace Spring.Northwind.Service
             {
                 if (order.ShippedDate.HasValue)
                 {
-                    log.Warn("Order with " + order.Id + " has already been shipped, skipping.");
+                    log.LogWarning("Order {OrderId} has already been shipped, skipping.", order.Id);
                     continue;
                 }
 
                 //Validate Order
                 Validate(order);
-                log.Info("Order " + order.Id + " validated, proceeding with shipping..");
+                log.LogInformation("Order {OrderId} validated, proceeding with shipping..", order.Id);
 
                 //Ship with external shipping service
                 ShippingService.ShipOrder(order);

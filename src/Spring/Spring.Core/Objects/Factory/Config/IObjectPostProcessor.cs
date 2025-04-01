@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright © 2002-2011 the original author or authors.
  *
@@ -16,81 +14,78 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Config;
 
-namespace Spring.Objects.Factory.Config
+/// <summary>
+/// Allows for custom modification of new object instances, e.g.
+/// checking for marker interfaces or wrapping them with proxies.
+/// </summary>
+/// <remarks>
+/// <p>
+/// Application contexts can auto-detect
+/// <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor"/>
+/// objects in their object definitions and apply them before any other
+/// objects get created. Plain object factories allow for programmatic
+/// registration of post-processors.
+/// </p>
+/// <p>
+/// Typically, post-processors that populate objects via marker interfaces
+/// or the like will implement
+/// <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor.PostProcessBeforeInitialization"/>,
+/// and post-processors that wrap objects with proxies will normally implement
+/// <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor.PostProcessAfterInitialization"/>.
+/// </p>
+/// </remarks>
+/// <author>Juergen Hoeller</author>
+/// <author>Aleksandar Seovic (.NET)</author>
+/// <see cref="Spring.Objects.Factory.Config.IInstantiationAwareObjectPostProcessor"/>
+public interface IObjectPostProcessor
 {
-	/// <summary>
-	/// Allows for custom modification of new object instances, e.g.
-	/// checking for marker interfaces or wrapping them with proxies.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// Application contexts can auto-detect
-	/// <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor"/>
-	/// objects in their object definitions and apply them before any other
-	/// objects get created. Plain object factories allow for programmatic
-	/// registration of post-processors.
-	/// </p>
-	/// <p>
-	/// Typically, post-processors that populate objects via marker interfaces
-	/// or the like will implement
-	/// <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor.PostProcessBeforeInitialization"/>,
-	/// and post-processors that wrap objects with proxies will normally implement
-	/// <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor.PostProcessAfterInitialization"/>.
-	/// </p>
-	/// </remarks>
-	/// <author>Juergen Hoeller</author>
-	/// <author>Aleksandar Seovic (.NET)</author>
-	/// <see cref="Spring.Objects.Factory.Config.IInstantiationAwareObjectPostProcessor"/>
-	public interface IObjectPostProcessor
-	{
-		/// <summary>
-		/// Apply this <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor"/>
-		/// to the given new object instance <i>before</i> any object initialization callbacks.
-		/// </summary>
-		/// <remarks>
-		/// <p>
-		/// The object will already be populated with property values.
-		/// The returned object instance may be a wrapper around the original.
-		/// </p>
-		/// </remarks>
-		/// <param name="instance">
-		/// The new object instance.
-		/// </param>
-		/// <param name="name">
-		/// The name of the object.
-		/// </param>
-		/// <returns>
-		/// The object instance to use, either the original or a wrapped one.
-		/// </returns>
-		/// <exception cref="Spring.Objects.ObjectsException">
-		/// In case of errors.
-		/// </exception>
-		object PostProcessBeforeInitialization(object instance, string name);
+    /// <summary>
+    /// Apply this <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor"/>
+    /// to the given new object instance <i>before</i> any object initialization callbacks.
+    /// </summary>
+    /// <remarks>
+    /// <p>
+    /// The object will already be populated with property values.
+    /// The returned object instance may be a wrapper around the original.
+    /// </p>
+    /// </remarks>
+    /// <param name="instance">
+    /// The new object instance.
+    /// </param>
+    /// <param name="name">
+    /// The name of the object.
+    /// </param>
+    /// <returns>
+    /// The object instance to use, either the original or a wrapped one.
+    /// </returns>
+    /// <exception cref="Spring.Objects.ObjectsException">
+    /// In case of errors.
+    /// </exception>
+    object PostProcessBeforeInitialization(object instance, string name);
 
-		/// <summary>
-		/// Apply this <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor"/> to the
-		/// given new object instance <i>after</i> any object initialization callbacks.
-		/// </summary>
-		/// <remarks>
-		/// <p>
-		/// The object will already be populated with property values. The returned object
-		/// instance may be a wrapper around the original.
-		/// </p>
-		/// </remarks>
-		/// <param name="instance">
-		/// The new object instance.
-		/// </param>
-		/// <param name="objectName">
-		/// The name of the object.
-		/// </param>
-		/// <returns>
-		/// The object instance to use, either the original or a wrapped one.
-		/// </returns>
-		/// <exception cref="Spring.Objects.ObjectsException">
-		/// In case of errors.
-		/// </exception>
-		object PostProcessAfterInitialization(object instance, string objectName);
-	}
+    /// <summary>
+    /// Apply this <see cref="Spring.Objects.Factory.Config.IObjectPostProcessor"/> to the
+    /// given new object instance <i>after</i> any object initialization callbacks.
+    /// </summary>
+    /// <remarks>
+    /// <p>
+    /// The object will already be populated with property values. The returned object
+    /// instance may be a wrapper around the original.
+    /// </p>
+    /// </remarks>
+    /// <param name="instance">
+    /// The new object instance.
+    /// </param>
+    /// <param name="objectName">
+    /// The name of the object.
+    /// </param>
+    /// <returns>
+    /// The object instance to use, either the original or a wrapped one.
+    /// </returns>
+    /// <exception cref="Spring.Objects.ObjectsException">
+    /// In case of errors.
+    /// </exception>
+    object PostProcessAfterInitialization(object instance, string objectName);
 }

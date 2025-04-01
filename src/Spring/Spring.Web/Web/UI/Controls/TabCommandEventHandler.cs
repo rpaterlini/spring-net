@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,21 +14,12 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Web.UI.Controls;
 
-#region Imports
-
-
-
-#endregion
-
-namespace Spring.Web.UI.Controls
-{
-	/// <summary>
-	/// Represents the method that will handle the TabCommand event. 
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">A <see cref="TabCommandEventArgs"/> that contains the event data.</param>
-	/// <author>Erich Eichinger</author>
-	public delegate void TabCommandEventHandler(object sender, TabCommandEventArgs e);
-}
+/// <summary>
+/// Represents the method that will handle the TabCommand event. 
+/// </summary>
+/// <param name="sender">The source of the event.</param>
+/// <param name="e">A <see cref="TabCommandEventArgs"/> that contains the event data.</param>
+/// <author>Erich Eichinger</author>
+public delegate void TabCommandEventHandler(object sender, TabCommandEventArgs e);

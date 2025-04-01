@@ -1,49 +1,40 @@
+using Microsoft.Extensions.Logging;
 
+namespace Spring.Messaging.Listener;
 
-using System;
-using Common.Logging;
-using System.Threading;
-
-namespace Spring.Messaging.Listener
+public class WaitingHandler
 {
-    public class WaitingHandler
+    private static readonly ILogger<WaitingHandler> LOG = LogManager.GetLogger<WaitingHandler>();
+
+    private int messageCount;
+
+    private string stateVariable;
+
+    public WaitingHandler()
     {
-        #region Logging
+        this.stateVariable = "hello";
+    }
 
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(WaitingHandler));
+    public WaitingHandler(string stateVariable)
+    {
+        this.stateVariable = stateVariable;
+    }
 
-        #endregion
+    public int MessageCount
+    {
+        get { return messageCount; }
+        set { messageCount = value; }
+    }
 
-        private int messageCount;
+    public string HandleMessage(string msgTxt)
+    {
+        LOG.LogDebug(String.Format("Received text = [{0}]", msgTxt));
+        LOG.LogDebug("constructor set state string  = " + stateVariable);
 
-        private string stateVariable;
+        Thread.Sleep(10000);
 
-        public WaitingHandler()
-        {
-            this.stateVariable = "hello";
-        }
-        public WaitingHandler(string stateVariable)
-        {
-            this.stateVariable = stateVariable;
-        }
-
-
-        public int MessageCount
-        {
-            get { return messageCount; }
-            set { messageCount = value; }
-        }
-
-        public string HandleMessage(string msgTxt)
-        {
-            LOG.Debug(String.Format("Received text = [{0}]", msgTxt));
-            LOG.Debug("constructor set state string  = " + stateVariable);
-
-            Thread.Sleep(10000);
-
-            messageCount++;
-            LOG.Debug("Message listener count = " + messageCount);
-            return msgTxt + " - processed!";
-        }
+        messageCount++;
+        LOG.LogDebug("Message listener count = " + messageCount);
+        return msgTxt + " - processed!";
     }
 }

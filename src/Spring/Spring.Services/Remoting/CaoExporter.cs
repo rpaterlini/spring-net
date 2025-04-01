@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,292 +14,221 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Remoting;
-
+using Microsoft.Extensions.Logging;
 using Spring.Context;
 using Spring.Objects.Factory;
 using Spring.Objects.Factory.Support;
 using Spring.Remoting.Support;
 
-namespace Spring.Remoting
+namespace Spring.Remoting;
+
+/// <summary>
+/// Registers an object type on the server
+/// as a Client Activated Object (CAO).
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+/// <author>Mark Pollack</author>
+/// <author>Bruno Baia</author>
+public class CaoExporter : ConfigurableLifetime, IApplicationContextAware, IObjectFactoryAware, IInitializingObject, IDisposable
 {
-	/// <summary>
-	/// Registers an object type on the server
-	/// as a Client Activated Object (CAO).
-	/// </summary>
-	/// <author>Aleksandar Seovic</author>
-	/// <author>Mark Pollack</author>
-	/// <author>Bruno Baia</author>
-	public class CaoExporter : ConfigurableLifetime, IApplicationContextAware, IObjectFactoryAware, IInitializingObject, IDisposable
-	{
-		#region Logging
+    private static readonly ILogger<CaoExporter> LOG = LogManager.GetLogger<CaoExporter>();
 
-		private static readonly Common.Logging.ILog LOG = Common.Logging.LogManager.GetLogger(typeof(CaoExporter));
+    private string targetName;
+    private string[] interfaces;
 
-		#endregion
+    private IApplicationContext applicationContext;
+    private AbstractObjectFactory objectFactory;
 
-		#region Fields
+    private CaoRemoteFactory remoteFactory;
 
-		private string targetName;
-        private string[] interfaces;
+    /// <summary>
+    /// Creates a new instance of the <see cref="CaoExporter"/> class.
+    /// </summary>
+    public CaoExporter()
+    {
+    }
 
-		private IApplicationContext applicationContext;
-		private AbstractObjectFactory objectFactory;
+    /// <summary>
+    /// Gets or sets the name of the target object definition.
+    /// </summary>
+    public string TargetName
+    {
+        get { return targetName; }
+        set { targetName = value; }
+    }
 
-		private CaoRemoteFactory remoteFactory;
+    /// <summary>
+    /// Gets or sets the list of interfaces whose methods should be exported.
+    /// </summary>
+    /// <remarks>
+    /// The default value of this property is all the interfaces
+    /// implemented or inherited by the target type.
+    /// </remarks>
+    /// <value>The interfaces to export.</value>
+    public string[] Interfaces
+    {
+        get { return interfaces; }
+        set { interfaces = value; }
+    }
 
-		#endregion
+    /// <summary>
+    /// Sets the <see cref="Spring.Context.IApplicationContext"/> that this
+    /// object runs in.
+    /// </summary>
+    /// <value></value>
+    /// <remarks>
+    /// <p>
+    /// Normally this call will be used to initialize the object.
+    /// </p>
+    /// <p>
+    /// Invoked after population of normal object properties but before an
+    /// init callback such as
+    /// <see cref="Spring.Objects.Factory.IInitializingObject"/>'s
+    /// <see cref="Spring.Objects.Factory.IInitializingObject.AfterPropertiesSet"/>
+    /// or a custom init-method. Invoked after the setting of any
+    /// <see cref="Spring.Context.IResourceLoaderAware"/>'s
+    /// <see cref="Spring.Context.IResourceLoaderAware.ResourceLoader"/>
+    /// property.
+    /// </p>
+    /// </remarks>
+    /// <exception cref="Spring.Context.ApplicationContextException">
+    /// In the case of application context initialization errors.
+    /// </exception>
+    /// <exception cref="Spring.Objects.ObjectsException">
+    /// If thrown by any application context methods.
+    /// </exception>
+    /// <exception cref="Spring.Objects.Factory.ObjectInitializationException"/>
+    public IApplicationContext ApplicationContext
+    {
+        set { applicationContext = value; }
+    }
 
-		#region Constructor(s) / Destructor
+    /// <summary>
+    /// Sets object factory to use.
+    /// </summary>
+    public IObjectFactory ObjectFactory
+    {
+        set { objectFactory = (AbstractObjectFactory) value; }
+    }
 
-		/// <summary>
-		/// Creates a new instance of the <see cref="CaoExporter"/> class.
-		/// </summary>
-		public CaoExporter()
-		{
-		}
+    /// <summary>
+    /// Publish the object
+    /// </summary>
+    public void AfterPropertiesSet()
+    {
+        ValidateConfiguration();
+        Export();
+    }
 
-		#endregion
+    /// <summary>
+    /// Disconnect the remote object from the registered remoting channels.
+    /// </summary>
+    public void Dispose()
+    {
+        RemotingServices.Disconnect(remoteFactory);
+    }
 
-		#region Properties
+    private void ValidateConfiguration()
+    {
+        if (TargetName == null)
+        {
+            throw new ArgumentException("The TargetName property is required.");
+        }
+    }
 
-		/// <summary>
-		/// Gets or sets the name of the target object definition.
-		/// </summary>
-		public string TargetName
-		{
-			get { return targetName; }
-			set { targetName = value; }
-		}
+    private void Export()
+    {
+        remoteFactory = new CaoRemoteFactory(this, targetName, interfaces, objectFactory);
+
+        RemotingServices.Marshal(remoteFactory, targetName);
+
+        if (LOG.IsEnabled(LogLevel.Debug))
+        {
+            LOG.LogDebug(String.Format("Target '{0}' registered.", targetName));
+        }
+    }
+
+    /// <summary>
+    /// This class extends <see cref="Spring.Remoting.Support.BaseRemoteObject"/> to allow CAOs
+    /// to be disconnect from the client.
+    /// </summary>
+    public abstract class BaseCao : BaseRemoteObject, IDisposable
+    {
+        void IDisposable.Dispose()
+        {
+            RemotingServices.Disconnect(this);
+        }
+    }
+
+    private sealed class CaoRemoteFactory : MarshalByRefObject, ICaoRemoteFactory
+    {
+        private AbstractObjectFactory objectFactory;
+        private string targetName;
+        private RemoteObjectFactory remoteObjectFactory;
 
         /// <summary>
-        /// Gets or sets the list of interfaces whose methods should be exported.
+        /// Create a new instance of the RemoteFactory.
+        /// </summary>
+        public CaoRemoteFactory(ILifetime lifetime, string targetName,
+            string[] interfaces, AbstractObjectFactory objectFactory)
+        {
+            this.targetName = targetName;
+            this.objectFactory = objectFactory;
+
+            this.remoteObjectFactory = new RemoteObjectFactory();
+            this.remoteObjectFactory.BaseType = typeof(BaseCao);
+            this.remoteObjectFactory.Interfaces = interfaces;
+            this.remoteObjectFactory.Infinite = lifetime.Infinite;
+            this.remoteObjectFactory.InitialLeaseTime = lifetime.InitialLeaseTime;
+            this.remoteObjectFactory.RenewOnCallTime = lifetime.RenewOnCallTime;
+            this.remoteObjectFactory.SponsorshipTimeout = lifetime.SponsorshipTimeout;
+        }
+
+        /// <summary>
+        /// Returns the CAO proxy.
+        /// </summary>
+        /// <returns>The remote object.</returns>
+        public object GetObject()
+        {
+            remoteObjectFactory.Target = objectFactory.GetObject(targetName);
+
+            return remoteObjectFactory.GetObject();
+        }
+
+        /// <summary>
+        /// Returns the CAO proxy using the
+        /// argument list to call the constructor.
         /// </summary>
         /// <remarks>
-        /// The default value of this property is all the interfaces
-        /// implemented or inherited by the target type.
+        /// The matching of arguments to call the constructor is done
+        /// by type. The alternative ways, by index and by constructor
+        /// name are not supported.
         /// </remarks>
-        /// <value>The interfaces to export.</value>
-        public string[] Interfaces
+        /// <param name="constructorArguments">Constructor
+        /// arguments used to create the object.</param>
+        /// <returns>The remote object.</returns>
+        public object GetObject(object[] constructorArguments)
         {
-            get { return interfaces; }
-            set { interfaces = value; }
-        }
+            RootObjectDefinition mergedObjectDefinition = objectFactory.GetMergedObjectDefinition(targetName, false);
 
-		#endregion
-
-		#region IApplicationContextAware Members
-
-        /// <summary>
-        /// Sets the <see cref="Spring.Context.IApplicationContext"/> that this
-        /// object runs in.
-        /// </summary>
-        /// <value></value>
-        /// <remarks>
-        /// <p>
-        /// Normally this call will be used to initialize the object.
-        /// </p>
-        /// <p>
-        /// Invoked after population of normal object properties but before an
-        /// init callback such as
-        /// <see cref="Spring.Objects.Factory.IInitializingObject"/>'s
-        /// <see cref="Spring.Objects.Factory.IInitializingObject.AfterPropertiesSet"/>
-        /// or a custom init-method. Invoked after the setting of any
-        /// <see cref="Spring.Context.IResourceLoaderAware"/>'s
-        /// <see cref="Spring.Context.IResourceLoaderAware.ResourceLoader"/>
-        /// property.
-        /// </p>
-        /// </remarks>
-        /// <exception cref="Spring.Context.ApplicationContextException">
-        /// In the case of application context initialization errors.
-        /// </exception>
-        /// <exception cref="Spring.Objects.ObjectsException">
-        /// If thrown by any application context methods.
-        /// </exception>
-        /// <exception cref="Spring.Objects.Factory.ObjectInitializationException"/>
-		public IApplicationContext ApplicationContext
-		{
-			set { applicationContext = value; }
-		}
-
-		#endregion
-
-		#region IObjectFactoryAware Members
-
-		/// <summary>
-		/// Sets object factory to use.
-		/// </summary>
-		public IObjectFactory ObjectFactory
-		{
-			set { objectFactory = (AbstractObjectFactory) value; }
-		}
-
-		#endregion
-
-		#region IInitializingObject Members
-
-		/// <summary>
-		/// Publish the object
-		/// </summary>
-		public void AfterPropertiesSet()
-		{
-			ValidateConfiguration();
-			Export();
-		}
-
-		#endregion
-
-		#region IDisposable Members
-
-		/// <summary>
-		/// Disconnect the remote object from the registered remoting channels.
-		/// </summary>
-		public void Dispose()
-		{
-			RemotingServices.Disconnect(remoteFactory);
-		}
-
-		#endregion
-
-		#region Private Methods
-
-		private void ValidateConfiguration()
-		{
-			if (TargetName == null)
-			{
-				throw new ArgumentException("The TargetName property is required.");
-			}
-		}
-
-		private void Export()
-		{
-			remoteFactory = new CaoRemoteFactory(this, targetName, interfaces, objectFactory);
-
-			RemotingServices.Marshal(remoteFactory, targetName);
-
-			#region Instrumentation
-
-			if (LOG.IsDebugEnabled)
-			{
-				LOG.Debug(String.Format("Target '{0}' registered.", targetName));
-			}
-
-			#endregion
-		}
-
-		#endregion
-
-        #region BaseCao inner class definition
-
-        /// <summary>
-        /// This class extends <see cref="Spring.Remoting.Support.BaseRemoteObject"/> to allow CAOs
-        /// to be disconnect from the client.
-        /// </summary>
-        public abstract class BaseCao : BaseRemoteObject, IDisposable
-        {
-            #region IDisposable Members
-
-            void IDisposable.Dispose()
+            if (typeof(IFactoryObject).IsAssignableFrom(mergedObjectDefinition.ObjectType))
             {
-                RemotingServices.Disconnect(this);
+                throw new NotSupportedException(
+                    "Client activated objects with constructor arguments is not supported with IFactoryObject implementations.");
             }
 
-            #endregion
+            remoteObjectFactory.Target = objectFactory.GetObject(targetName, constructorArguments);
+
+            return remoteObjectFactory.GetObject();
         }
 
-        #endregion
-
-        #region CaoRemoteFactory inner class definition
-
-        private sealed class CaoRemoteFactory : MarshalByRefObject, ICaoRemoteFactory
-		{
-			#region Fields
-
-			private AbstractObjectFactory objectFactory;
-			private string targetName;
-            private RemoteObjectFactory remoteObjectFactory;
-
-			#endregion
-
-			#region Constructor(s) / Destructor
-
-			/// <summary>
-			/// Create a new instance of the RemoteFactory.
-			/// </summary>
-            public CaoRemoteFactory(ILifetime lifetime, string targetName,
-                string[] interfaces, AbstractObjectFactory objectFactory)
-			{
-				this.targetName = targetName;
-				this.objectFactory = objectFactory;
-
-                this.remoteObjectFactory = new RemoteObjectFactory();
-                this.remoteObjectFactory.BaseType = typeof(BaseCao);
-                this.remoteObjectFactory.Interfaces = interfaces;
-                this.remoteObjectFactory.Infinite = lifetime.Infinite;
-                this.remoteObjectFactory.InitialLeaseTime = lifetime.InitialLeaseTime;
-                this.remoteObjectFactory.RenewOnCallTime = lifetime.RenewOnCallTime;
-                this.remoteObjectFactory.SponsorshipTimeout = lifetime.SponsorshipTimeout;
-			}
-
-			#endregion
-
-			#region Membres de ICaoRemoteFactory
-
-			/// <summary>
-			/// Returns the CAO proxy.
-			/// </summary>
-			/// <returns>The remote object.</returns>
-			public object GetObject()
-			{
-				remoteObjectFactory.Target = objectFactory.GetObject(targetName);
-
-                return remoteObjectFactory.GetObject();
-			}
-
-			/// <summary>
-			/// Returns the CAO proxy using the
-			/// argument list to call the constructor.
-			/// </summary>
-			/// <remarks>
-			/// The matching of arguments to call the constructor is done
-			/// by type. The alternative ways, by index and by constructor
-			/// name are not supported.
-			/// </remarks>
-			/// <param name="constructorArguments">Constructor
-			/// arguments used to create the object.</param>
-			/// <returns>The remote object.</returns>
-			public object GetObject(object[] constructorArguments)
-			{
-				RootObjectDefinition mergedObjectDefinition = objectFactory.GetMergedObjectDefinition(targetName, false);
-
-				if (typeof(IFactoryObject).IsAssignableFrom(mergedObjectDefinition.ObjectType))
-				{
-					throw new NotSupportedException(
-                        "Client activated objects with constructor arguments is not supported with IFactoryObject implementations.");
-				}
-
-                remoteObjectFactory.Target = objectFactory.GetObject(targetName, constructorArguments);
-
-                return remoteObjectFactory.GetObject();
-			}
-
-			#endregion
-
-            #region Overrided Methods
-
-            /// <summary>
-            /// Set infinite lifetime.
-            /// </summary>
-            public override object InitializeLifetimeService()
-            {
-                return null;
-            }
-
-            #endregion
+        /// <summary>
+        /// Set infinite lifetime.
+        /// </summary>
+        public override object InitializeLifetimeService()
+        {
+            return null;
         }
-
-		#endregion
-	}
+    }
 }

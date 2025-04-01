@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,22 +14,15 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Remoting;
 
-namespace Spring.Remoting
+/// <summary>
+/// Unit tests for the RemotingConfigParserTests class.
+/// </summary>
+/// <author>Bruno Baia</author>
+[TestFixture]
+public class RemotingConfigParserTests
 {
-	/// <summary>
-    /// Unit tests for the RemotingConfigParserTests class.
-	/// </summary>
-	/// <author>Bruno Baia</author>
-	[TestFixture]
-    public class RemotingConfigParserTests
-	{
-	}
 }

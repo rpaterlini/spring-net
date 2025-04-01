@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,37 +14,30 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
-using System.Collections.Generic;
-
 using NUnit.Framework;
-
 using Spring.Objects.Factory.Support;
 
-namespace Spring.Context.Attributes
-{
-    [TestFixture]
-    public class AssemblyObjectDefinitionScannerTests
-    {
-        [Test]
-        public void Can_Create_Custom_Scan_Routine()
-        {
-            var scanner = new ScanOverridingAssemblyObjectDefinitionScanner();
-            var registry = new DefaultListableObjectFactory();
-            scanner.ScanAndRegisterTypes(registry);
-            Assert.That(registry.ObjectDefinitionCount, Is.EqualTo(1), "found multiple definitions");
-            Assert.That(registry.GetObject<ComponentScan.ScanComponentsAndAddToContext.ConfigurationImpl>(), Is.Not.Null,
-                "correct single defintion was not registered");
-        }
+namespace Spring.Context.Attributes;
 
-        private class ScanOverridingAssemblyObjectDefinitionScanner : AssemblyObjectDefinitionScanner
+[TestFixture]
+public class AssemblyObjectDefinitionScannerTests
+{
+    [Test]
+    public void Can_Create_Custom_Scan_Routine()
+    {
+        var scanner = new ScanOverridingAssemblyObjectDefinitionScanner();
+        var registry = new DefaultListableObjectFactory();
+        scanner.ScanAndRegisterTypes(registry);
+        Assert.That(registry.ObjectDefinitionCount, Is.EqualTo(1), "found multiple definitions");
+        Assert.That(registry.GetObject<ComponentScan.ScanComponentsAndAddToContext.ConfigurationImpl>(), Is.Not.Null,
+            "correct single defintion was not registered");
+    }
+
+    private class ScanOverridingAssemblyObjectDefinitionScanner : AssemblyObjectDefinitionScanner
+    {
+        public override IEnumerable<Type> Scan()
         {
-            public override IEnumerable<Type> Scan()
-            {
-                return new Type[] {typeof (ComponentScan.ScanComponentsAndAddToContext.ConfigurationImpl)};
-            }
+            return new Type[] { typeof(ComponentScan.ScanComponentsAndAddToContext.ConfigurationImpl) };
         }
     }
 }

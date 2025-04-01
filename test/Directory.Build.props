@@ -13,10 +13,6 @@
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
 
-    <ApacheNmsVersion>2.0.0</ApacheNmsVersion>
-    <CommonLoggingVersion>3.4.1</CommonLoggingVersion>
-    <Log4NetVersion>2.0.8</Log4NetVersion>
-
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <ComVisible>False</ComVisible>
     <DebugSymbols>True</DebugSymbols>
@@ -27,9 +23,15 @@
 
     <IsPackable>false</IsPackable>
 
-    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>	
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+
+    <ImplicitUsings>enable</ImplicitUsings>
 
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.Extensions.Logging.ILogger" Alias="ILog" />
+  </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>Full</DebugType>
@@ -40,5 +42,9 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.Extensions.Logging.ILogger" Alias="ILog" />
+  </ItemGroup>
 
 </Project>

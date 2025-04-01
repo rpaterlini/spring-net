@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,32 +14,31 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Transaction.Support;
 
-namespace Spring.Transaction.Support
+/// <summary>
+/// Enumeration containing the state of transaction synchronization.
+/// </summary>
+/// <author>Griffin Caprio (.NET)</author>
+public enum TransactionSynchronizationState
 {
-	/// <summary>
-	/// Enumeration containing the state of transaction synchronization.
+    /// <summary>
+    /// Always activate transaction synchronization, even for "empty" transactions
+    /// that result from <see cref="Spring.Transaction.TransactionPropagation"/>.
     /// </summary>
-    /// <author>Griffin Caprio (.NET)</author>
-	public enum TransactionSynchronizationState
-	{
-		/// <summary>
-		/// Always activate transaction synchronization, even for "empty" transactions
-		/// that result from <see cref="Spring.Transaction.TransactionPropagation"/>.
-		/// </summary>
-		/// <seealso cref="Spring.Transaction.TransactionPropagation.Supports"/> with no existing backend transaction.
-		Always,
-		/// <summary>
-		/// Activate transaction synchronization only for actual transactions,
-		/// i.e. not for empty ones that result from <see cref="Spring.Transaction.TransactionPropagation"/>.
-		/// </summary>
-        /// <seealso cref="Spring.Transaction.TransactionPropagation.Supports"/> with no
-        /// existing backend transaction.
-		OnActualTransaction,
-		/// <summary>
-		/// Never active transaction synchronization.
-		/// </summary>
-		Never
-	}
+    /// <seealso cref="Spring.Transaction.TransactionPropagation.Supports"/> with no existing backend transaction.
+    Always,
+
+    /// <summary>
+    /// Activate transaction synchronization only for actual transactions,
+    /// i.e. not for empty ones that result from <see cref="Spring.Transaction.TransactionPropagation"/>.
+    /// </summary>
+    /// <seealso cref="Spring.Transaction.TransactionPropagation.Supports"/> with no
+    /// existing backend transaction.
+    OnActualTransaction,
+
+    /// <summary>
+    /// Never active transaction synchronization.
+    /// </summary>
+    Never
 }

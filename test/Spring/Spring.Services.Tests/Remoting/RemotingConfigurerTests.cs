@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,40 +14,33 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Runtime.Remoting.Channels;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 
-#endregion
+namespace Spring.Remoting;
 
-namespace Spring.Remoting
+/// <summary>
+/// Unit tests for the RemotingConfigurerTests class.
+/// </summary>
+/// <author>Bruno Baia</author>
+[TestFixture]
+public class RemotingConfigurerTests : BaseRemotingTestFixture
 {
-	/// <summary>
-    /// Unit tests for the RemotingConfigurerTests class.
-	/// </summary>
-	/// <author>Bruno Baia</author>
-	[TestFixture]
-    public class RemotingConfigurerTests : BaseRemotingTestFixture
-	{
-        [Test]
-        [Explicit]
-        public void ConfiguresUsingFilename()
-        {
-            Assert.AreEqual(1, ChannelServices.RegisteredChannels.Length);
-            Assert.AreEqual(channel, ChannelServices.RegisteredChannels[0]);
-            ChannelServices.UnregisterChannel(channel);
-            Assert.AreEqual(0, ChannelServices.RegisteredChannels.Length);
+    [Test]
+    [Explicit]
+    public void ConfiguresUsingFilename()
+    {
+        Assert.AreEqual(1, ChannelServices.RegisteredChannels.Length);
+        Assert.AreEqual(channel, ChannelServices.RegisteredChannels[0]);
+        ChannelServices.UnregisterChannel(channel);
+        Assert.AreEqual(0, ChannelServices.RegisteredChannels.Length);
 
-            IApplicationContext ctx = new XmlApplicationContext("assembly://Spring.Services.Tests/Spring.Data.Spring.Remoting/remotingConfigurer.xml");
-            ContextRegistry.RegisterContext(ctx);
+        IApplicationContext ctx = new XmlApplicationContext("assembly://Spring.Services.Tests/Spring.Data.Spring.Remoting/remotingConfigurer.xml");
+        ContextRegistry.RegisterContext(ctx);
 
-            Assert.AreEqual(1, ChannelServices.RegisteredChannels.Length);
-            Assert.AreEqual("tcp", ChannelServices.RegisteredChannels[0].ChannelName);
-        }
-	}
+        Assert.AreEqual(1, ChannelServices.RegisteredChannels.Length);
+        Assert.AreEqual("tcp", ChannelServices.RegisteredChannels[0].ChannelName);
+    }
 }

@@ -1,15 +1,8 @@
 ﻿using NUnit.Framework;
-
 using NhCfg = NHibernate.Cfg;
-
-using System.Collections.Generic;
-
 using Spring.Data.Common;
-
 using NHibernate.Dialect;
-
 using Spring.Context.Support;
-
 using NHibernate.Connection;
 using NHibernate.Driver;
 

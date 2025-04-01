@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +14,13 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Attributes;
 
-using System;
-
-namespace Spring.Objects.Factory.Attributes
+/// <summary>
+/// Custom attribute to indicate required setter property
+/// </summary>
+/// <author>Mark Pollack</author>
+[AttributeUsage(AttributeTargets.Property)]
+public class MyRequiredAttribute : Attribute
 {
-    /// <summary>
-    /// Custom attribute to indicate required setter property
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class MyRequiredAttribute : Attribute
-    {
-        
-    }
 }

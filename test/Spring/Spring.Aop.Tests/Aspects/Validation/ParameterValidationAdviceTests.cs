@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,88 +14,78 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
 using System.Reflection;
-
 using FakeItEasy;
-
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Validation;
 using Spring.Validation.Actions;
 
-namespace Spring.Aspects.Validation
+namespace Spring.Aspects.Validation;
+
+/// <summary>
+/// Unit tests for the CacheParameterAdvice class.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[TestFixture]
+public sealed class ParameterValidationAdviceTests
 {
-    /// <summary>
-    /// Unit tests for the CacheParameterAdvice class.
-    /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [TestFixture]
-    public sealed class ParameterValidationAdviceTests
+    private IApplicationContext mockContext;
+    private ParameterValidationAdvice advice;
+    private RequiredValidator requiredValidator;
+
+    [SetUp]
+    public void SetUp()
     {
-        private IApplicationContext mockContext;
-        private ParameterValidationAdvice advice;
-        private RequiredValidator requiredValidator;
+        mockContext = A.Fake<IApplicationContext>();
 
-        [SetUp]
-        public void SetUp()
-        {
-            mockContext = A.Fake<IApplicationContext>();
+        advice = new ParameterValidationAdvice();
+        advice.ApplicationContext = mockContext;
 
-            advice = new ParameterValidationAdvice();
-            advice.ApplicationContext = mockContext;
-
-            requiredValidator = new RequiredValidator();
-            requiredValidator.Actions.Add(new ErrorMessageAction("error.required", "errors"));
-        }
-
-        [Test]
-        public void TestValidArgument()
-        {
-            MethodInfo method = typeof(ValidationTarget).GetMethod("Save");
-            Inventor inventor = new Inventor("Nikola Tesla", new DateTime(1856, 7, 9), "Serbian");
-            ValidationTarget target = new ValidationTarget();
-            object[] args = new object[] {inventor};
-
-            ExpectValidatorRetrieval("required", requiredValidator);
-
-            advice.Before(method, args, target);
-            method.Invoke(target, args);
-            Assert.AreEqual("NIKOLA TESLA", inventor.Name);
-        }
-
-        [Test]
-        public void TestInvalidArgument()
-        {
-            MethodInfo method = typeof(ValidationTarget).GetMethod("Save");
-
-            ExpectValidatorRetrieval("required", requiredValidator);
-
-            Assert.Throws<ValidationException>(() => advice.Before(method, new object[] {null}, new ValidationTarget()));
-        }
-
-        private void ExpectValidatorRetrieval(string validatorName, IValidator validator)
-        {
-            A.CallTo(() => mockContext.GetObject(validatorName)).Returns(validator).Once();
-        }
+        requiredValidator = new RequiredValidator();
+        requiredValidator.Actions.Add(new ErrorMessageAction("error.required", "errors"));
     }
 
-    #region Inner Class : ValidationTarget
-
-    public interface IValidationTarget
+    [Test]
+    public void TestValidArgument()
     {
-        void Save(Inventor inventor);
+        MethodInfo method = typeof(ValidationTarget).GetMethod("Save");
+        Inventor inventor = new Inventor("Nikola Tesla", new DateTime(1856, 7, 9), "Serbian");
+        ValidationTarget target = new ValidationTarget();
+        object[] args = new object[] { inventor };
+
+        ExpectValidatorRetrieval("required", requiredValidator);
+
+        advice.Before(method, args, target);
+        method.Invoke(target, args);
+        Assert.AreEqual("NIKOLA TESLA", inventor.Name);
     }
 
-    public sealed class ValidationTarget : IValidationTarget
+    [Test]
+    public void TestInvalidArgument()
     {
-        public void Save([Validated("required")] Inventor inventor)
-        {
-            inventor.Name = inventor.Name.ToUpper();
-        }
+        MethodInfo method = typeof(ValidationTarget).GetMethod("Save");
+
+        ExpectValidatorRetrieval("required", requiredValidator);
+
+        Assert.Throws<ValidationException>(() => advice.Before(method, new object[] { null }, new ValidationTarget()));
     }
 
-    #endregion
+    private void ExpectValidatorRetrieval(string validatorName, IValidator validator)
+    {
+        A.CallTo(() => mockContext.GetObject(validatorName)).Returns(validator).Once();
+    }
+}
+
+public interface IValidationTarget
+{
+    void Save(Inventor inventor);
+}
+
+public sealed class ValidationTarget : IValidationTarget
+{
+    public void Save([Validated("required")] Inventor inventor)
+    {
+        inventor.Name = inventor.Name.ToUpper();
+    }
 }

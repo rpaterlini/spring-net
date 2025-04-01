@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +14,19 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Threading;
 
-namespace Spring.Threading
+/// <summary>
+/// Apply common thread-storage tests for <see cref="ThreadStaticStorage"/>
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class ThreadStaticStorageTests : CommonThreadStorageTests
 {
-    /// <summary>
-    /// Apply common thread-storage tests for <see cref="ThreadStaticStorage"/>
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class ThreadStaticStorageTests : CommonThreadStorageTests
+    protected override IThreadStorage CreateStorage()
     {
-        protected override IThreadStorage CreateStorage()
-        {
-            return new ThreadStaticStorage();
-        }
+        return new ThreadStaticStorage();
     }
 }

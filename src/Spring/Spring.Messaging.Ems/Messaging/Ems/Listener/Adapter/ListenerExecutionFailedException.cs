@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,36 +14,32 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Listener.Adapter;
 
-namespace Spring.Messaging.Ems.Listener.Adapter
+/// <summary>
+/// Exception to be thrown when the execution of a listener method failed.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Mark Pollack (.NET)</author>
+public class ListenerExecutionFailedException : EMSException
 {
     /// <summary>
-    /// Exception to be thrown when the execution of a listener method failed.
+    /// Initializes a new instance of the <see cref="ListenerExecutionFailedException"/> class, with the specified message
     /// </summary>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Mark Pollack (.NET)</author>
-    public class ListenerExecutionFailedException : EMSException
+    /// <param name="message">The message.</param>
+    public ListenerExecutionFailedException(string message) : base(message)
     {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ListenerExecutionFailedException"/> class, with the specified message
-        /// </summary>
-        /// <param name="message">The message.</param>
-        public ListenerExecutionFailedException(string message) : base(message)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ListenerExecutionFailedException"/> class, with the specified message
-        /// and root cause exception
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="innerException">The inner exception.</param>
-        public ListenerExecutionFailedException(string message, Exception innerException)
-            : base(message)
-        {
-            LinkedException = innerException;
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ListenerExecutionFailedException"/> class, with the specified message
+    /// and root cause exception
+    /// </summary>
+    /// <param name="message">The message.</param>
+    /// <param name="innerException">The inner exception.</param>
+    public ListenerExecutionFailedException(string message, Exception innerException)
+        : base(message)
+    {
+        LinkedException = innerException;
     }
 }

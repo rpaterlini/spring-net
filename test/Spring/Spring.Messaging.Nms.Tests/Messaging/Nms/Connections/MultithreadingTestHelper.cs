@@ -1,52 +1,49 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Diagnostics;
 
-namespace Spring.Messaging.Nms.Connections
+namespace Spring.Messaging.Nms.Connections;
+
+public class MultithreadingTestHelper
 {
-    public class MultithreadingTestHelper
+    [DebuggerStepThrough]
+    public static TestThreadHandler RunOnSeparateThread(Action action)
     {
-        [DebuggerStepThrough]
-        public static TestThreadHandler RunOnSeparateThread(Action action)
+        Exception exception = null;
+        var thread1 = new Thread(() =>
         {
-            Exception exception = null;
-            var thread1 = new Thread(() =>
+            try
             {
-                try
-                {
-                    action();
-                }
-                catch (Exception e)
-                {
-                    exception = e;
-                }
-            });
-            thread1.Start();
+                action();
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+        });
+        thread1.Start();
 
-            return new TestThreadHandler(() =>
+        return new TestThreadHandler(() =>
+        {
+            thread1.Join();
+            if (exception != null)
             {
-                thread1.Join();
-                if (exception != null)
-                {
-                    throw exception;
-                }
-            });
+                throw exception;
+            }
+        });
+    }
+
+    public class TestThreadHandler
+    {
+        private readonly Action _waitAction;
+
+        public TestThreadHandler(Action waitAction)
+        {
+            _waitAction = waitAction;
         }
 
-        public class TestThreadHandler
+        [DebuggerStepThrough]
+        public void Wait()
         {
-            private readonly Action _waitAction;
-
-            public TestThreadHandler(Action waitAction)
-            {
-                _waitAction = waitAction;
-            }
-
-            [DebuggerStepThrough]
-            public void Wait()
-            {
-                _waitAction();
-            }
+            _waitAction();
         }
     }
 }

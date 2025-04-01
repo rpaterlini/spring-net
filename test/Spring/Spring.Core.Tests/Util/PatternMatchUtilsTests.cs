@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,21 +14,14 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Util;
 
-namespace Spring.Util
+/// <summary>
+/// Unit tests for the PatternMatchUtils class.
+/// </summary>
+[TestFixture]
+public sealed class PatternMatchUtilsTests
 {
-	/// <summary>
-    /// Unit tests for the PatternMatchUtils class.
-	/// </summary>
-    [TestFixture]
-    public sealed class PatternMatchUtilsTests
-    {
-    }
 }

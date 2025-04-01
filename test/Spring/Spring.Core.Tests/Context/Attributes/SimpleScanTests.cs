@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2010-2011 the original author or authors.
+ * Copyright ï¿½ 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,76 +14,69 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
-
 using Spring.Context.Support;
 using Spring.Example.Scannable;
 using Spring.Objects.Factory;
 using Spring.Objects.Factory.Xml;
 
-namespace Spring.Context.Attributes
+namespace Spring.Context.Attributes;
+
+public class SimpleScanTests
 {
+    private IApplicationContext _applicationContext;
 
-    public class SimpleScanTests
+    [SetUp]
+    public void Setup()
     {
-        private IApplicationContext _applicationContext;
+        _applicationContext = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("SimpleScanTest.xml", GetType()));
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _applicationContext = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("SimpleScanTest.xml", GetType()));
-        }
-        
-        //[Test]
-        public void FooService()
-        {
+    //[Test]
+    public void FooService()
+    {
+        IFooService fooService = GetObject<IFooService>();
+    }
 
-            IFooService fooService = GetObject<IFooService>();
+    public T GetObject<T>()
+    {
+        return (T) DoGetInstance(typeof(T), null);
+    }
 
-        }
+    public T GetObject<T>(string name)
+    {
+        return (T) DoGetInstance(typeof(T), name);
+    }
 
-        public T GetObject<T>()
+    protected object DoGetInstance(Type serviceType, string key)
+    {
+        if (key == null)
         {
-            return (T)DoGetInstance(typeof(T), null);
-        }
-        public T GetObject<T>(string name)
-        {
-            return (T)DoGetInstance(typeof(T), name);
-        }
-
-        protected object DoGetInstance(Type serviceType, string key)
-        {
-            if (key == null)
+            IEnumerator it = DoGetAllInstances(serviceType).GetEnumerator();
+            if (it.MoveNext())
             {
-                IEnumerator it = DoGetAllInstances(serviceType).GetEnumerator();
-                if (it.MoveNext())
-                {
-                    return it.Current;
-                }
-                throw new ObjectCreationException(string.Format("no services of type '{0}' defined", serviceType.FullName));
+                return it.Current;
             }
-            return _applicationContext.GetObject(key, serviceType);
+
+            throw new ObjectCreationException(string.Format("no services of type '{0}' defined", serviceType.FullName));
         }
 
-        /// <summary>
-        /// Resolves service instances by type.
-        /// </summary>
-        /// <param name="serviceType">Type of service requested.</param>
-        /// <returns>
-        /// Sequence of service instance objects matching the <paramref name="serviceType"/>.
-        /// </returns>
-        protected IEnumerable<object> DoGetAllInstances(Type serviceType)
+        return _applicationContext.GetObject(key, serviceType);
+    }
+
+    /// <summary>
+    /// Resolves service instances by type.
+    /// </summary>
+    /// <param name="serviceType">Type of service requested.</param>
+    /// <returns>
+    /// Sequence of service instance objects matching the <paramref name="serviceType"/>.
+    /// </returns>
+    protected IEnumerable<object> DoGetAllInstances(Type serviceType)
+    {
+        foreach (string objectName in _applicationContext.GetObjectNamesForType(serviceType))
         {
-            foreach (string objectName in _applicationContext.GetObjectNamesForType(serviceType))
-            {
-                yield return _applicationContext.GetObject(objectName);
-            }
+            yield return _applicationContext.GetObject(objectName);
         }
-
     }
 }

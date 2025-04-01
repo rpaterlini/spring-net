@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,54 +14,49 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region
-
-using System;
 using System.Reflection;
 using Spring.Expressions;
 using Spring.Util;
 
-#endregion
+namespace Spring.Messaging.Listener.Adapter;
 
-namespace Spring.Messaging.Listener.Adapter
+/// <summary>
+/// POC for a standard reflection based listener method invoker. 
+/// </summary>
+/// <author>Mark Pollack</author>
+public class StandardReflectionMessageListenerAdapter : MessageListenerAdapter
 {
-    /// <summary>
-    /// POC for a standard reflection based listener method invoker. 
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    public class StandardReflectionMessageListenerAdapter : MessageListenerAdapter
-    {
-        private const BindingFlags BINDING_FLAGS
-            = BindingFlags.Public | BindingFlags.NonPublic
-              | BindingFlags.Instance | BindingFlags.Static
-              | BindingFlags.IgnoreCase;
+    private const BindingFlags BINDING_FLAGS
+        = BindingFlags.Public | BindingFlags.NonPublic
+                              | BindingFlags.Instance | BindingFlags.Static
+                              | BindingFlags.IgnoreCase;
 
-        protected override object InvokeListenerMethod(string methodName, object[] arguments)
+    protected override object InvokeListenerMethod(string methodName, object[] arguments)
+    {
+        try
         {
-            try
-            {
-                MethodInfo mi = MethodNode.GetBestMethod(HandlerObject.GetType(), methodName, BINDING_FLAGS, arguments);
-                if (mi == null)
-                {
-                    throw new ListenerExecutionFailedException("Failed to invoke the target method '" + methodName +
-                                                               "' with arguments " +
-                                                               StringUtils.CollectionToCommaDelimitedString(arguments));
-                }
-                try
-                {
-                    return mi.Invoke(HandlerObject, arguments);
-                } catch (Exception e)
-                {
-                    throw new ListenerExecutionFailedException("Listener method '" + methodName + "' threw exception.", e);                                                                  
-                }
-            } catch (Exception e)
+            MethodInfo mi = MethodNode.GetBestMethod(HandlerObject.GetType(), methodName, BINDING_FLAGS, arguments);
+            if (mi == null)
             {
                 throw new ListenerExecutionFailedException("Failed to invoke the target method '" + methodName +
-                                                               "' with arguments " +
-                                                               StringUtils.CollectionToCommaDelimitedString(arguments), e);
+                                                           "' with arguments " +
+                                                           StringUtils.CollectionToCommaDelimitedString(arguments));
             }
+
+            try
+            {
+                return mi.Invoke(HandlerObject, arguments);
+            }
+            catch (Exception e)
+            {
+                throw new ListenerExecutionFailedException("Listener method '" + methodName + "' threw exception.", e);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new ListenerExecutionFailedException("Failed to invoke the target method '" + methodName +
+                                                       "' with arguments " +
+                                                       StringUtils.CollectionToCommaDelimitedString(arguments), e);
         }
     }
 }

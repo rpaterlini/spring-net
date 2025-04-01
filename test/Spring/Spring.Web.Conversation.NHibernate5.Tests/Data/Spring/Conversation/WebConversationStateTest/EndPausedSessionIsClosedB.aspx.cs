@@ -1,5 +1,3 @@
-using System;
-
 using Spring.Web.Conversation;
 using NHibernate;
 using Spring.Entities;
@@ -7,6 +5,7 @@ using Spring.Entities;
 public partial class EndPausedSessionIsClosedB : System.Web.UI.Page
 {
     private IConversationState conversation;
+
     /// <summary>
     /// <see cref="IConversationState"/>
     /// </summary>
@@ -27,7 +26,7 @@ public partial class EndPausedSessionIsClosedB : System.Web.UI.Page
             //database access
             ISession session = this.Conversation.SessionFactory.GetCurrentSession();
             SPCMasterEnt sPCMasterEnt = session.Get<SPCMasterEnt>(1);
-            
+
             this.Session["result"] = "OK";
         }
         catch (Exception ex)

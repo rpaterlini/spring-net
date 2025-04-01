@@ -1,6 +1,5 @@
-#region License
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#endregion
-
-#region Imports
 
 using Spring.Context;
 
-#endregion
+namespace Spring.Web.Support;
 
-namespace Spring.Web.Support
+/// <summary>
+/// Any concrete interception strategy must implement this interface
+/// </summary>
+/// <author>Erich Eichinger</author>
+internal interface IInterceptionStrategy
 {
     /// <summary>
-    /// Any concrete interception strategy must implement this interface
+    /// Any implementation must never throw an exception from this method. 
+    /// Instead <c>false</c> must be returned to indicate interception failure.
     /// </summary>
-    /// <author>Erich Eichinger</author>
-    internal interface IInterceptionStrategy
-    {
-        /// <summary>
-        /// Any implementation must never throw an exception from this method. 
-        /// Instead <c>false</c> must be returned to indicate interception failure.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c>, if interception succeeded. <c>false</c> otherwise.
-        /// </returns>
-        bool Intercept(IApplicationContext defaultApplicationContext,
-                       ControlAccessor ctlAccessor, ControlCollectionAccessor ctlColAccessor);		
-    }
+    /// <returns>
+    /// <c>true</c>, if interception succeeded. <c>false</c> otherwise.
+    /// </returns>
+    bool Intercept(IApplicationContext defaultApplicationContext,
+        ControlAccessor ctlAccessor, ControlCollectionAccessor ctlColAccessor);
 }

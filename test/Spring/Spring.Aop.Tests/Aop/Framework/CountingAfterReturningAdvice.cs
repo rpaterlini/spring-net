@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +14,20 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-using System;
 using System.Reflection;
 
-#endregion
+namespace Spring.Aop.Framework;
 
-namespace Spring.Aop.Framework
+/// <summary>
+/// Simple after returning advice example that we can use for counting checks.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Bruno Baia (.NET)</author>
+[Serializable]
+public class CountingAfterReturningAdvice : MethodCounter, IAfterReturningAdvice
 {
-    /// <summary>
-    /// Simple after returning advice example that we can use for counting checks.
-    /// </summary>
-    /// <author>Rod Johnson</author>
-    /// <author>Bruno Baia (.NET)</author>
-    [Serializable]
-    public class CountingAfterReturningAdvice : MethodCounter, IAfterReturningAdvice
+    public void AfterReturning(object returnValue, MethodInfo method, object[] args, object target)
     {
-        public void AfterReturning(object returnValue, MethodInfo method, object[] args, object target)
-        {
-            Count(method);
-        }
+        Count(method);
     }
 }

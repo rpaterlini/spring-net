@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +14,11 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Objects.Factory.Config;
 
-namespace Spring.Objects.Factory.Support
+namespace Spring.Objects.Factory.Support;
+
+public interface IObjectDefinitionRegistryPostProcessor : IObjectFactoryPostProcessor
 {
-    public interface IObjectDefinitionRegistryPostProcessor : IObjectFactoryPostProcessor
-    {
-        void PostProcessObjectDefinitionRegistry(IObjectDefinitionRegistry registry);
-    }
+    void PostProcessObjectDefinitionRegistry(IObjectDefinitionRegistry registry);
 }

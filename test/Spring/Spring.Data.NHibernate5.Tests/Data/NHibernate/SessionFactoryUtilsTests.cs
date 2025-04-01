@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2010 the original author or authors.
+ * Copyright ï¿½ 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +14,12 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Data.SqlClient;
-
 using FakeItEasy;
-
 using NHibernate.Connection;
 using NHibernate.Driver;
 using NHibernate.Engine;
-
 using NUnit.Framework;
-
 using Spring.Data.Common;
 
 namespace Spring.Data.NHibernate

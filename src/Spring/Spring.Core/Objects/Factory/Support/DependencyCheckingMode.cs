@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,35 +14,32 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Support;
 
-namespace Spring.Objects.Factory.Support {
-
-	/// <summary>
-	/// The various modes of dependency checking.
+/// <summary>
+/// The various modes of dependency checking.
+/// </summary>
+/// <author>Rick Evans (.NET)</author>
+[Serializable]
+public enum DependencyCheckingMode
+{
+    /// <summary>
+    /// DO not do any dependency checking.
     /// </summary>
-    /// <author>Rick Evans (.NET)</author>
-    [Serializable]
-    public enum DependencyCheckingMode
-    {
-        /// <summary>
-        /// DO not do any dependency checking.
-        /// </summary>
-        None = 0,
+    None = 0,
 
-        /// <summary>
-        /// Check object references.
-        /// </summary>
-        Objects = 1,
+    /// <summary>
+    /// Check object references.
+    /// </summary>
+    Objects = 1,
 
-        /// <summary>
-        /// Just check primitive (string, int, etc) values.
-        /// </summary>
-        Simple = 2,
+    /// <summary>
+    /// Just check primitive (string, int, etc) values.
+    /// </summary>
+    Simple = 2,
 
-        /// <summary>
-        /// Check everything.
-        /// </summary>
-        All = 3
-	}
+    /// <summary>
+    /// Check everything.
+    /// </summary>
+    All = 3
 }

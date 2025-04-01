@@ -20,10 +20,7 @@
 
 #region Imports
 
-using System;
-
-using Common.Logging;
-
+using Microsoft.Extensions.Logging;
 using Spring.Northwind.Domain;
 
 #endregion
@@ -32,11 +29,11 @@ namespace Spring.Northwind.Service
 {
     public class FedExShippingService : IShippingService
     {
-        protected static readonly ILog log = LogManager.GetLogger(typeof (FedExShippingService));
+        protected static readonly ILogger log = LogManager.GetLogger(typeof (FedExShippingService));
 
         public void ShipOrder(Order order)
         {
-            log.Info("Shipping order id = " + order.Id);
+            log.LogInformation("Shipping order id = {OrderId} ", order.Id);
         }
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright © 2002-2011 the original author or authors.
  *
@@ -16,14 +14,11 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Web.Mvc;
 
-namespace Spring.Web.Mvc.Tests.Controllers
+namespace Spring.Web.Mvc.Tests.Controllers;
+
+public class FirstContainerRegisteredController : Controller
 {
-    public class FirstContainerRegisteredController : Controller
-    {
-        public string TestValue { get; set; }
-    }
+    public string TestValue { get; set; }
 }

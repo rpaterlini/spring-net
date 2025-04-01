@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2010 the original author or authors.
  *
@@ -16,20 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Core
-{
-    /// <summary>
-    /// Delegate that creates a EMS message given a Session
-    /// </summary>
-    /// <param name="session">the EMS Session to be used to create the
-    /// <code>Message</code> (never <code>null</code>)
-    /// </param>
-    /// <returns> the <code>Message</code> to be sent
-    /// </returns>
-    /// <throws>EMSException if thrown by EMS API methods </throws>
-    public delegate Message MessageCreatorDelegate(ISession session);
-}
+namespace Spring.Messaging.Ems.Core;
+
+/// <summary>
+/// Delegate that creates a EMS message given a Session
+/// </summary>
+/// <param name="session">the EMS Session to be used to create the
+/// <code>Message</code> (never <code>null</code>)
+/// </param>
+/// <returns> the <code>Message</code> to be sent
+/// </returns>
+/// <throws>EMSException if thrown by EMS API methods </throws>
+public delegate Message MessageCreatorDelegate(ISession session);

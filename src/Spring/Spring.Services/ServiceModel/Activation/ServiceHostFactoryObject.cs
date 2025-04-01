@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,211 +14,168 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.ServiceModel;
-
+using Microsoft.Extensions.Logging;
 using Spring.Objects.Factory;
 
-namespace Spring.ServiceModel.Activation
+namespace Spring.ServiceModel.Activation;
+
+/// <summary>
+/// Factory that provides instances of <see cref="ServiceHost" />
+/// to host objects created with Spring's IoC container.
+/// </summary>
+/// <author>Bruno Baia</author>
+public class ServiceHostFactoryObject : IFactoryObject, IInitializingObject, IObjectFactoryAware, IDisposable
 {
+    private static readonly ILogger<ServiceHostFactoryObject> LOG = LogManager.GetLogger<ServiceHostFactoryObject>();
+
+    private string _targetName;
+    private bool _useServiceProxyTypeCache = true;
+    private Uri[] _baseAddresses = new Uri[] { };
+
     /// <summary>
-    /// Factory that provides instances of <see cref="ServiceHost" />
-    /// to host objects created with Spring's IoC container.
+    /// The owning factory.
     /// </summary>
-    /// <author>Bruno Baia</author>
-    public class ServiceHostFactoryObject : IFactoryObject, IInitializingObject, IObjectFactoryAware, IDisposable
+    private IObjectFactory objectFactory;
+
+    /// <summary>
+    /// The <see cref="Spring.ServiceModel.SpringServiceHost" /> instance managed by this factory.
+    /// </summary>
+    protected SpringServiceHost springServiceHost;
+
+    /// <summary>
+    /// Gets or sets the name of the target object that should be exposed as a service.
+    /// </summary>
+    /// <value>
+    /// The name of the target object that should be exposed as a service.
+    /// </value>
+    public string TargetName
     {
-        #region Logging
+        get { return _targetName; }
+        set { _targetName = value; }
+    }
 
-        private static readonly Common.Logging.ILog LOG = Common.Logging.LogManager.GetLogger(typeof(ServiceHostFactoryObject));
+    /// <summary>
+    /// Gets or sets the base addresses for the hosted service.
+    /// </summary>
+    /// <value>
+    /// The base addresses for the hosted service.
+    /// </value>
+    public Uri[] BaseAddresses
+    {
+        get { return _baseAddresses; }
+        set { _baseAddresses = value; }
+    }
 
-        #endregion
+    /// <summary>
+    /// Controls, whether the underlying <see cref="SpringServiceHost"/> should cache
+    /// the generated proxy types. Defaults to <c>true</c>.
+    /// </summary>
+    public bool UseServiceProxyTypeCache
+    {
+        get { return _useServiceProxyTypeCache; }
+        set { _useServiceProxyTypeCache = value; }
+    }
 
-        #region Fields
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.ServiceModel.Activation.ServiceHostFactoryObject"/> class.
+    /// </summary>
+    public ServiceHostFactoryObject()
+    {
+    }
 
-        private string _targetName;
-        private bool _useServiceProxyTypeCache = true;
-        private Uri[] _baseAddresses = new Uri[] { };
+    /// <summary>
+    /// Callback that supplies the owning factory to an object instance.
+    /// </summary>
+    /// <value>
+    /// Owning <see cref="Spring.Objects.Factory.IObjectFactory"/>
+    /// (may not be <see langword="null"/>). The object can immediately
+    /// call methods on the factory.
+    /// </value>
+    /// <remarks>
+    /// <p>
+    /// Invoked after population of normal object properties but before an init
+    /// callback like <see cref="Spring.Objects.Factory.IInitializingObject"/>'s
+    /// <see cref="Spring.Objects.Factory.IInitializingObject.AfterPropertiesSet"/>
+    /// method or a custom init-method.
+    /// </p>
+    /// </remarks>
+    /// <exception cref="Spring.Objects.ObjectsException">
+    /// In case of initialization errors.
+    /// </exception>
+    public virtual IObjectFactory ObjectFactory
+    {
+        protected get { return this.objectFactory; }
+        set { this.objectFactory = value; }
+    }
 
-        /// <summary>
-        /// The owning factory.
-        /// </summary>
-        private IObjectFactory objectFactory;
+    /// <summary>
+    /// Return a <see cref="Spring.ServiceModel.SpringServiceHost" /> instance
+    /// managed by this factory.
+    /// </summary>
+    /// <returns>
+    /// An instance of <see cref="Spring.ServiceModel.SpringServiceHost" />
+    /// managed by this factory.
+    /// </returns>
+    public virtual object GetObject()
+    {
+        return springServiceHost;
+    }
 
-        /// <summary>
-        /// The <see cref="Spring.ServiceModel.SpringServiceHost" /> instance managed by this factory.
-        /// </summary>
-        protected SpringServiceHost springServiceHost;
+    /// <summary>
+    /// Return the <see cref="System.Type"/> of object that this
+    /// <see cref="Spring.Objects.Factory.IFactoryObject"/> creates.
+    /// </summary>
+    public virtual Type ObjectType
+    {
+        get { return typeof(SpringServiceHost); }
+    }
 
-        #endregion
+    /// <summary>
+    /// Always returns <see langword="false"/>
+    /// </summary>
+    public virtual bool IsSingleton
+    {
+        get { return false; }
+    }
 
-        #region Properties
+    /// <summary>
+    /// Publish the object.
+    /// </summary>
+    public virtual void AfterPropertiesSet()
+    {
+        ValidateConfiguration();
 
-        /// <summary>
-        /// Gets or sets the name of the target object that should be exposed as a service.
-        /// </summary>
-        /// <value>
-        /// The name of the target object that should be exposed as a service.
-        /// </value>
-        public string TargetName
+        springServiceHost = new SpringServiceHost(TargetName, objectFactory, UseServiceProxyTypeCache, BaseAddresses);
+
+        springServiceHost.Open();
+
+        if (LOG.IsEnabled(LogLevel.Information))
         {
-            get { return _targetName; }
-            set { _targetName = value; }
+            LOG.LogInformation(String.Format("The service '{0}' is ready and can now be accessed.", TargetName));
         }
+    }
 
-        /// <summary>
-        /// Gets or sets the base addresses for the hosted service.
-        /// </summary>
-        /// <value>
-        /// The base addresses for the hosted service.
-        /// </value>
-        public Uri[] BaseAddresses
+    /// <summary>
+    /// Close the SpringServiceHost
+    /// </summary>
+    public void Dispose()
+    {
+        if (springServiceHost != null)
         {
-            get { return _baseAddresses; }
-            set { _baseAddresses = value; }
+            springServiceHost.Close();
         }
+    }
 
-        /// <summary>
-        /// Controls, whether the underlying <see cref="SpringServiceHost"/> should cache
-        /// the generated proxy types. Defaults to <c>true</c>.
-        /// </summary>
-        public bool UseServiceProxyTypeCache
+    /// <summary>
+    /// Validates the configuration.
+    /// </summary>
+    protected virtual void ValidateConfiguration()
+    {
+        if (TargetName == null)
         {
-            get { return _useServiceProxyTypeCache; }
-            set { _useServiceProxyTypeCache = value; }
+            throw new ArgumentException("The TargetName property is required.");
         }
-
-        #endregion
-
-        #region Constructor(s) / Destructor
-
-        /// <summary>
-        /// Creates a new instance of the
-        /// <see cref="Spring.ServiceModel.Activation.ServiceHostFactoryObject"/> class.
-        /// </summary>
-        public ServiceHostFactoryObject()
-        {
-        }
-
-        #endregion
-
-        #region IObjectFactoryAware Members
-
-        /// <summary>
-        /// Callback that supplies the owning factory to an object instance.
-        /// </summary>
-        /// <value>
-        /// Owning <see cref="Spring.Objects.Factory.IObjectFactory"/>
-        /// (may not be <see langword="null"/>). The object can immediately
-        /// call methods on the factory.
-        /// </value>
-        /// <remarks>
-        /// <p>
-        /// Invoked after population of normal object properties but before an init
-        /// callback like <see cref="Spring.Objects.Factory.IInitializingObject"/>'s
-        /// <see cref="Spring.Objects.Factory.IInitializingObject.AfterPropertiesSet"/>
-        /// method or a custom init-method.
-        /// </p>
-        /// </remarks>
-        /// <exception cref="Spring.Objects.ObjectsException">
-        /// In case of initialization errors.
-        /// </exception>
-        public virtual IObjectFactory ObjectFactory
-        {
-            protected get { return this.objectFactory; }
-            set { this.objectFactory = value; }
-        }
-
-        #endregion
-
-        #region IFactoryObject Members
-
-        /// <summary>
-        /// Return a <see cref="Spring.ServiceModel.SpringServiceHost" /> instance
-        /// managed by this factory.
-        /// </summary>
-        /// <returns>
-        /// An instance of <see cref="Spring.ServiceModel.SpringServiceHost" />
-        /// managed by this factory.
-        /// </returns>
-        public virtual object GetObject()
-        {
-            return springServiceHost;
-        }
-
-        /// <summary>
-        /// Return the <see cref="System.Type"/> of object that this
-        /// <see cref="Spring.Objects.Factory.IFactoryObject"/> creates.
-        /// </summary>
-        public virtual Type ObjectType
-        {
-            get { return typeof(SpringServiceHost); }
-        }
-
-        /// <summary>
-        /// Always returns <see langword="false"/>
-        /// </summary>
-        public virtual bool IsSingleton
-        {
-            get { return false; }
-        }
-
-        #endregion
-
-        #region IInitializingObject Members
-
-        /// <summary>
-        /// Publish the object.
-        /// </summary>
-        public virtual void AfterPropertiesSet()
-        {
-            ValidateConfiguration();
-
-            springServiceHost = new SpringServiceHost(TargetName, objectFactory, UseServiceProxyTypeCache, BaseAddresses);
-
-            springServiceHost.Open();
-
-            #region Instrumentation
-
-            if (LOG.IsInfoEnabled)
-            {
-                LOG.Info(String.Format("The service '{0}' is ready and can now be accessed.", TargetName));
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        #region IDisposable Members
-
-        /// <summary>
-        /// Close the SpringServiceHost
-        /// </summary>
-        public void Dispose()
-        {
-            if (springServiceHost != null)
-            {
-                springServiceHost.Close();
-            }
-        }
-
-        #endregion
-
-        #region Protected Methods
-
-        /// <summary>
-        /// Validates the configuration.
-        /// </summary>
-        protected virtual void ValidateConfiguration()
-        {
-            if (TargetName == null)
-            {
-                throw new ArgumentException("The TargetName property is required.");
-            }
-        }
-
-        #endregion
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,37 +14,33 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Xml;
 
-namespace Spring.Objects.Factory.Xml
+/// <summary>
+/// Class used to test array ctor autowiring
+/// </summary>
+/// <remarks>
+///
+/// </remarks>
+/// <author>Mark Pollack</author>
+public class ArrayCtorDependencyObject
 {
-    /// <summary>
-    /// Class used to test array ctor autowiring
-    /// </summary>
-    /// <remarks>
-    ///
-    /// </remarks>
-    /// <author>Mark Pollack</author>
-    public class ArrayCtorDependencyObject
+    private ITestObject spouse1;
+    private ITestObject spouse2;
+
+    public ArrayCtorDependencyObject(ITestObject[] spouses)
     {
-        private ITestObject spouse1;
-        private ITestObject spouse2;
+        this.spouse1 = spouses[0];
+        this.spouse2 = spouses[1];
+    }
 
+    public ITestObject Spouse1
+    {
+        get { return spouse1; }
+    }
 
-        public ArrayCtorDependencyObject(ITestObject[] spouses)
-        {
-            this.spouse1 = spouses[0];
-            this.spouse2 = spouses[1];
-        }
-
-        public ITestObject Spouse1
-        {
-            get { return spouse1; }
-        }
-
-        public ITestObject Spouse2
-        {
-            get { return spouse2; }
-        }
+    public ITestObject Spouse2
+    {
+        get { return spouse2; }
     }
 }

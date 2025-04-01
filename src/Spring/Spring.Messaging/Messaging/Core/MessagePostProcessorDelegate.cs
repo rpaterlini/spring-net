@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,26 +14,23 @@
  * limitations under the License.
  */
 
-#endregion
-
-
 #if NETSTANDARD
 using Experimental.System.Messaging;
+
 #else
 using System.Messaging;
 #endif
 
-namespace Spring.Messaging.Core
-{
-    /// <summary>
-    /// To be used with MessageQueueTemplate's send method that
-    /// convert an object to a message.
-    /// </summary>
-    /// <remarks>
-    /// It allows for further modification of the message after it has been processed
-    /// by the converter. This is useful for setting of Message properties (e.g. 
-    /// CorrelationId, AppSpecific, TimeToReachQueue).
-    /// </remarks>
-    /// <author>Mark Pollack</author>
-    public delegate Message MessagePostProcessorDelegate(Message message);
-}
+namespace Spring.Messaging.Core;
+
+/// <summary>
+/// To be used with MessageQueueTemplate's send method that
+/// convert an object to a message.
+/// </summary>
+/// <remarks>
+/// It allows for further modification of the message after it has been processed
+/// by the converter. This is useful for setting of Message properties (e.g.
+/// CorrelationId, AppSpecific, TimeToReachQueue).
+/// </remarks>
+/// <author>Mark Pollack</author>
+public delegate Message MessagePostProcessorDelegate(Message message);

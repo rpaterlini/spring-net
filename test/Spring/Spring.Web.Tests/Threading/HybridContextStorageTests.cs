@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +14,30 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System.IO;
 using System.Web;
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Threading;
 
-namespace Spring.Threading
+/// <summary>
+/// Apply common thread-storage tests for <see cref="HybridContextStorage"/>
+/// </summary>
+/// <author>Erich Eichinger</author>
+[TestFixture]
+public class HybridContextStorageTests : CommonThreadStorageTests
 {
-    /// <summary>
-    /// Apply common thread-storage tests for <see cref="HybridContextStorage"/>
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    [TestFixture]
-    public class HybridContextStorageTests : CommonThreadStorageTests
+    protected override IThreadStorage CreateStorage()
     {
-        protected override IThreadStorage CreateStorage()
-        {
-            return new HybridContextStorage();
-        }
+        return new HybridContextStorage();
+    }
 
-        protected override void ThreadSetup()
-        {
-            HttpContext.Current = new HttpContext(new HttpRequest("/page.aspx", "http://localhost/page.aspx", null), new HttpResponse(new StringWriter()));
-        }
+    protected override void ThreadSetup()
+    {
+        HttpContext.Current = new HttpContext(new HttpRequest("/page.aspx", "http://localhost/page.aspx", null), new HttpResponse(new StringWriter()));
+    }
 
-        protected override void ThreadCleanup()
-        {
-            HttpContext.Current = null;
-        }
+    protected override void ThreadCleanup()
+    {
+        HttpContext.Current = null;
     }
 }

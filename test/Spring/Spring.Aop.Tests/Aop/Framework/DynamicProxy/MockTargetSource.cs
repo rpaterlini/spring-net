@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,71 +14,58 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Aop.Framework.DynamicProxy;
 
-#region Imports
-
-using System;
-
-#endregion
-
-namespace Spring.Aop.Framework.DynamicProxy
+/// <summary>
+/// Useful <see cref="Spring.Aop.ITargetSource"/> implementation
+/// that checks calls to GetTarget and ReleaseTarget.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Bruno Baia (.NET)</author>
+public class MockTargetSource : ITargetSource
 {
-    /// <summary>
-    /// Useful <see cref="Spring.Aop.ITargetSource"/> implementation 
-    /// that checks calls to GetTarget and ReleaseTarget.
-    /// </summary>
-    /// <author>Rod Johnson</author>
-    /// <author>Bruno Baia (.NET)</author>
-    public class MockTargetSource : ITargetSource
+    private object _target;
+
+    public int gets;
+    public int releases;
+
+    public void Reset()
     {
-        private object _target;
+        this._target = null;
+        gets = releases = 0;
+    }
 
-        public int gets;
-        public int releases;
+    public void SetTarget(Object target)
+    {
+        this._target = target;
+    }
 
-        public void Reset()
-        {
-            this._target = null;
-            gets = releases = 0;
-        }
+    public void Verify()
+    {
+        if (gets != releases)
+            throw new Exception("Expectation failed: " + gets + " gets and " + releases + " releases");
+    }
 
-        public void SetTarget(Object target)
-        {
-            this._target = target;
-        }
+    public Type TargetType
+    {
+        get { return _target.GetType(); }
+    }
 
-        public void Verify()
-        {
-            if (gets != releases)
-                throw new Exception("Expectation failed: " + gets + " gets and " + releases + " releases");
-        }
+    public bool IsStatic
+    {
+        get { return false; }
+    }
 
-        #region ITargetSource Members
+    public object GetTarget()
+    {
+        ++gets;
+        return _target;
+    }
 
-        public Type TargetType
-        {
-            get { return _target.GetType(); }
-        }
-
-        public bool IsStatic
-        {
-            get { return false; }
-        }
-
-        public object GetTarget()
-        {
-            ++gets;
-            return _target;
-        }
-
-        public void ReleaseTarget(object target)
-        {
-            if (target != this._target)
-                throw new Exception("Released wrong target");
-            ++releases;
-        }
-
-        #endregion
+    public void ReleaseTarget(object target)
+    {
+        if (target != this._target)
+            throw new Exception("Released wrong target");
+        ++releases;
     }
 }

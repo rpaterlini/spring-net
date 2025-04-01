@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2007 the original author or authors.
  *
@@ -27,14 +25,19 @@ using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 
-#endregion
+namespace Spring.Scheduling.Quartz.Integration.Tests;
 
-namespace Spring.Scheduling.Quartz.Integration.Tests
+[TestFixture]
+public class LocalDataSourceJobStoreTest
 {
-    [TestFixture]
-    public class LocalDataSourceJobStoreTest
+    private IApplicationContext ctx;
+
+    [SetUp]
+    public void SetUp()
     {
-        private IApplicationContext ctx;
+        ctx = new XmlApplicationContext(
+            "assembly://Spring.Scheduling.Quartz3.Integration.Tests/Spring.Scheduling.Quartz/LocalDataSourceJobStoreTest.xml");
+    }
 
         [SetUp]
         public void SetUp()

@@ -1,7 +1,4 @@
-
-
-using System.Collections;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 using Spring.MsmqQuickStart.Client.UI;
 using Spring.MsmqQuickStart.Common.Data;
 
@@ -11,7 +8,7 @@ namespace Spring.MsmqQuickStart.Client.Handlers
     {
         #region Logging Definition
 
-        private readonly ILog log = LogManager.GetLogger(typeof(StockAppHandler));
+        private readonly ILogger log = LogManager.GetLogger(typeof(StockAppHandler));
 
         #endregion
 
@@ -26,7 +23,7 @@ namespace Spring.MsmqQuickStart.Client.Handlers
 
         public void Handle(string data)
         {
-            log.Info(string.Format("Received market data. " + data));
+            log.LogInformation("Received market data. " + data);
 
             // forward to controller to update view
             stockController.UpdateMarketData(data);
@@ -36,13 +33,13 @@ namespace Spring.MsmqQuickStart.Client.Handlers
 
         public void Handle(TradeResponse tradeResponse)
         {
-            log.Info(string.Format("Received trade resonse.  Ticker = {0}, Price = {1}", tradeResponse.Ticker, tradeResponse.Price));
+            log.LogInformation("Received trade resonse.  Ticker = {TradeResponseTicker}, Price = {TradeResponsePrice}", tradeResponse.Ticker, tradeResponse.Price);
             stockController.UpdateTrade(tradeResponse);
         }
 
         public void Handle(object catchAllObject)
         {
-            log.Error("could not handle object of type = " + catchAllObject.GetType());
+            log.LogError("could not handle object of type {ObjectType}", catchAllObject.GetType());
         }
     }
 }

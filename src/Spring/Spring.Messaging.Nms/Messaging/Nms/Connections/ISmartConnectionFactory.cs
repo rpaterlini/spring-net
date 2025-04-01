@@ -1,7 +1,3 @@
- 
-
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -18,25 +14,22 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Apache.NMS;
 
-namespace Spring.Messaging.Nms.Connections
+namespace Spring.Messaging.Nms.Connections;
+
+/// <summary>
+/// Extension of the <code>ConnectionFactory</code> interface,
+/// indicating how to release Connections obtained from it.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Mark Pollack (.NET)</author>
+public interface ISmartConnectionFactory
 {
     /// <summary>
-    /// Extension of the <code>ConnectionFactory</code> interface, 
-    /// indicating how to release Connections obtained from it.
+    /// Shoulds we stop the connection, obtained from this ConnectionFactory?
     /// </summary>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Mark Pollack (.NET)</author>
-    public interface ISmartConnectionFactory
-    {
-        /// <summary>
-        /// Shoulds we stop the connection, obtained from this ConnectionFactory?
-        /// </summary>
-        /// <param name="con">The connection to check.</param>
-        /// <returns>wheter a stop call is necessary</returns>
-        bool ShouldStop(IConnection con);
-    }
+    /// <param name="con">The connection to check.</param>
+    /// <returns>wheter a stop call is necessary</returns>
+    bool ShouldStop(IConnection con);
 }

@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Attributes;
 
-namespace Spring.Objects.Factory.Attributes
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
+public class ValueAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public class ValueAttribute : Attribute
+    private string _expression;
+
+    public ValueAttribute(string expression)
     {
-        private string _expression;
-
-        public ValueAttribute(string expression)
-        {
-            _expression = expression;
-        }
-
-        public string Expression { get { return _expression; } }
+        _expression = expression;
     }
+
+    public string Expression { get { return _expression; } }
 }

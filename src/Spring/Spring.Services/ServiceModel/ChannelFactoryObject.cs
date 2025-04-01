@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,98 +14,83 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.ServiceModel;
-
+using Microsoft.Extensions.Logging;
 using Spring.Objects.Factory;
 
-namespace Spring.ServiceModel
+namespace Spring.ServiceModel;
+
+/// <summary>
+/// <see cref="IFactoryObject"/> that creates a channel that is used by clients
+/// to send messages to a specified endpoint address.
+/// </summary>
+/// <typeparam name="T">The type of channel produced by the channel factory.</typeparam>
+/// <author>Bruno Baia</author>
+public class ChannelFactoryObject<T> : ChannelFactory<T>, IFactoryObject
 {
+    private static readonly ILogger Log = LogManager.GetLogger(typeof(ChannelFactoryObject<>));
+
+    private bool _isSingleton = true;
+    private string _endpointConfigurationName;
+
     /// <summary>
-    /// <see cref="IFactoryObject"/> that creates a channel that is used by clients
-    /// to send messages to a specified endpoint address.
+    /// Creates a new instance of the <see cref="ChannelFactoryObject{T}"/> class.
     /// </summary>
-    /// <typeparam name="T">The type of channel produced by the channel factory.</typeparam>
-    /// <author>Bruno Baia</author>
-    public class ChannelFactoryObject<T> : ChannelFactory<T>, IFactoryObject
+    /// <param name="endpointConfigurationName">
+    /// The configuration name used for the endpoint.
+    /// </param>
+    public ChannelFactoryObject(string endpointConfigurationName)
+        : base(endpointConfigurationName)
     {
-        #region Logging
+        this._endpointConfigurationName = endpointConfigurationName;
+    }
 
-        private static readonly Common.Logging.ILog Log = Common.Logging.LogManager.GetLogger(typeof(ChannelFactoryObject<>));
+    /// <summary>
+    /// Gets the configuration name used for the endpoint.
+    /// </summary>
+    public string EndpointConfigurationName
+    {
+        get { return this._endpointConfigurationName; }
+    }
 
-        #endregion
-
-        private bool _isSingleton = true;
-        private string _endpointConfigurationName;
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="ChannelFactoryObject{T}"/> class.
-        /// </summary>
-        /// <param name="endpointConfigurationName">
-        /// The configuration name used for the endpoint.
-        /// </param>
-        public ChannelFactoryObject(string endpointConfigurationName)
-            : base(endpointConfigurationName)
+    /// <summary>
+    /// Return an instance (possibly shared or independent) of the channel
+    /// managed by this factory.
+    /// </summary>
+    /// <returns>
+    /// An instance (possibly shared or independent) of the channel managed by
+    /// this factory.
+    /// </returns>
+    public object GetObject()
+    {
+        if (Log.IsEnabled(LogLevel.Debug))
         {
-            this._endpointConfigurationName = endpointConfigurationName;
+            Log.LogDebug(String.Format(
+                "Creating channel of type '{0}' for the specified endpoint '{1}'...",
+                typeof(T).FullName, this._endpointConfigurationName));
         }
 
-        /// <summary>
-        /// Gets the configuration name used for the endpoint.
-        /// </summary>
-        public string EndpointConfigurationName
-        {
-            get { return this._endpointConfigurationName; }
-        }
+        return this.CreateChannel();
+    }
 
-        #region IFactoryObject Membres
+    /// <summary>
+    /// Return the <see cref="System.Type"/> of channel that this
+    /// <see cref="Spring.Objects.Factory.IFactoryObject"/> creates.
+    /// </summary>
+    public Type ObjectType
+    {
+        get { return typeof(T); }
+    }
 
-        /// <summary>
-        /// Return an instance (possibly shared or independent) of the channel
-        /// managed by this factory.
-        /// </summary>
-        /// <returns>
-        /// An instance (possibly shared or independent) of the channel managed by
-        /// this factory.
-        /// </returns>
-        public object GetObject()
-        {
-            #region Instrumentation
-
-            if (Log.IsDebugEnabled)
-            {
-                Log.Debug(String.Format(
-                    "Creating channel of type '{0}' for the specified endpoint '{1}'...",
-                    typeof(T).FullName, this._endpointConfigurationName));
-            }
-
-            #endregion
-
-            return this.CreateChannel();
-        }
-
-        /// <summary>
-        /// Return the <see cref="System.Type"/> of channel that this
-        /// <see cref="Spring.Objects.Factory.IFactoryObject"/> creates.
-        /// </summary>
-        public Type ObjectType
-        {
-            get { return typeof(T); }
-        }
-
-        /// <summary>
-        /// Is the object managed by this factory a singleton or a prototype ?
-        /// </summary>
-        /// <remarks>
-        /// Default value is <see langword="true"/>.
-        /// </remarks>
-        public bool IsSingleton
-        {
-            get { return this._isSingleton; }
-            set { this._isSingleton = value; }
-        }
-
-        #endregion
+    /// <summary>
+    /// Is the object managed by this factory a singleton or a prototype ?
+    /// </summary>
+    /// <remarks>
+    /// Default value is <see langword="true"/>.
+    /// </remarks>
+    public bool IsSingleton
+    {
+        get { return this._isSingleton; }
+        set { this._isSingleton = value; }
     }
 }

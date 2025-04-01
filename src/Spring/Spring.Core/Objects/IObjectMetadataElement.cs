@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects;
 
-namespace Spring.Objects
+/// <summary>
+/// Interface to be implemented by bean metadata elements
+/// that carry a configuration source object.
+/// </summary>
+public interface IObjectMetadataElement
 {
     /// <summary>
-    /// Interface to be implemented by bean metadata elements
-    /// that carry a configuration source object.
+    /// Return the configuration source <code>Object</code> for this metadata element
+    /// (may be <code>null</code>).
     /// </summary>
-    public interface IObjectMetadataElement
-    {
-        /// <summary>
-        /// Return the configuration source <code>Object</code> for this metadata element
-        /// (may be <code>null</code>).
-        /// </summary>
-        Object Source { get; }
-    }
+    Object Source { get; }
 }

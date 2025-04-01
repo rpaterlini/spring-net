@@ -1,5 +1,3 @@
-#region Licence
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,64 +14,50 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Collections;
-
 using Spring.Data.Common;
 
-namespace Spring.Data.Objects
+namespace Spring.Data.Objects;
+
+/// <summary>
+/// Encapsulate Command.ExecuteNonQuery operations within a reusable class.
+/// </summary>
+/// <author>Mark Pollack (.NET)</author>
+/// <remarks>The default CommandType is CommandType.Text</remarks>
+public class AdoNonQuery : AdoOperation
 {
-	/// <summary>
-	/// Encapsulate Command.ExecuteNonQuery operations within a reusable class.
-	/// </summary>
-	/// <author>Mark Pollack (.NET)</author>
-	/// <remarks>The default CommandType is CommandType.Text</remarks>
-	public class AdoNonQuery : AdoOperation
-	{
-        #region Constructor (s)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AdoNonQuery"/> class.
+    /// </summary>
+    public AdoNonQuery()
+    {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdoNonQuery"/> class.
-        /// </summary>
-        public AdoNonQuery()
-        {}
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AdoNonQuery"/> class.
+    /// </summary>
+    public AdoNonQuery(IDbProvider provider)
+        : base(provider)
+    {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdoNonQuery"/> class.
-        /// </summary>
-        public AdoNonQuery(IDbProvider provider)
-            : base(provider)
-        {}
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AdoNonQuery"/> class.
+    /// </summary>
+    public AdoNonQuery(IDbProvider dbProvider, string sql)
+        : base(dbProvider, sql)
+    {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdoNonQuery"/> class.
-        /// </summary>
-        public AdoNonQuery(IDbProvider dbProvider, string sql)
-            : base(dbProvider, sql)
-        {}
+    public IDictionary ExecuteNonQuery(params object[] inParameterValues)
+    {
+        ValidateParameters(inParameterValues);
+        return AdoTemplate.ExecuteNonQuery(NewCommandCreatorWithParamValues(inParameterValues));
+    }
 
-        #endregion
-
-		#region Properties
-
-		#endregion
-
-		#region Methods
-
-        public IDictionary ExecuteNonQuery(params object[] inParameterValues)
-        {
-            ValidateParameters(inParameterValues);
-            return AdoTemplate.ExecuteNonQuery(NewCommandCreatorWithParamValues(inParameterValues));
-        }
-
-
-        public IDictionary ExecuteNonQueryByNamedParam(IDictionary inParams)
-        {
-            ValidateNamedParameters(inParams);
-            return AdoTemplate.ExecuteNonQuery(NewCommandCreator(inParams));
-        }
-
-		#endregion
-	}
+    public IDictionary ExecuteNonQueryByNamedParam(IDictionary inParams)
+    {
+        ValidateNamedParameters(inParams);
+        return AdoTemplate.ExecuteNonQuery(NewCommandCreator(inParams));
+    }
 }

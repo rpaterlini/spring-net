@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,74 +14,71 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Runtime.Serialization;
 using Spring.Expressions.Parser.antlr.collections;
 
-namespace Spring.Expressions
+namespace Spring.Expressions;
+
+/// <summary>
+/// Represents ternary expression node.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[Serializable]
+public class TernaryNode : BaseNode
 {
+    private bool initialized = false;
+    private BaseNode condition;
+    private BaseNode trueExp;
+    private BaseNode falseExp;
+
     /// <summary>
-    /// Represents ternary expression node.
+    /// Create a new instance
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [Serializable]
-    public class TernaryNode : BaseNode
+    public TernaryNode() : base()
     {
-        private bool initialized = false;
-        private BaseNode condition;
-        private BaseNode trueExp;
-        private BaseNode falseExp;
+    }
 
-        /// <summary>
-        /// Create a new instance
-        /// </summary>
-        public TernaryNode():base()
-        {
-        }
+    /// <summary>
+    /// Create a new instance from SerializationInfo
+    /// </summary>
+    protected TernaryNode(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
+    }
 
-        /// <summary>
-        /// Create a new instance from SerializationInfo
-        /// </summary>
-        protected TernaryNode(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+    /// <summary>
+    /// Returns a value for the string literal node.
+    /// </summary>
+    /// <param name="context">Context to evaluate expressions against.</param>
+    /// <param name="evalContext">Current expression evaluation context.</param>
+    /// <returns>Node's value.</returns>
+    protected override object Get(object context, EvaluationContext evalContext)
+    {
+        if (!initialized)
         {
-        }
-
-        /// <summary>
-        /// Returns a value for the string literal node.
-        /// </summary>
-        /// <param name="context">Context to evaluate expressions against.</param>
-        /// <param name="evalContext">Current expression evaluation context.</param>
-        /// <returns>Node's value.</returns>
-        protected override object Get(object context, EvaluationContext evalContext)
-        {
-            if (!initialized)
+            lock (this)
             {
-                lock (this)
+                if (!initialized)
                 {
-                    if (!initialized)
-                    {
-                        AST node = this.getFirstChild();
-                        condition = (BaseNode) node;
-                        node = node.getNextSibling();
-                        trueExp = (BaseNode) node;
-                        node = node.getNextSibling();
-                        falseExp = (BaseNode) node;
+                    AST node = this.getFirstChild();
+                    condition = (BaseNode) node;
+                    node = node.getNextSibling();
+                    trueExp = (BaseNode) node;
+                    node = node.getNextSibling();
+                    falseExp = (BaseNode) node;
 
-                        initialized = true;
-                    }
+                    initialized = true;
                 }
             }
+        }
 
-            if (Convert.ToBoolean(GetValue(condition, context, evalContext)))
-            {
-                return GetValue(trueExp, context, evalContext);
-            }
-            else
-            {
-                return GetValue(falseExp, context, evalContext);
-            }
+        if (Convert.ToBoolean(GetValue(condition, context, evalContext)))
+        {
+            return GetValue(trueExp, context, evalContext);
+        }
+        else
+        {
+            return GetValue(falseExp, context, evalContext);
         }
     }
 }

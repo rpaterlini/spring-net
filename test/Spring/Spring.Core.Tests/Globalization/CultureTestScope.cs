@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,64 +14,55 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Globalization;
-using System.Threading;
 
-#endregion
+namespace Spring.Globalization;
 
-namespace Spring.Globalization
+/// <summary>
+/// Helps setting/resetting current thread cultures.
+/// </summary>
+/// <author>Erich Eichinger</author>
+public class CultureTestScope : IDisposable
 {
-    /// <summary>
-    /// Helps setting/resetting current thread cultures.
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    public class CultureTestScope : IDisposable
+    [ThreadStatic] private static CultureTestScope s_currentScope;
+
+    public static void Set()
     {
-        [ThreadStatic]
-        private static CultureTestScope s_currentScope;
+        Set("en-GB", "de-DE");
+    }
 
-        public static void Set()
-        {
-            Set("en-GB", "de-DE");
-        }
+    public static void Set(string culture, string uiCulture)
+    {
+        s_currentScope = new CultureTestScope(culture, uiCulture);
+    }
 
-        public static void Set(string culture, string uiCulture)
-        {
-            s_currentScope = new CultureTestScope(culture, uiCulture);
-        }
+    public static void Reset()
+    {
+        CultureTestScope scope = s_currentScope;
+        s_currentScope = null;
+        scope.Dispose();
+    }
 
-        public static void Reset()
-        {
-            CultureTestScope scope = s_currentScope; s_currentScope = null;
-            scope.Dispose();
-        }
+    private readonly CultureInfo _prevCulture;
+    private readonly CultureInfo _prevUICulture;
 
-        private readonly CultureInfo _prevCulture;
-        private readonly CultureInfo _prevUICulture;
+    private CultureTestScope(string culture, string uiCulture)
+    {
+        this._prevCulture = Thread.CurrentThread.CurrentCulture;
+        this._prevUICulture = Thread.CurrentThread.CurrentUICulture;
 
-        private CultureTestScope(string culture, string uiCulture)
-        {
-            this._prevCulture = Thread.CurrentThread.CurrentCulture;
-            this._prevUICulture = Thread.CurrentThread.CurrentUICulture;
+        Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+        Thread.CurrentThread.CurrentUICulture = new CultureInfo(uiCulture);
+    }
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(uiCulture);
-        }
+    void IDisposable.Dispose()
+    {
+        this.Dispose();
+    }
 
-        void IDisposable.Dispose()
-        {
-            this.Dispose();
-        }
-
-        private void Dispose()
-        {
-            Thread.CurrentThread.CurrentCulture = this._prevCulture;
-            Thread.CurrentThread.CurrentUICulture = this._prevUICulture;
-        }
+    private void Dispose()
+    {
+        Thread.CurrentThread.CurrentCulture = this._prevCulture;
+        Thread.CurrentThread.CurrentUICulture = this._prevUICulture;
     }
 }

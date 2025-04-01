@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
-
 using NUnit.Framework;
 
-namespace Spring.Context.Events
+namespace Spring.Context.Events;
+
+[TestFixture]
+public class ConsoleListenerTests
 {
-	[TestFixture]
-	public class ConsoleListenerTests
-	{
-		[Test]
-		public void ConsoleOnApplicationEvent()
-		{
-			ConsoleListener listener = new ConsoleListener();
-			listener.HandleApplicationEvent( this, new ApplicationEventArgs() );
-		}
-	}
+    [Test]
+    public void ConsoleOnApplicationEvent()
+    {
+        ConsoleListener listener = new ConsoleListener();
+        listener.HandleApplicationEvent(this, new ApplicationEventArgs());
+    }
 }

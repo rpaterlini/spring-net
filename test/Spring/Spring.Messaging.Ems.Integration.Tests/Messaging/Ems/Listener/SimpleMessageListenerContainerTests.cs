@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,54 +14,42 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System.Threading;
 using NUnit.Framework;
 using Spring.Messaging.Ems.Core;
 using Spring.Testing.NUnit;
 
-namespace Spring.Messaging.Ems.Listener
+namespace Spring.Messaging.Ems.Listener;
+
+/// <summary>
+/// Integration tests for SimpleMessageListenerContainer
+/// </summary>
+/// <author>Mark Pollack </author>
+[TestFixture]
+public class SimpleMessageListenerContainerTests : AbstractDependencyInjectionSpringContextTests
 {
+    protected SimpleGateway simpleGateway;
+
+    protected SimpleMessageListener simpleMessageListener;
+
     /// <summary>
-    /// Integration tests for SimpleMessageListenerContainer
+    /// Enable DI based on protected field names
     /// </summary>
-    /// <author>Mark Pollack </author>
-    [TestFixture]
-    public class SimpleMessageListenerContainerTests : AbstractDependencyInjectionSpringContextTests
+    public SimpleMessageListenerContainerTests()
     {
-        protected SimpleGateway simpleGateway;
-
-        protected SimpleMessageListener simpleMessageListener;
-
-
-        /// <summary>
-        /// Enable DI based on protected field names
-        /// </summary>
-        public SimpleMessageListenerContainerTests()
-        {
-            this.PopulateProtectedVariables = true;
-        }
-
-        [Test]
-        public void SendAndRecieveAsync()
-        {
-            Assert.AreEqual(0, simpleMessageListener.MessageCount);
-            simpleGateway.Publish("CSCO", 123.45);
-            Thread.Sleep(1000);
-            Assert.AreEqual(1, simpleMessageListener.MessageCount);
-
-        }
-
-        #region Overrides of AbstractDependencyInjectionSpringContextTests
-
-        protected override string[] ConfigLocations
-        {
-            get { return new string[] { "assembly://Spring.Messaging.Ems.Integration.Tests/Spring.Messaging.Ems.Listener/SimpleMessageListenerContainerTests.xml" }; }
-       
-        }
-
-        #endregion
+        this.PopulateProtectedVariables = true;
     }
 
+    [Test]
+    public void SendAndRecieveAsync()
+    {
+        Assert.AreEqual(0, simpleMessageListener.MessageCount);
+        simpleGateway.Publish("CSCO", 123.45);
+        Thread.Sleep(1000);
+        Assert.AreEqual(1, simpleMessageListener.MessageCount);
+    }
+
+    protected override string[] ConfigLocations
+    {
+        get { return new string[] { "assembly://Spring.Messaging.Ems.Integration.Tests/Spring.Messaging.Ems.Listener/SimpleMessageListenerContainerTests.xml" }; }
+    }
 }

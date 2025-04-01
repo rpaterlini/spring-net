@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,51 +14,45 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Context.Attributes.TypeFilters;
 
-namespace Spring.Context.Attributes.TypeFilters
+/// <summary>
+/// A simple filter which matches classes with a given attribute,
+/// checking inherited annotations as well.
+/// </summary>
+public class AttributeTypeFilter : AbstractLoadTypeFilter
 {
+    /// <summary>
+    /// Creates a Type Filter with required type attribute
+    /// </summary>
+    /// <param name="expression"></param>
+    public AttributeTypeFilter(string expression)
+    {
+        GetRequiredType(expression);
+    }
 
     /// <summary>
-    /// A simple filter which matches classes with a given attribute,
-    /// checking inherited annotations as well.
+    /// Determine a match based on the given type object.
     /// </summary>
-    public class AttributeTypeFilter : AbstractLoadTypeFilter
+    /// <param name="type">Type to compare against</param>
+    /// <returns>true if there is a match; false is there is no match</returns>
+    public override bool Match(Type type)
     {
+        if (RequiredType == null)
+            return false;
 
-        /// <summary>
-        /// Creates a Type Filter with required type attribute
-        /// </summary>
-        /// <param name="expression"></param>
-        public AttributeTypeFilter(string expression)
-        {
-            GetRequiredType(expression);
-        }
+        return (Attribute.GetCustomAttribute(type, RequiredType) != null);
+    }
 
-        /// <summary>
-        /// Determine a match based on the given type object.
-        /// </summary>
-        /// <param name="type">Type to compare against</param>
-        /// <returns>true if there is a match; false is there is no match</returns>
-        public override bool Match(Type type)
-        {
-            if (RequiredType == null)
-                return false;
-
-            return (Attribute.GetCustomAttribute(type, RequiredType) != null);
-        }
-
-        /// <summary>
-        /// Returns a string that represents the current object.
-        /// </summary>
-        /// <returns>
-        /// A string that represents the current object.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
-        public override string ToString()
-        {
-            return string.Format("Required Type: {0}", RequiredType != null ? RequiredType.FullName : "");
-        }
-
+    /// <summary>
+    /// Returns a string that represents the current object.
+    /// </summary>
+    /// <returns>
+    /// A string that represents the current object.
+    /// </returns>
+    /// <filterpriority>2</filterpriority>
+    public override string ToString()
+    {
+        return string.Format("Required Type: {0}", RequiredType != null ? RequiredType.FullName : "");
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,41 +14,38 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Collections;
 
-namespace Spring.Expressions.Processors
+namespace Spring.Expressions.Processors;
+
+/// <summary>
+/// Reverts order of elements in the list
+/// </summary>
+/// <author>Erich Eichinger</author>
+public class ReverseProcessor : ICollectionProcessor
 {
     /// <summary>
-    /// Reverts order of elements in the list
+    /// Processes a list of source items and returns a result.
     /// </summary>
-    /// <author>Erich Eichinger</author>
-    public class ReverseProcessor : ICollectionProcessor
+    /// <param name="source">
+    /// The source list to process.
+    /// </param>
+    /// <param name="args">
+    /// An optional processor arguments array.
+    /// </param>
+    /// <returns>
+    /// The processing result.
+    /// </returns>
+    public object Process(ICollection source, object[] args)
     {
-        /// <summary>
-        /// Processes a list of source items and returns a result.
-        /// </summary>
-        /// <param name="source">
-        /// The source list to process.
-        /// </param>
-        /// <param name="args">
-        /// An optional processor arguments array.
-        /// </param>
-        /// <returns>
-        /// The processing result.
-        /// </returns>
-        public object Process(ICollection source, object[] args)
+        if (source == null || source.Count == 0)
         {
-            if (source == null || source.Count == 0)
-            {
-                return source;
-            }
-
-            ArrayList list = new ArrayList(source);
-            list.Reverse();
-
-            return list;
+            return source;
         }
+
+        ArrayList list = new ArrayList(source);
+        list.Reverse();
+
+        return list;
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,31 +14,28 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Transaction.Interceptor;
 
-namespace Spring.Transaction.Interceptor
+/// <summary>
+/// Tag class. Its class means it has the opposite behaviour to the
+/// <see cref="Spring.Transaction.Interceptor.RollbackRuleAttribute"/> superclass.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Griffin Caprio (.NET)</author>
+public class NoRollbackRuleAttribute : RollbackRuleAttribute
 {
-	/// <summary>
-	/// Tag class. Its class means it has the opposite behaviour to the
-	/// <see cref="Spring.Transaction.Interceptor.RollbackRuleAttribute"/> superclass.
-	/// </summary>
-	/// <author>Rod Johnson</author>
-	/// <author>Griffin Caprio (.NET)</author>
-	public class NoRollbackRuleAttribute : RollbackRuleAttribute
-	{
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Transaction.Interceptor.NameMatchTransactionAttributeSource"/> class.
-		/// </summary>
-		public NoRollbackRuleAttribute( string exceptionType ) : base( exceptionType ){}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Transaction.Interceptor.NameMatchTransactionAttributeSource"/> class.
+    /// </summary>
+    public NoRollbackRuleAttribute(string exceptionType) : base(exceptionType) { }
 
-		/// <summary>
-		/// Creates a new instance of the
-		/// <see cref="Spring.Transaction.Interceptor.NameMatchTransactionAttributeSource"/> class.
-		/// </summary>
-		/// <param name="exceptionType">
-		/// The <see cref="System.Exception"/> class that will trigger a rollback.
-		/// </param>
-		public NoRollbackRuleAttribute( Type exceptionType ) : base( exceptionType ){}
-	}
+    /// <summary>
+    /// Creates a new instance of the
+    /// <see cref="Spring.Transaction.Interceptor.NameMatchTransactionAttributeSource"/> class.
+    /// </summary>
+    /// <param name="exceptionType">
+    /// The <see cref="System.Exception"/> class that will trigger a rollback.
+    /// </param>
+    public NoRollbackRuleAttribute(Type exceptionType) : base(exceptionType) { }
 }

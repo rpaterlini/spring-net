@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +14,44 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
 
-#endregion
+namespace Spring;
 
-namespace Spring
+/// <summary>
+/// Tests the various exception classes.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Shamelessly lifted from the NAnt test suite.
+/// </para>
+/// </remarks>
+public abstract class CompilerOptionsTests
 {
-    /// <summary>
-    /// Tests the various exception classes.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Shamelessly lifted from the NAnt test suite.
-    /// </para>
-    /// </remarks>
-    public abstract class CompilerOptionsTests
+    [Test]
+    public void TestBuildCompliance()
     {
-        #region Tests
+        ProcessAssembly(AssemblyToCheck);
+    }
 
-        [Test]
-        public void TestBuildCompliance()
-        {
-            ProcessAssembly(AssemblyToCheck);
-        }
-
-        #endregion
-
-        private void ProcessAssembly(Assembly assembly)
-        {
-            object[] attributes = assembly.GetCustomAttributes(typeof (DebuggableAttribute), false);
+    private void ProcessAssembly(Assembly assembly)
+    {
+        object[] attributes = assembly.GetCustomAttributes(typeof(DebuggableAttribute), false);
 
 #if DEBUG && TRACE
-            if (attributes.Length == 0)
-            {
-                Assert.Fail("No DebugAttributes found in debug build");
-            }
-            ProcessDebugBuild(attributes);
+        if (attributes.Length == 0)
+        {
+            Assert.Fail("No DebugAttributes found in debug build");
+        }
+
+        ProcessDebugBuild(attributes);
 #endif
 #if TRACE && !DEBUG
             if (attributes.Length == 0)
             {
-                // This was build with VS.NET Release mode and no DebugAttributes were added.  
+                // This was build with VS.NET Release mode and no DebugAttributes were added.
             }
             else
             {
@@ -71,64 +59,56 @@ namespace Spring
                 ProcessReleaseBuild(attributes);
             }
 #endif
-        }
-
-        private void ProcessReleaseBuild(object[] attributes)
-        {
-            foreach (Attribute attribute in attributes)
-            {
-                if (attribute is DebuggableAttribute)
-                {
-                    DebuggableAttribute debuggableAttribute = attribute as DebuggableAttribute;
-                    if (debuggableAttribute.IsJITOptimizerDisabled)
-                    {
-                        Assert.Fail("IsJITOptimizerDisabled should be set to false for Release builds.");
-                    }
-                    if (debuggableAttribute.IsJITTrackingEnabled)
-                    {
-                        Assert.Fail("IsJITTrackingEnabled should be set to false for Release builds.");
-                    }
-                }
-            }
-        }
-
-
-        private void ProcessDebugBuild(object[] attributes)
-        {
-            foreach (Attribute attribute in attributes)
-            {
-                if (attribute is DebuggableAttribute)
-                {
-                    DebuggableAttribute debuggableAttribute = attribute as DebuggableAttribute;
-                    if (debuggableAttribute.IsJITOptimizerDisabled == false)
-                    {
-                        Assert.Fail("IsJITOptimizerDisabled should be set to true for Debug builds.");
-                    }
-                    if (debuggableAttribute.IsJITTrackingEnabled == false)
-                    {
-                        Assert.Fail("IsJITTrackingEnabled should be set to true for Debug builds.");
-                    }
-                }
-            }
-        }
-
-
-
-        #region Properties
-
-        /// <summary>
-        /// Specify the assembly whose metadata will be checked for a given release mode (debug/release).
-        /// </summary>
-		protected Assembly AssemblyToCheck
-		{
-			get { return _assemblyToCheck; }
-			set { _assemblyToCheck = value; }
-		}
-
-		#endregion
-
-		private Assembly _assemblyToCheck = null;
-
-
     }
+
+    private void ProcessReleaseBuild(object[] attributes)
+    {
+        foreach (Attribute attribute in attributes)
+        {
+            if (attribute is DebuggableAttribute)
+            {
+                DebuggableAttribute debuggableAttribute = attribute as DebuggableAttribute;
+                if (debuggableAttribute.IsJITOptimizerDisabled)
+                {
+                    Assert.Fail("IsJITOptimizerDisabled should be set to false for Release builds.");
+                }
+
+                if (debuggableAttribute.IsJITTrackingEnabled)
+                {
+                    Assert.Fail("IsJITTrackingEnabled should be set to false for Release builds.");
+                }
+            }
+        }
+    }
+
+    private void ProcessDebugBuild(object[] attributes)
+    {
+        foreach (Attribute attribute in attributes)
+        {
+            if (attribute is DebuggableAttribute)
+            {
+                DebuggableAttribute debuggableAttribute = attribute as DebuggableAttribute;
+                if (debuggableAttribute.IsJITOptimizerDisabled == false)
+                {
+                    Assert.Fail("IsJITOptimizerDisabled should be set to true for Debug builds.");
+                }
+
+                if (debuggableAttribute.IsJITTrackingEnabled == false)
+                {
+                    Assert.Fail("IsJITTrackingEnabled should be set to true for Debug builds.");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Specify the assembly whose metadata will be checked for a given release mode (debug/release).
+    /// </summary>
+    protected Assembly AssemblyToCheck
+    {
+        get { return _assemblyToCheck; }
+        set { _assemblyToCheck = value; }
+    }
+
+    private Assembly _assemblyToCheck = null;
 }

@@ -1,5 +1,3 @@
-using System;
-
 using Spring.Web.Conversation;
 using Spring.Entities;
 using NHibernate;
@@ -7,6 +5,7 @@ using NHibernate;
 public partial class SessionIsClosedB : System.Web.UI.Page
 {
     private IConversationState conversation;
+
     /// <summary>
     /// <see cref="IConversationState"/>
     /// </summary>
@@ -17,6 +16,7 @@ public partial class SessionIsClosedB : System.Web.UI.Page
     }
 
     private IConversationState conversationA;
+
     /// <summary>
     /// "convASessionIsClosed"
     /// </summary>
@@ -37,9 +37,9 @@ public partial class SessionIsClosedB : System.Web.UI.Page
                 this.Conversation.StartResumeConversation();
 
                 /*
-                 * Producing the error "HibernateException: Session is closed..." This is because in 
-                 * "SessionPerConversationScope.LazySessionPerConversationHolder.CloseConversation(IConversationState)" 
-                 * we are closing the "SessionPerConversationScope.LazySessionPerConversationHolder.activeConversation" 
+                 * Producing the error "HibernateException: Session is closed..." This is because in
+                 * "SessionPerConversationScope.LazySessionPerConversationHolder.CloseConversation(IConversationState)"
+                 * we are closing the "SessionPerConversationScope.LazySessionPerConversationHolder.activeConversation"
                  * instead of parameter "conversation" (BUG).
                  */
                 this.ConversationA.EndConversation();

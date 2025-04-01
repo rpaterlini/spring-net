@@ -1,41 +1,30 @@
-
-
 using Spring.Messaging.Nms.Core;
 using Apache.NMS;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 
-namespace Spring.Messaging.Nms.Integration
+namespace Spring.Messaging.Nms.Integration;
+
+public class SimpleMessageListener : IMessageListener
 {
-    public class SimpleMessageListener : IMessageListener
+    private static readonly ILogger<SimpleMessageListener> LOG = LogManager.GetLogger<SimpleMessageListener>();
+
+    private IMessage lastReceivedMessage;
+    private int messageCount;
+
+    public IMessage LastReceivedMessage
     {
-        #region Logging Definition
+        get { return lastReceivedMessage; }
+    }
 
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(SimpleMessageListener));
-        #endregion
+    public int MessageCount
+    {
+        get { return messageCount; }
+    }
 
-        private IMessage lastReceivedMessage;
-        private int messageCount;
-
-        public IMessage LastReceivedMessage
-        {
-            get { return lastReceivedMessage; }
-        }
-
-
-        public int MessageCount
-        {
-            get { return messageCount; }
-        }
-
-        #region IMessageListener Members
-
-        public void OnMessage(IMessage message)
-        {
-            lastReceivedMessage = message;
-            messageCount++;
-            LOG.Debug("Message listener count = " + messageCount);
-        }
-
-        #endregion
+    public void OnMessage(IMessage message)
+    {
+        lastReceivedMessage = message;
+        messageCount++;
+        LOG.LogDebug("Message listener count = " + messageCount);
     }
 }

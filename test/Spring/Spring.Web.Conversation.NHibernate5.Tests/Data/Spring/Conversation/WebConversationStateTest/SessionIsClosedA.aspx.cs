@@ -1,5 +1,3 @@
-using System;
-
 using Spring.Web.Conversation;
 using Spring.Entities;
 using NHibernate;
@@ -7,6 +5,7 @@ using NHibernate;
 public partial class SessionIsClosedA : System.Web.UI.Page
 {
     private IConversationState conversation;
+
     /// <summary>
     /// <see cref="IConversationState"/>
     /// </summary>

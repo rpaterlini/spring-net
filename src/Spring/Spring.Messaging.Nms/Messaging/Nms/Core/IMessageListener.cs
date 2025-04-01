@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright © 2002-2006 the original author or authors.
  *
@@ -16,21 +14,18 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Apache.NMS;
 
-namespace Spring.Messaging.Nms.Core
+namespace Spring.Messaging.Nms.Core;
+
+/// <summary>
+/// Interfaced based approach to listen to messaging events.
+/// </summary>
+public interface IMessageListener
 {
     /// <summary>
-    /// Interfaced based approach to listen to messaging events.
+    /// Called when a message is delivered.
     /// </summary>
-	public interface IMessageListener
-	{
-        /// <summary>
-        /// Called when a message is delivered.
-        /// </summary>
-        /// <param name="message">The message.</param>
-		void OnMessage(IMessage message);
-	}
+    /// <param name="message">The message.</param>
+    void OnMessage(IMessage message);
 }

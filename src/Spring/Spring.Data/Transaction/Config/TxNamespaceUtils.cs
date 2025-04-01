@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,34 +14,29 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Core;
 
-namespace Spring.Transaction.Config
+namespace Spring.Transaction.Config;
+
+/// <summary>
+/// This is a utility class to help in parsing the transaction namespace
+/// </summary>
+/// <author>Mark Pollack</author>
+public sealed class TxNamespaceUtils
 {
     /// <summary>
-    /// This is a utility class to help in parsing the transaction namespace
+    /// The transaction manager attribute
     /// </summary>
-    /// <author>Mark Pollack</author>
-    public sealed class TxNamespaceUtils
-    {
-        /// <summary>
-        /// The transaction manager attribute
-        /// </summary>
-        public const string TRANSACTION_MANAGER_ATTRIBUTE = "transaction-manager";
+    public const string TRANSACTION_MANAGER_ATTRIBUTE = "transaction-manager";
 
-        /// <summary>
-        /// The source of transaction metadata
-        /// </summary>
-        public const string TRANSACTION_ATTRIBUTE_SOURCE = "transactionAttributeSource";
+    /// <summary>
+    /// The source of transaction metadata
+    /// </summary>
+    public const string TRANSACTION_ATTRIBUTE_SOURCE = "transactionAttributeSource";
 
-        /// <summary>
-        /// The property asociated with the transaction manager xml element
-        /// </summary>
-        public static readonly string TRANSACTION_MANAGER_PROPERTY =
-            Conventions.AttributeNameToPropertyName(TRANSACTION_MANAGER_ATTRIBUTE);
-
-
-    }
+    /// <summary>
+    /// The property asociated with the transaction manager xml element
+    /// </summary>
+    public static readonly string TRANSACTION_MANAGER_PROPERTY =
+        Conventions.AttributeNameToPropertyName(TRANSACTION_MANAGER_ATTRIBUTE);
 }

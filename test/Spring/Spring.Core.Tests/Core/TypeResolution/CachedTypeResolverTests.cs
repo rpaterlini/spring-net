@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,41 +14,35 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
-
 using FakeItEasy;
-
 using NUnit.Framework;
 
-namespace Spring.Core.TypeResolution
+namespace Spring.Core.TypeResolution;
+
+/// <summary>
+/// Unit tests for the CachedTypeResolver class.
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class CachedTypeResolverTests
 {
-    /// <summary>
-    /// Unit tests for the CachedTypeResolver class.
-    /// </summary>
-    /// <author>Rick Evans</author>
-    [TestFixture]
-    public sealed class CachedTypeResolverTests
+    [SetUp]
+    public void SetUp()
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
+    }
 
-        [Test]
-        public void ResolveWithNullTypeName()
-        {
-            ITypeResolver mockResolver = A.Fake<ITypeResolver>();
+    [Test]
+    public void ResolveWithNullTypeName()
+    {
+        ITypeResolver mockResolver = A.Fake<ITypeResolver>();
 
-            CachedTypeResolver resolver = new CachedTypeResolver(mockResolver);
-            Assert.Throws<TypeLoadException>(() => resolver.Resolve(null));
-        }
+        CachedTypeResolver resolver = new CachedTypeResolver(mockResolver);
+        Assert.Throws<TypeLoadException>(() => resolver.Resolve(null));
+    }
 
-        [Test]
-        public void InstantiateWithNullTypeResolver()
-        {
-            Assert.Throws<ArgumentNullException>(() => new CachedTypeResolver(null));
-        }
+    [Test]
+    public void InstantiateWithNullTypeResolver()
+    {
+        Assert.Throws<ArgumentNullException>(() => new CachedTypeResolver(null));
     }
 }

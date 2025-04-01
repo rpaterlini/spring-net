@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2010 the original author or authors.
+ * Copyright ï¿½ 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +14,11 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Common
+/// <summary>
+/// Market interface for EMS SSL store types
+/// </summary>
+public interface IEmsSSLStoreType
 {
-    /// <summary>
-    /// Market interface for EMS SSL store types
-    /// </summary>
-    public interface IEmsSSLStoreType
-    {
-        
-    }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,9 +14,6 @@
  * limitations under the License.
  */
 
-#endregion
-
-
 using Spring.Transaction.Interceptor;
 
 namespace Spring.Data.NHibernate
@@ -26,7 +21,6 @@ namespace Spring.Data.NHibernate
     public class SimpleService : ISimpleService
     {
         private ITestObjectDao testObjectDao;
-
 
         public ITestObjectDao TestObjectDao
         {

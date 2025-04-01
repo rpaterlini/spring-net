@@ -1,12 +1,10 @@
-using System;
-
 using Spring.Web.Conversation;
-
 using NHibernate;
 
 public partial class RedirectErrorNoPauseConversation : System.Web.UI.Page
 {
     private IConversationState conversation;
+
     public IConversationState Conversation
     {
         get { return conversation; }
@@ -19,6 +17,7 @@ public partial class RedirectErrorNoPauseConversation : System.Web.UI.Page
         {
             //nothing, only for obtain session cookie
         }
+
         if (this.Request.Params["step"].Equals("step_01"))
         {
             this.Conversation.StartResumeConversation();

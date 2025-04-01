@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +14,28 @@
  * limitations under the License.
  */
 
-#endregion
-
-using System;
-
 using Spring.Data.Common;
 using System.Data;
 
-namespace Spring.Spring.Data.Common
+namespace Spring.Spring.Data.Common;
+
+/// <summary>
+/// Count the number of calls to "CreateConnection()".
+/// </summary>
+public class ConnectionCreationTrackingDbProvider : DelegatingDbProvider
 {
     /// <summary>
-    /// Count the number of calls to "CreateConnection()".
+    /// Count of calls to <see cref="CreateConnection"/>
     /// </summary>
-    public class ConnectionCreationTrackingDbProvider : DelegatingDbProvider
-    {
-        /// <summary>
-        /// Count of calls to <see cref="CreateConnection"/>
-        /// </summary>
-        public static Int32 Count = 0;
+    public static Int32 Count = 0;
 
-        /// <summary>
-        /// Count. 
-        /// </summary>
-        /// <returns></returns>
-        public override IDbConnection CreateConnection()
-        {
-            Count++;
-            return this.TargetDbProvider.CreateConnection();
-        }
+    /// <summary>
+    /// Count. 
+    /// </summary>
+    /// <returns></returns>
+    public override IDbConnection CreateConnection()
+    {
+        Count++;
+        return this.TargetDbProvider.CreateConnection();
     }
 }

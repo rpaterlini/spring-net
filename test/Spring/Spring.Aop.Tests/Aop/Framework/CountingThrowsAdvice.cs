@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +14,23 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Aop.Framework;
 
-#region Imports
-
-using System;
-
-#endregion
-
-namespace Spring.Aop.Framework
+/// <summary>
+/// Simple throw advice example that we can use for counting checks.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Bruno Baia (.NET)</author>
+[Serializable]
+public class CountingThrowsAdvice : MethodCounter, IThrowsAdvice
 {
-    /// <summary>
-    /// Simple throw advice example that we can use for counting checks.
-    /// </summary>
-    /// <author>Rod Johnson</author>
-    /// <author>Bruno Baia (.NET)</author>
-    [Serializable]
-    public class CountingThrowsAdvice : MethodCounter, IThrowsAdvice
+    public void AfterThrowing(Exception ex)
     {
-        public void AfterThrowing(Exception ex)
-        {
-            Count(ex.GetType().Name);
-        }
+        Count(ex.GetType().Name);
+    }
 
-        public void AfterThrowing(ApplicationException aex)
-        {
-            Count(aex.GetType().Name);
-        }
+    public void AfterThrowing(ApplicationException aex)
+    {
+        Count(aex.GetType().Name);
     }
 }

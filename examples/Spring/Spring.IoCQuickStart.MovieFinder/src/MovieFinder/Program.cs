@@ -21,8 +21,7 @@
 #region Imports
 
 using System;
-using Common.Logging;
-using Common.Logging.Log4Net;
+using Microsoft.Extensions.Logging;
 using Spring.Context;
 using Spring.Context.Support;
 using Spring.Objects.Factory.Config;
@@ -46,7 +45,7 @@ namespace Spring.IocQuickStart.MovieFinder
 	{
 	    #region Logging Definition
 
-	    private static readonly ILog LOG = LogManager.GetLogger(typeof(Program));
+	    private static readonly ILogger LOG = LogManager.GetLogger(typeof(Program));
 
 	    #endregion
 
@@ -68,18 +67,16 @@ namespace Spring.IocQuickStart.MovieFinder
 
                 MovieLister lister = (MovieLister) ctx.GetObject("MyMovieLister");
 				Movie[] movies = lister.MoviesDirectedBy("Roberto Benigni");
-				LOG.Debug("Searching for movie...");
+				LOG.LogDebug("Searching for movie...");
 				foreach (Movie movie in movies)
 				{
-                    LOG.Debug(
-						string.Format("Movie Title = '{0}', Director = '{1}'.",
-						              movie.Title, movie.Director));
+                    LOG.LogDebug("Movie Title = '{Title}', Director = '{Director}'.", movie.Title, movie.Director);
 				}
-                LOG.Debug("MovieApp Done.");
+                LOG.LogDebug("MovieApp Done.");
 			}
 			catch (Exception e)
 			{
-				LOG.Error("Movie Finder is broken.", e);
+				LOG.LogError("Movie Finder is broken.", e);
 			}
 			finally
 			{
@@ -94,7 +91,7 @@ namespace Spring.IocQuickStart.MovieFinder
 
         private static IApplicationContext CreateContextProgrammatically()
 	    {
-            InitializeCommonLogging();
+            InitializeLogging();
 	        GenericApplicationContext ctx = new GenericApplicationContext();
             
             IObjectDefinitionFactory objectDefinitionFactory = new DefaultObjectDefinitionFactory();
@@ -119,7 +116,7 @@ namespace Spring.IocQuickStart.MovieFinder
 
         private static IApplicationContext CreateContextProgrammaticallyWithAutoWire()
         {
-            InitializeCommonLogging();
+            InitializeLogging();
             GenericApplicationContext ctx = new GenericApplicationContext();
            
             IObjectDefinitionFactory objectDefinitionFactory = new DefaultObjectDefinitionFactory();
@@ -165,11 +162,12 @@ namespace Spring.IocQuickStart.MovieFinder
             return ctx;
         }
 
-        private static void InitializeCommonLogging()
+        private static void InitializeLogging()
         {
-            var properties = new Common.Logging.Configuration.NameValueCollection();
-            properties["configType"] = "INLINE";
-            LogManager.Adapter = new Log4NetLoggerFactoryAdapter(properties);
+            var loggerFactory = LoggerFactory.Create(
+                builder => builder.AddLog4Net());
+
+            LogManager.LoggerFactory = loggerFactory;
         }
         #endregion
 

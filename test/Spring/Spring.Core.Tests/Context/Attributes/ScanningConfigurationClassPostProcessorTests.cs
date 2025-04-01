@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,27 +14,23 @@
  * limitations under the License.
  */
 
-#endregion
-
 using NUnit.Framework;
-
 using Spring.Context.Support;
 using Spring.Objects.Factory.Xml;
 
-namespace Spring.Context.Attributes
-{
-    [TestFixture]
-    public class ScanningConfigurationClassPostProcessorTests : AbstractConfigurationClassPostProcessorTests
-    {
-        protected override void CreateApplicationContext()
-        {
-            _ctx = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("SimpleScanTest.xml", GetType()));
-        }
+namespace Spring.Context.Attributes;
 
-        [Test]
-        public void ContextNotNull()
-        {
-            Assert.That(_ctx, Is.Not.Null);
-        }
+[TestFixture]
+public class ScanningConfigurationClassPostProcessorTests : AbstractConfigurationClassPostProcessorTests
+{
+    protected override void CreateApplicationContext()
+    {
+        _ctx = new XmlApplicationContext(ReadOnlyXmlTestResource.GetFilePath("SimpleScanTest.xml", GetType()));
+    }
+
+    [Test]
+    public void ContextNotNull()
+    {
+        Assert.That(_ctx, Is.Not.Null);
     }
 }

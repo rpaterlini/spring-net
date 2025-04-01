@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,67 +14,58 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System.Threading;
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Threading;
 
-namespace Spring.Threading
+/// <summary>
+///
+/// </summary>
+/// <author>Erich Eichinger</author>
+public class AsyncTestMethod : AsyncTestTask
 {
-    /// <summary>
-    ///
-    /// </summary>
-    /// <author>Erich Eichinger</author>
-    public class AsyncTestMethod : AsyncTestTask
+    public delegate object TestMethod(object[] args);
+
+    private readonly TestMethod callback;
+    private readonly object[] args;
+    private object result;
+
+    private class ThreadStartTestMethodAdapter
     {
-        public delegate object TestMethod(object[] args);
+        private readonly ThreadStart threadStart;
 
-        private readonly TestMethod callback;
-        private readonly object[] args;
-        private object result;
-
-        private class ThreadStartTestMethodAdapter
+        public ThreadStartTestMethodAdapter(ThreadStart threadStart)
         {
-            private readonly ThreadStart threadStart;
-
-            public ThreadStartTestMethodAdapter(ThreadStart threadStart)
-            {
-                Assert.IsNotNull(threadStart);
-                this.threadStart = threadStart;
-            }
-
-            public object Execute(object[] args)
-            {
-                threadStart();
-                return null;
-            }
+            Assert.IsNotNull(threadStart);
+            this.threadStart = threadStart;
         }
 
-        public AsyncTestMethod(int iterations, ThreadStart callback, params object[] args)
-            : this(iterations, new TestMethod(new ThreadStartTestMethodAdapter(callback).Execute), args)
+        public object Execute(object[] args)
         {
+            threadStart();
+            return null;
         }
+    }
 
+    public AsyncTestMethod(int iterations, ThreadStart callback, params object[] args)
+        : this(iterations, new TestMethod(new ThreadStartTestMethodAdapter(callback).Execute), args)
+    {
+    }
 
-        public AsyncTestMethod(int iterations, TestMethod callback, params object[] args) : base(iterations)
-        {
-            Assert.IsNotNull(callback);
-            this.args = args;
-            this.callback = callback;
-        }
+    public AsyncTestMethod(int iterations, TestMethod callback, params object[] args) : base(iterations)
+    {
+        Assert.IsNotNull(callback);
+        this.args = args;
+        this.callback = callback;
+    }
 
-        public override void DoExecute()
-        {
-            result = callback(args);
-        }
+    public override void DoExecute()
+    {
+        result = callback(args);
+    }
 
-        public object Result
-        {
-            get { return result; }
-        }
+    public object Result
+    {
+        get { return result; }
     }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,21 +14,18 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.DataBinding;
 
-namespace Spring.DataBinding
+/// <summary>
+/// Interface that should be implemented by data bound objects, such as
+/// web pages, user controls, windows forms, etc.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+public interface IDataBound
 {
     /// <summary>
-    /// Interface that should be implemented by data bound objects, such as 
-    /// web pages, user controls, windows forms, etc.
+    /// Gets the binding manager.
     /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    public interface IDataBound
-    {
-        /// <summary>
-        /// Gets the binding manager.
-        /// </summary>
-        /// <value>The binding manager.</value>
-        IBindingContainer BindingManager { get; }
-    }
+    /// <value>The binding manager.</value>
+    IBindingContainer BindingManager { get; }
 }

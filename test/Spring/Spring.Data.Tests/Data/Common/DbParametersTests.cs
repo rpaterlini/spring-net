@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,59 +14,51 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Data;
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Data.Common;
 
-namespace Spring.Data.Common
+/// <summary>
+/// This class contains tests for DbParameters
+/// </summary>
+/// <author>Mark Pollack</author>
+[TestFixture]
+public class DbParametersTests
 {
-    /// <summary>
-    /// This class contains tests for DbParameters
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    [TestFixture]
-    public class DbParametersTests
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
+    }
 
-        // TODO separate providers for OracleClient
+    // TODO separate providers for OracleClient
 #if !NETCOREAPP
-        [Test]
-        public void OracleClient()
-        {
-            IDbProvider dbProvider = DbProviderFactory.GetDbProvider("System.Data.OracleClient");
-            DbParameters dbParameters = new DbParameters(dbProvider);
-            dbParameters.Add("p1", DbType.String);
-            IDataParameter parameter = dbParameters[0];
-            Assert.AreEqual("p1", parameter.ParameterName);
-            dbParameters.SetValue("p1", "foo");
-            object springParameter = dbParameters.GetValue("p1");
-            Assert.IsNotNull(springParameter);
-            Assert.AreEqual("foo", springParameter);
-        }
+    [Test]
+    public void OracleClient()
+    {
+        IDbProvider dbProvider = DbProviderFactory.GetDbProvider("System.Data.OracleClient");
+        DbParameters dbParameters = new DbParameters(dbProvider);
+        dbParameters.Add("p1", DbType.String);
+        IDataParameter parameter = dbParameters[0];
+        Assert.AreEqual("p1", parameter.ParameterName);
+        dbParameters.SetValue("p1", "foo");
+        object springParameter = dbParameters.GetValue("p1");
+        Assert.IsNotNull(springParameter);
+        Assert.AreEqual("foo", springParameter);
+    }
 #endif
 
-        [Test]
-        public void SqlClient()
-        {
-            IDbProvider dbProvider = DbProviderFactory.GetDbProvider("System.Data.SqlClient");
-            DbParameters dbParameters = new DbParameters(dbProvider);
-            dbParameters.Add("p1", DbType.String);
-            IDataParameter parameter = dbParameters[0];
-            Assert.AreEqual("@p1", parameter.ParameterName);
-            dbParameters.SetValue("p1", "foo");
-            object springParameter = dbParameters.GetValue("p1");
-            Assert.IsNotNull(springParameter);
-            Assert.AreEqual("foo", springParameter);
-        }
+    [Test]
+    public void SqlClient()
+    {
+        IDbProvider dbProvider = DbProviderFactory.GetDbProvider("System.Data.SqlClient");
+        DbParameters dbParameters = new DbParameters(dbProvider);
+        dbParameters.Add("p1", DbType.String);
+        IDataParameter parameter = dbParameters[0];
+        Assert.AreEqual("@p1", parameter.ParameterName);
+        dbParameters.SetValue("p1", "foo");
+        object springParameter = dbParameters.GetValue("p1");
+        Assert.IsNotNull(springParameter);
+        Assert.AreEqual("foo", springParameter);
     }
 }

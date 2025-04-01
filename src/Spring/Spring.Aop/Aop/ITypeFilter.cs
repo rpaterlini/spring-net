@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,41 +14,34 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Aop;
 
-#region Imports
-
-#endregion
-
-namespace Spring.Aop
+/// <summary>
+/// A filter that restricts the matching of a pointcut or introduction to
+/// a given set of target types.
+/// </summary>
+/// <remarks>
+/// <p>
+/// Can be used as part of a pointcut, or for the entire targeting of an
+/// introduction.
+/// </p>
+/// </remarks>
+/// <author>Rod Johnson</author>
+/// <author>Aleksandar Seovic (.NET)</author>
+/// <seealso cref="Spring.Aop.IPointcut"/>
+/// <seealso cref="TrueTypeFilter.True"/>
+public interface ITypeFilter
 {
-	/// <summary>
-	/// A filter that restricts the matching of a pointcut or introduction to
-	/// a given set of target types.
-	/// </summary>
-	/// <remarks>
-	/// <p>
-	/// Can be used as part of a pointcut, or for the entire targeting of an
-	/// introduction.
-	/// </p>
-	/// </remarks>
-	/// <author>Rod Johnson</author>
-	/// <author>Aleksandar Seovic (.NET)</author>
-	/// <seealso cref="Spring.Aop.IPointcut"/>
-	/// <seealso cref="TrueTypeFilter.True"/>
-	public interface ITypeFilter
-	{
-		/// <summary>
-		/// Should the pointcut apply to the supplied
-		/// <see cref="System.Type"/>?
-		/// </summary>
-		/// <param name="type">
-		/// The candidate <see cref="System.Type"/>.
-		/// </param>
-		/// <returns>
-		/// <see langword="true"/> if the advice should apply to the supplied
-		/// <paramref name="type"/>
-		/// </returns>
-		bool Matches(Type type);
-	}
+    /// <summary>
+    /// Should the pointcut apply to the supplied
+    /// <see cref="System.Type"/>?
+    /// </summary>
+    /// <param name="type">
+    /// The candidate <see cref="System.Type"/>.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the advice should apply to the supplied
+    /// <paramref name="type"/>
+    /// </returns>
+    bool Matches(Type type);
 }

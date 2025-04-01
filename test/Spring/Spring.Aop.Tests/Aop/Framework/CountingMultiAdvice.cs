@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +14,30 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Reflection;
 
-#endregion
+namespace Spring.Aop.Framework;
 
-namespace Spring.Aop.Framework
+/// <summary>
+/// Advice object that implements <i>multiple</i> Advice interfaces.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Bruno Baia (.NET)</author>
+public class CountingMultiAdvice : MethodCounter,
+    IMethodBeforeAdvice, IAfterReturningAdvice, IThrowsAdvice
 {
-    /// <summary>
-    /// Advice object that implements <i>multiple</i> Advice interfaces.
-    /// </summary>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Bruno Baia (.NET)</author>
-    public class CountingMultiAdvice : MethodCounter,
-        IMethodBeforeAdvice, IAfterReturningAdvice, IThrowsAdvice
+    public void Before(MethodInfo method, object[] args, object target)
     {
-        public void Before(MethodInfo method, object[] args, object target)
-        {
-            Count(method);
-        }
+        Count(method);
+    }
 
-        public void AfterReturning(object returnValue, MethodInfo method, object[] args, object target)
-        {
-            Count(method);
-        }
+    public void AfterReturning(object returnValue, MethodInfo method, object[] args, object target)
+    {
+        Count(method);
+    }
 
-        public void AfterThrowing(ApplicationException aex)
-        {
-            Count(aex.GetType().Name);
-        }
+    public void AfterThrowing(ApplicationException aex)
+    {
+        Count(aex.GetType().Name);
     }
 }

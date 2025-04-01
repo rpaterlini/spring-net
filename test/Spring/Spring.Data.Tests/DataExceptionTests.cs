@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,29 +14,21 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Reflection;
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring;
 
-namespace Spring
+/// <summary>
+/// Unit tests for all of the exception classes in the Spring.Data library...
+/// </summary>
+/// <author>Rick Evans</author>
+[TestFixture]
+public sealed class DataExceptionTests : ExceptionsTest
 {
-    /// <summary>
-    /// Unit tests for all of the exception classes in the Spring.Data library...
-    /// </summary>
-    /// <author>Rick Evans</author>
-    [TestFixture]
-    public sealed class DataExceptionTests : ExceptionsTest
+    [OneTimeSetUp]
+    public void FixtureSetUp()
     {
-        [OneTimeSetUp]
-        public void FixtureSetUp ()
-        {
-            AssemblyToCheck = Assembly.GetAssembly (typeof (Spring.Transaction.CannotCreateTransactionException));
-        }
+        AssemblyToCheck = Assembly.GetAssembly(typeof(Spring.Transaction.CannotCreateTransactionException));
     }
 }

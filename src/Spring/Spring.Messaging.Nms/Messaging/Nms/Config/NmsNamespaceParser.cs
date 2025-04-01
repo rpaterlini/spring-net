@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,33 +14,30 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Objects.Factory.Xml;
 
-namespace Spring.Messaging.Nms.Config
+namespace Spring.Messaging.Nms.Config;
+
+/// <summary>
+/// Namespace parser for the nms namespace.
+/// </summary>
+/// <author>Mark Fisher</author>
+/// <author>Juergen Hoeller</author>
+/// <author>Mark Pollack (.NET)</author>
+[
+    NamespaceParser(
+        Namespace = "http://www.springframework.net/nms",
+        SchemaLocationAssemblyHint = typeof(NmsNamespaceParser),
+        SchemaLocation = "/Spring.Messaging.Nms.Config/spring-nms-1.3.xsd"
+    )
+]
+public class NmsNamespaceParser : NamespaceParserSupport
 {
     /// <summary>
-    /// Namespace parser for the nms namespace.
+    /// Register a MessageListenerContainer for the '<code>listener-container</code>' tag.
     /// </summary>
-    /// <author>Mark Fisher</author>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Mark Pollack (.NET)</author>
-    [
-        NamespaceParser(
-            Namespace = "http://www.springframework.net/nms",
-            SchemaLocationAssemblyHint = typeof (NmsNamespaceParser),
-            SchemaLocation = "/Spring.Messaging.Nms.Config/spring-nms-1.3.xsd"
-            )
-    ]
-    public class NmsNamespaceParser : NamespaceParserSupport
+    public override void Init()
     {
-        /// <summary>
-        /// Register a MessageListenerContainer for the '<code>listener-container</code>' tag.
-        /// </summary>
-        public override void Init()
-        {
-            RegisterObjectDefinitionParser("listener-container", new MessageListenerContainerObjectDefinitionParser());
-        }
+        RegisterObjectDefinitionParser("listener-container", new MessageListenerContainerObjectDefinitionParser());
     }
 }

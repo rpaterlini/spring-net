@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,64 +14,56 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Objects.Factory.Config;
 
-namespace Spring.Objects.Factory.Config
+/// <summary>
+/// Unit tests for the ConfigSectionVariableSource class.
+/// </summary>
+/// <author>Aleksandar Seovic</author>
+[TestFixture]
+public sealed class ConfigSectionVariableSourceTests
 {
-	/// <summary>
-    /// Unit tests for the ConfigSectionVariableSource class.
-    /// </summary>
-    /// <author>Aleksandar Seovic</author>
-    [TestFixture]
-    public sealed class ConfigSectionVariableSourceTests
+    [Test]
+    public void TestVariablesResolutionWithSingleSection()
     {
-        [Test]
-        public void TestVariablesResolutionWithSingleSection()
-        {
-            ConfigSectionVariableSource vs = new ConfigSectionVariableSource();
-            vs.SectionName = "DaoConfiguration";
+        ConfigSectionVariableSource vs = new ConfigSectionVariableSource();
+        vs.SectionName = "DaoConfiguration";
 
-            // existing vars
-            Assert.AreEqual("1000", vs.ResolveVariable("maxResults"));
-            Assert.AreEqual("1000", vs.ResolveVariable("MAXResults"));
+        // existing vars
+        Assert.AreEqual("1000", vs.ResolveVariable("maxResults"));
+        Assert.AreEqual("1000", vs.ResolveVariable("MAXResults"));
 
-            // non-existant variable
-            Assert.IsNull(vs.ResolveVariable("dummy"));
-        }
-
-        [Test]
-        public void TestVariablesResolutionWithTwoSections()
-        {
-            ConfigSectionVariableSource vs = new ConfigSectionVariableSource();
-            vs.SectionNames = new string[] { "DaoConfiguration", "DatabaseConfiguration" };
-
-            // existing vars
-            Assert.AreEqual("1000", vs.ResolveVariable("maxResults"));
-            Assert.AreEqual("1000", vs.ResolveVariable("MAXResults"));
-            Assert.AreEqual(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=c:\Northwind.mdb;User ID=Admin;Password=;",
-                            vs.ResolveVariable("connection.string"));
-            Assert.AreEqual(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=c:\Northwind.mdb;User ID=Admin;Password=;",
-                            vs.ResolveVariable("Connection.String"));
-
-            // non-existant variable
-            Assert.IsNull(vs.ResolveVariable("dummy"));
-        }
-
-        [Test]
-        public void TestVariableResolutionFromApplicationSettingsSchema()
-        {
-            ConfigSectionVariableSource vs = new ConfigSectionVariableSource();
-            vs.SectionName = "applicationSettings/MyApp.Properties.Settings";
-            Assert.AreEqual("1000", vs.ResolveVariable("maxResults"));
-            Assert.AreEqual(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=c:\Northwind.mdb;User ID=Admin;Password=;",
-                vs.ResolveVariable("connection.string"));
-        }
+        // non-existant variable
+        Assert.IsNull(vs.ResolveVariable("dummy"));
     }
 
+    [Test]
+    public void TestVariablesResolutionWithTwoSections()
+    {
+        ConfigSectionVariableSource vs = new ConfigSectionVariableSource();
+        vs.SectionNames = new string[] { "DaoConfiguration", "DatabaseConfiguration" };
+
+        // existing vars
+        Assert.AreEqual("1000", vs.ResolveVariable("maxResults"));
+        Assert.AreEqual("1000", vs.ResolveVariable("MAXResults"));
+        Assert.AreEqual(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=c:\Northwind.mdb;User ID=Admin;Password=;",
+            vs.ResolveVariable("connection.string"));
+        Assert.AreEqual(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=c:\Northwind.mdb;User ID=Admin;Password=;",
+            vs.ResolveVariable("Connection.String"));
+
+        // non-existant variable
+        Assert.IsNull(vs.ResolveVariable("dummy"));
+    }
+
+    [Test]
+    public void TestVariableResolutionFromApplicationSettingsSchema()
+    {
+        ConfigSectionVariableSource vs = new ConfigSectionVariableSource();
+        vs.SectionName = "applicationSettings/MyApp.Properties.Settings";
+        Assert.AreEqual("1000", vs.ResolveVariable("maxResults"));
+        Assert.AreEqual(@"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=c:\Northwind.mdb;User ID=Admin;Password=;",
+            vs.ResolveVariable("connection.string"));
+    }
 }

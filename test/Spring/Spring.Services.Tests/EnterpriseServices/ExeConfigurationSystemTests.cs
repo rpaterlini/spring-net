@@ -1,6 +1,4 @@
-﻿#region License
-
-/*
+﻿/*
  * Copyright © 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,49 +14,39 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Configuration;
 using System.Configuration.Internal;
-using System.IO;
-using Common.Logging.Configuration;
-using Common.Logging.Simple;
 using NUnit.Framework;
 using Spring.Util;
 
-namespace Spring.EnterpriseServices
+namespace Spring.EnterpriseServices;
+
+[TestFixture]
+public class ExeConfigurationSystemTests
 {
-
-
-    [TestFixture]
-    public class ExeConfigurationSystemTests
+    [Test]
+    public void SunnyDay()
     {
-        [Test]
-        public void SunnyDay()
+        FileInfo resFile = TestResourceLoader.ExportResource(this, ".config", new FileInfo(Path.GetTempFileName() + ".config"));
+        string exePath = resFile.FullName.Substring(0, resFile.FullName.Length - ".config".Length);
+        Assert.IsTrue(resFile.Exists);
+        IInternalConfigSystem prevConfig = null;
+        try
         {
-            FileInfo resFile = TestResourceLoader.ExportResource(this, ".config", new FileInfo(Path.GetTempFileName()+".config"));
-            string exePath = resFile.FullName.Substring(0, resFile.FullName.Length - ".config".Length);
-            Assert.IsTrue(resFile.Exists);
-            IInternalConfigSystem prevConfig = null;
-            try
-            {
-                ExeConfigurationSystem ccs = new ExeConfigurationSystem(exePath);
-                prevConfig = ConfigurationUtils.SetConfigurationSystem(ccs, true);
-                LogSetting settings = (LogSetting) ConfigurationManager.GetSection("logging");
-                Assert.AreEqual(typeof (TraceLoggerFactoryAdapter), settings.FactoryAdapterType);
+            ExeConfigurationSystem ccs = new ExeConfigurationSystem(exePath);
+            prevConfig = ConfigurationUtils.SetConfigurationSystem(ccs, true);
+            Assert.AreEqual("from custom config!", ConfigurationManager.AppSettings["key"]);
 
-                Assert.AreEqual("from custom config!", ConfigurationManager.AppSettings["key"]);
-
-                Assert.IsNull(ConfigurationManager.GetSection("spring/context"));
-            }
-            finally
+            Assert.IsNull(ConfigurationManager.GetSection("spring/context"));
+        }
+        finally
+        {
+            if (prevConfig != null)
             {
-                if (prevConfig != null)
-                {
-                    ConfigurationUtils.SetConfigurationSystem(prevConfig, true);
-                }
-                resFile.Delete();
+                ConfigurationUtils.SetConfigurationSystem(prevConfig, true);
             }
+
+            resFile.Delete();
         }
     }
 }

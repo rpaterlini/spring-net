@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,28 +14,24 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Messaging.Ems.Common;
 using Spring.Messaging.Ems.Connections;
 
-namespace Spring.Messaging.Ems.Listener
+namespace Spring.Messaging.Ems.Listener;
+
+/// <summary>
+/// EmsResourceHolder marker subclass that indicates local exposure,
+/// i.e. that does not indicate an externally managed transaction.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Mark Pollack (.NET)</author>
+public class LocallyExposedEmsResourceHolder : EmsResourceHolder
 {
     /// <summary>
-    /// EmsResourceHolder marker subclass that indicates local exposure,
-    /// i.e. that does not indicate an externally managed transaction.
+    /// Initializes a new instance of the <see cref="LocallyExposedEmsResourceHolder"/> class.
     /// </summary>
-    /// <author>Juergen Hoeller</author>
-    /// <author>Mark Pollack (.NET)</author>
-    public class LocallyExposedEmsResourceHolder : EmsResourceHolder
+    /// <param name="session">The session.</param>
+    public LocallyExposedEmsResourceHolder(ISession session) : base(session)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocallyExposedEmsResourceHolder"/> class.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        public LocallyExposedEmsResourceHolder(ISession session) : base(session)
-        {
-            
-        }
     }
 }

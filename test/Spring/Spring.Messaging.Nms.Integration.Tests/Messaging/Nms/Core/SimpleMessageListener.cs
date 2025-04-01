@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,42 +14,34 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Apache.NMS;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 
-namespace Spring.Messaging.Nms.Core
+namespace Spring.Messaging.Nms.Core;
+
+public class SimpleMessageListener : IMessageListener
 {
+    private static readonly ILogger<SimpleMessageListener> LOG = LogManager.GetLogger<SimpleMessageListener>();
 
-    public class SimpleMessageListener : IMessageListener
+    private int messageCount;
+
+    public int MessageCount
     {
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(SimpleMessageListener));
-
-        private int messageCount;
-
-        public int MessageCount
-        {
-            get { return messageCount; }
-        }
-        #region Implementation of IMessageListener
-
-        public void OnMessage(IMessage message)
-        {
-            messageCount++;
-            LOG.Debug("Message listener count = " + messageCount);
-            ITextMessage textMessage = message as ITextMessage;
-            if (textMessage != null)
-            {
-                LOG.Info("Message Text = " + textMessage.Text);
-            }
-            else
-            {
-                LOG.Warn("Can not process message of type " + message.GetType());
-            }
-        }
-
-        #endregion
+        get { return messageCount; }
     }
 
+    public void OnMessage(IMessage message)
+    {
+        messageCount++;
+        LOG.LogDebug("Message listener count = " + messageCount);
+        ITextMessage textMessage = message as ITextMessage;
+        if (textMessage != null)
+        {
+            LOG.LogInformation("Message Text = " + textMessage.Text);
+        }
+        else
+        {
+            LOG.LogWarning("Can not process message of type " + message.GetType());
+        }
+    }
 }

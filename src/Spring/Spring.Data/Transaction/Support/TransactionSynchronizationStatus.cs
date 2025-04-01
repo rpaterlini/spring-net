@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,27 +14,26 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Transaction.Support;
 
-namespace Spring.Transaction.Support
+/// <summary>
+/// Enumeration of status values when synchronizing transactions.
+/// </summary>
+/// <author>Griffin Caprio</author>
+public enum TransactionSynchronizationStatus
 {
-	/// <summary>
-	/// Enumeration of status values when synchronizing transactions.
-	/// </summary>
-	/// <author>Griffin Caprio</author>
-	public enum TransactionSynchronizationStatus
-	{
-		/// <summary>
-		/// Completion status in case of proper commit.
-		/// </summary>
-		Committed,
-		/// <summary>
-		/// Completion status in case of proper rollback.
-		/// </summary>
-		Rolledback,
-		/// <summary>
-		/// Completion status in case of heuristic mixed completion or system error.
-		/// </summary>
-		Unknown,
-	}
+    /// <summary>
+    /// Completion status in case of proper commit.
+    /// </summary>
+    Committed,
+
+    /// <summary>
+    /// Completion status in case of proper rollback.
+    /// </summary>
+    Rolledback,
+
+    /// <summary>
+    /// Completion status in case of heuristic mixed completion or system error.
+    /// </summary>
+    Unknown,
 }

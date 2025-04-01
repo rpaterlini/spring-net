@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +14,27 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Context;
 
-namespace Spring.Context
+/// <summary>
+/// Sub-interface of <see cref="Spring.Context.IMessageSource"/> to be
+/// implemented by objects that can resolve messages hierarchically.
+/// </summary>
+/// <author>Rod Johnson</author>
+/// <author>Juergen Hoeller</author>
+/// <author>Mark Pollack (.NET)</author>
+/// <seealso cref="Spring.Context.IMessageSource"/>
+public interface IHierarchicalMessageSource : IMessageSource
 {
-	/// <summary>
-	/// Sub-interface of <see cref="Spring.Context.IMessageSource"/> to be
-	/// implemented by objects that can resolve messages hierarchically.
-	/// </summary>
-	/// <author>Rod Johnson</author>
-	/// <author>Juergen Hoeller</author>
-	/// <author>Mark Pollack (.NET)</author>
-	/// <seealso cref="Spring.Context.IMessageSource"/>
-	public interface IHierarchicalMessageSource : IMessageSource
-	{
-		/// <summary>
-		/// The parent message source used to try and resolve messages that
-		/// this object can't resolve.
-		/// </summary>
-		/// <remarks>
-		/// <p>
-		/// If the value of this property is <see langword="null"/> then no
-		/// further resolution is possible.
-		/// </p>
-		/// </remarks>
-		IMessageSource ParentMessageSource { get; set; }
-	}
+    /// <summary>
+    /// The parent message source used to try and resolve messages that
+    /// this object can't resolve.
+    /// </summary>
+    /// <remarks>
+    /// <p>
+    /// If the value of this property is <see langword="null"/> then no
+    /// further resolution is possible.
+    /// </p>
+    /// </remarks>
+    IMessageSource ParentMessageSource { get; set; }
 }

@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,50 +14,39 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Util.Generic;
 
-namespace Spring.Dao.Support.Generic
+namespace Spring.Dao.Support.Generic;
+
+/// <summary>
+/// Miscellaneous utility methods for DAO implementations.
+/// Useful with any data access technology.
+/// </summary>
+/// <author>Mark Pollack (.NET)</author>
+public class DataAccessUtils
 {
-	/// <summary>
-	/// Miscellaneous utility methods for DAO implementations.
-	/// Useful with any data access technology.
-	/// </summary>
-	/// <author>Mark Pollack (.NET)</author>
-	public class DataAccessUtils
-	{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DataAccessUtils"/> class.
+    /// </summary>
+    public DataAccessUtils()
+    {
+    }
 
-		#region Constructor (s)
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DataAccessUtils"/> class.
-                /// </summary>
-		public 	DataAccessUtils()
-		{
+    public static T RequiredUniqueResultSet<T>(IList<T> results)
+    {
+        int size = (results != null ? results.Count : 0);
+        if (size == 0)
+        {
+            throw new EmptyResultDataAccessException(1);
+        }
 
-		}
+        if (!CollectionUtils.HasUniqueObject(results))
+        {
+            throw new IncorrectResultSizeDataAccessException(1, size);
+        }
 
-		#endregion
-
-		#region Methods
-
-	    public static T RequiredUniqueResultSet<T>(IList<T> results)
-	    {
-	        int size = (results != null ? results.Count : 0);
-	        if (size == 0)
-	        {
-	            throw new EmptyResultDataAccessException(1);
-	        }
-	        if ( ! CollectionUtils.HasUniqueObject(results))
-	        {
-	            throw new IncorrectResultSizeDataAccessException(1, size);
-	        }
-            IEnumerator<T> enumerator = results.GetEnumerator();
-	        enumerator.MoveNext();
-	        return enumerator.Current;
-	    }
-
-	    #endregion
-	}
-
+        IEnumerator<T> enumerator = results.GetEnumerator();
+        enumerator.MoveNext();
+        return enumerator.Current;
+    }
 }

@@ -1,68 +1,57 @@
-using System;
 using System.Messaging;
-using System.Threading;
-using Common.Logging;
+using Microsoft.Extensions.Logging;
 
-namespace Spring.Messaging.Listener
+namespace Spring.Messaging.Listener;
+
+/// <summary>
+///
+/// </summary>
+public class LoggingExceptionHandler : IExceptionHandler
 {
+    private TimeSpan recoveryTimeSpan;
+
+    private static readonly ILog LOG = LogManager.GetLogger(typeof(LoggingExceptionHandler));
+
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="LoggingExceptionHandler"/> class with
+    /// a default recovery time span of 5 seconds.
     /// </summary>
-    public class LoggingExceptionHandler : IExceptionHandler
+    public LoggingExceptionHandler()
     {
-        private TimeSpan recoveryTimeSpan;
+        recoveryTimeSpan = new TimeSpan(0, 0, 0, 5);
+    }
 
-        #region Logging Definition
+    public LoggingExceptionHandler(TimeSpan recoveryTimeSpan)
+    {
+        this.recoveryTimeSpan = recoveryTimeSpan;
+    }
 
-        private static readonly ILog LOG = LogManager.GetLogger(typeof (LoggingExceptionHandler));
+    public TimeSpan RecoveryTimeSpan
+    {
+        set { recoveryTimeSpan = value; }
+    }
 
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LoggingExceptionHandler"/> class with
-        /// a default recovery time span of 5 seconds.
-        /// </summary>
-        public LoggingExceptionHandler()
+    public void OnException(Exception exception, Message message)
+    {
+        //TODO other exception handling
+        MessageQueueException e = exception as MessageQueueException;
+        if (e != null)
         {
-            recoveryTimeSpan = new TimeSpan(0, 0, 0, 5);
-        }
-
-        public LoggingExceptionHandler(TimeSpan recoveryTimeSpan)
-        {
-            this.recoveryTimeSpan = recoveryTimeSpan;
-        }
-
-        public TimeSpan RecoveryTimeSpan
-        {
-            set { recoveryTimeSpan = value; }
-        }
-
-        #region IExceptionListener Members
-
-        public void OnException(Exception exception, Message message)
-        {
-            //TODO other exception handling
-            MessageQueueException e = exception as MessageQueueException;
-            if (e != null)
+            switch ((int) e.MessageQueueErrorCode)
             {
-                switch ((int) e.MessageQueueErrorCode)
-                {
-                    case (int) MessageQueueErrorCode.IOTimeout:
-                    case -1073741536:
-                        Console.WriteLine("Msmq Error -1073741536 or IOTimeout : Sleeping, and then ReListening");
-                        Thread.Sleep(recoveryTimeSpan);
-                        break;
-                    default:
-                        LOG.Error("Exception Receiving Message", e);
-                        break;
-                }
-            }
-            else
-            {
-                LOG.Error("got exception", exception);
+                case (int) MessageQueueErrorCode.IOTimeout:
+                case -1073741536:
+                    Console.WriteLine("Msmq Error -1073741536 or IOTimeout : Sleeping, and then ReListening");
+                    Thread.Sleep(recoveryTimeSpan);
+                    break;
+                default:
+                    LOG.LogError(e, "Exception Receiving Message");
+                    break;
             }
         }
-
-        #endregion
+        else
+        {
+            LOG.LogError(exception, "got exception");
+        }
     }
 }

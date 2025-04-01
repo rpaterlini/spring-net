@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Spring.Objects.Factory.Attributes.ByType;
+﻿using Spring.Objects.Factory.Attributes.ByType;
 
 namespace Spring.Objects.Factory.Attributes.ByType
 {
@@ -27,14 +25,12 @@ namespace Spring.Objects.Factory.Attributes.ByType
 
     public class AutowireTestFieldNormal
     {
-        [Autowired]
-        public IFoo hello;
+        [Autowired] public IFoo hello;
     }
 
     public class AutowireTestPropertyNormal
     {
-        [Autowired]
-        public IFoo Hello { get; set; }
+        [Autowired] public IFoo Hello { get; set; }
     }
 
     public class AutowireTestMethodNormal
@@ -61,14 +57,12 @@ namespace Spring.Objects.Factory.Attributes.ByType
 
     public class AutowireTestFieldNotRequired
     {
-        [Autowired(Required = false)]
-        public IFoo hello;
+        [Autowired(Required = false)] public IFoo hello;
     }
 
     public class AutowireTestPropertyNotRequired
     {
-        [Autowired(Required = false)]
-        public IFoo Hello { get; set; }
+        [Autowired(Required = false)] public IFoo Hello { get; set; }
     }
 
     public class AutowireTestMethodNotRequired
@@ -81,23 +75,18 @@ namespace Spring.Objects.Factory.Attributes.ByType
             this.hello = hello;
         }
     }
-
 }
 
 namespace Spring.Objects.Factory.Attributes.ByQualifier
 {
     public class AutowireTestFieldNormal
     {
-        [Autowired]
-        [Qualifier("ciao")]
-        public IFoo ciao;
+        [Autowired] [Qualifier("ciao")] public IFoo ciao;
     }
 
     public class AutowireTestPropertyNormal
     {
-        [Autowired]
-        [Qualifier("ciao")]
-        public IFoo Ciao { get; set; }
+        [Autowired] [Qualifier("ciao")] public IFoo Ciao { get; set; }
     }
 
     public class AutowireTestMethodNormal
@@ -134,8 +123,7 @@ namespace Spring.Objects.Factory.Attributes.ByQualifierAttribute
 
     public class AutowireTestFieldNormal
     {
-        [Autowired]
-        [Dialect(Language = "Italian")]
+        [Autowired] [Dialect(Language = "Italian")]
         public IFoo ciao;
     }
 
@@ -173,14 +161,12 @@ namespace Spring.Objects.Factory.Attributes.ByValue
 {
     public class AutowireTestFieldNormal
     {
-        [Value("@(CiaoFoo)")]
-        public IFoo ciao;
+        [Value("@(CiaoFoo)")] public IFoo ciao;
     }
 
     public class AutowireTestPropertyNormal
     {
-        [Value("@(CiaoFoo)")]
-        public IFoo Ciao { get; set; }
+        [Value("@(CiaoFoo)")] public IFoo Ciao { get; set; }
     }
 
     public class AutowireTestMethodNormal
@@ -207,44 +193,34 @@ namespace Spring.Objects.Factory.Attributes.ByValue
 
     public class AutowireTestPropertyPlaceHolder
     {
-        [Value("${greeting}")]
-        public string greeting;
+        [Value("${greeting}")] public string greeting;
     }
-
 }
 
 namespace Spring.Objects.Factory.Attributes.Collections
 {
     public class AutowireTestList
     {
-        [Autowired]
-        public IList<IFoo> foos;
+        [Autowired] public IList<IFoo> foos;
     }
-    
+
     public class AutowireTestSet
     {
-        [Autowired]
-        public Spring.Collections.Generic.ISet<IFoo> foos;        
+        [Autowired] public Spring.Collections.Generic.ISet<IFoo> foos;
     }
 
     public class AutowireTestDictionary
     {
-        [Autowired]
-        public IDictionary<string, IFoo> foos;
+        [Autowired] public IDictionary<string, IFoo> foos;
     }
 
     public class AutowireTestDictionaryFail
     {
-        [Autowired]
-        public IDictionary<IFoo, IFoo> foos;
+        [Autowired] public IDictionary<IFoo, IFoo> foos;
     }
 
     public class AutowireTestQualifier
     {
-        [Autowired]
-        [Qualifier("ciao")]
-        public IList<IFoo> foos;        
+        [Autowired] [Qualifier("ciao")] public IList<IFoo> foos;
     }
-
-
 }

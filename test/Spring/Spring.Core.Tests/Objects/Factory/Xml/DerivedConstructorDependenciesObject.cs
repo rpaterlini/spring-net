@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,48 +14,38 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Xml;
 
-#region Imports
-
-
-
-#endregion
-
-namespace Spring.Objects.Factory.Xml
+/// <summary>
+/// Simple object used to check derived constructor dependency checking.
+/// </summary>
+/// <author>Juergen Hoeller</author>
+/// <author>Rick Evans (.NET)</author>
+public class DerivedConstructorDependenciesObject : ConstructorDependenciesObject
 {
-	/// <summary>
-	/// Simple object used to check derived constructor dependency checking.
-	/// </summary>
-	/// <author>Juergen Hoeller</author>
-	/// <author>Rick Evans (.NET)</author>
-	public class DerivedConstructorDependenciesObject : ConstructorDependenciesObject
-	{
+    public DerivedConstructorDependenciesObject(
+        ITestObject spouse1, ITestObject spouse2, IndexedTestObject other)
+        : base(spouse1, spouse2, other)
+    {
+    }
 
-		public DerivedConstructorDependenciesObject(
-			ITestObject spouse1, ITestObject spouse2, IndexedTestObject other)
-			: base(spouse1, spouse2, other)
-		{
-		}
+    public DerivedConstructorDependenciesObject(
+        ITestObject spouse1, object spouse2, IndexedTestObject other)
+        : base(spouse1, null, other)
+    {
+    }
 
-		public DerivedConstructorDependenciesObject(
-			ITestObject spouse1, object spouse2, IndexedTestObject other)
-			: base(spouse1, null, other)
-		{
-		}
+    public DerivedConstructorDependenciesObject(
+        ITestObject spouse1, ITestObject spouse2, IndexedTestObject other, int age, int otherAge)
+        : base(spouse1, spouse2, other)
+    {
+    }
 
-		public DerivedConstructorDependenciesObject(
-			ITestObject spouse1, ITestObject spouse2, IndexedTestObject other, int age, int otherAge)
-			: base(spouse1, spouse2, other)
-		{
-		}
-
-		public DerivedConstructorDependenciesObject(
-			ITestObject spouse1, ITestObject spouse2, IndexedTestObject other, int age, string name)
-			: base(spouse1, spouse2, other)
-		{
-			Age = age;
-			Name = name;
-		}
-	}
+    public DerivedConstructorDependenciesObject(
+        ITestObject spouse1, ITestObject spouse2, IndexedTestObject other, int age, string name)
+        : base(spouse1, spouse2, other)
+    {
+        Age = age;
+        Name = name;
+    }
 }

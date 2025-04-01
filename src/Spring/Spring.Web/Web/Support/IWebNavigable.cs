@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,25 +14,16 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Web.Support;
 
-#region Imports
-
-
-
-#endregion
-
-namespace Spring.Web.Support
+/// <summary>
+/// Any component participating in the navigation infrastructure must implement this interface.
+/// </summary>
+/// <author>Erich Eichinger</author>
+public interface IWebNavigable
 {
     /// <summary>
-    /// Any component participating in the navigation infrastructure must implement this interface.
+    /// Return the <see cref="IWebNavigator"/> associated with this component.
     /// </summary>
-    /// <author>Erich Eichinger</author>
-    public interface IWebNavigable
-    {
-        /// <summary>
-        /// Return the <see cref="IWebNavigator"/> associated with this component.
-        /// </summary>
-        IWebNavigator WebNavigator { get; }    
-    }
+    IWebNavigator WebNavigator { get; }
 }

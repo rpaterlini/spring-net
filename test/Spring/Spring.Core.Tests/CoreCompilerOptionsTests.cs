@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,28 +14,21 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using System.Reflection;
 using NUnit.Framework;
 using Spring.Objects;
 
-#endregion
+namespace Spring;
 
-namespace Spring
+/// <summary>Test that the AOP assembly is built with the correct DebugAttributes in release and debug builds.
+/// </summary>
+/// <author>Mark Pollack</author>
+[TestFixture]
+public sealed class CoreCompilerOptionsTests : CompilerOptionsTests
 {
-    /// <summary>Test that the AOP assembly is built with the correct DebugAttributes in release and debug builds.
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    [TestFixture]
-    public sealed class CoreCompilerOptionsTests : CompilerOptionsTests
+    [OneTimeSetUp]
+    public void FixtureSetUp()
     {
-        [OneTimeSetUp]
-        public void FixtureSetUp()
-        {
-            AssemblyToCheck = Assembly.GetAssembly(typeof (ObjectsException));
-        }
+        AssemblyToCheck = Assembly.GetAssembly(typeof(ObjectsException));
     }
 }

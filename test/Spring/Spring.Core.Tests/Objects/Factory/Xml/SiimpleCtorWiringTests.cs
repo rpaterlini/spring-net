@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +14,28 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using NUnit.Framework;
 
-#endregion
+namespace Spring.Objects.Factory.Xml;
 
-namespace Spring.Objects.Factory.Xml
+/// <summary>
+/// This class contains tests for
+/// </summary>
+/// <author>Mark Pollack</author>
+/// <version>$Id:$</version>
+[TestFixture]
+public class SiimpleCtorWiringTests
 {
-    /// <summary>
-    /// This class contains tests for 
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    /// <version>$Id:$</version>
-    [TestFixture]
-    public class SiimpleCtorWiringTests
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
+    }
 
-
-        [Test]
-        public void SimpleCtor()
-        {
-            XmlObjectFactory xof = new XmlObjectFactory(new ReadOnlyXmlTestResource("simple-constructor-arg.xml", GetType()));
-            ConstructorDependenciesObject obj = (ConstructorDependenciesObject)xof.GetObject("rod4");
-            Assert.AreEqual("Kerry2", obj.Spouse1.Name);
-        }
-
-        
+    [Test]
+    public void SimpleCtor()
+    {
+        XmlObjectFactory xof = new XmlObjectFactory(new ReadOnlyXmlTestResource("simple-constructor-arg.xml", GetType()));
+        ConstructorDependenciesObject obj = (ConstructorDependenciesObject) xof.GetObject("rod4");
+        Assert.AreEqual("Kerry2", obj.Spouse1.Name);
     }
 }

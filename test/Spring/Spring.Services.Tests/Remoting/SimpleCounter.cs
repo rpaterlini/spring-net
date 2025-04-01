@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2004 the original author or authors.
  *
@@ -16,53 +14,46 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Remoting;
 
-#region Imports
-
-
-#endregion
-
-namespace Spring.Remoting
+/// <summary>
+/// A simple remote class.
+/// </summary>
+public class SimpleCounter : ISimpleCounter
 {
-	/// <summary>
-	/// A simple remote class.
-	/// </summary>
-	public class SimpleCounter : ISimpleCounter
-	{
-        protected int _counter;
+    protected int _counter;
 
-        /// <summary>
-        /// Create an instance of the Counter class.
-        /// </summary>
-		public SimpleCounter()
-		{
-            _counter = 0;
-		}
+    /// <summary>
+    /// Create an instance of the Counter class.
+    /// </summary>
+    public SimpleCounter()
+    {
+        _counter = 0;
+    }
 
-		/// <summary>
-		/// Create an instance of the Counter class.
-		/// </summary>
-		/// <param name="initialCounter">Initial counter value.</param>
-		public SimpleCounter(int initialCounter)
-		{
-			_counter = initialCounter;
-		}
+    /// <summary>
+    /// Create an instance of the Counter class.
+    /// </summary>
+    /// <param name="initialCounter">Initial counter value.</param>
+    public SimpleCounter(int initialCounter)
+    {
+        _counter = initialCounter;
+    }
 
-        /// <summary>
-        /// Get or Set the Counter's value.
-        /// </summary>
-        public int Counter
-        {
-            get	{ return _counter; }
-            set	{ _counter = value; }
-        }
-        /// <summary>
-        /// Increment the counter by one.
-        /// </summary>
-        public void Count()
-        {
-            _counter++;
-        }
-	}
+    /// <summary>
+    /// Get or Set the Counter's value.
+    /// </summary>
+    public int Counter
+    {
+        get { return _counter; }
+        set { _counter = value; }
+    }
+
+    /// <summary>
+    /// Increment the counter by one.
+    /// </summary>
+    public void Count()
+    {
+        _counter++;
+    }
 }

@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2010-2011 the original author or authors.
+ * Copyright ï¿½ 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +14,15 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Example.Scannable;
 
-namespace Spring.Example.Scannable
+/// <summary>
+/// Simple service for testing of component scanning
+/// </summary>
+/// <author>Mark Pollack</author>
+public interface IFooService
 {
-    /// <summary>
-    /// Simple service for testing of component scanning
-    /// </summary>
-    /// <author>Mark Pollack</author>
-    public interface IFooService
-    {
-        string Foo { get; set; }
+    string Foo { get; set; }
 
-        bool InitCalled { get; set; }
-
-    }
-
+    bool InitCalled { get; set; }
 }

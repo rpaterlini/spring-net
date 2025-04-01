@@ -1,7 +1,3 @@
-
-
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -18,14 +14,11 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Spring.Messaging.Ems.Common;
 
-namespace Spring.Messaging.Ems.Core
-{
-    /// <summary>
-    /// Delegate callback for browsing the messages in an EMS queue.
-    /// </summary>
-    public delegate object BrowserDelegate(ISession session, QueueBrowser browser);
-}
+namespace Spring.Messaging.Ems.Core;
+
+/// <summary>
+/// Delegate callback for browsing the messages in an EMS queue.
+/// </summary>
+public delegate object BrowserDelegate(ISession session, QueueBrowser browser);

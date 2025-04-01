@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -16,48 +14,45 @@
  * limitations under the License.
  */
 
-#endregion
-
 using System.Collections;
 
-namespace Spring.Messaging.Nms.Listener.Adapter
+namespace Spring.Messaging.Nms.Listener.Adapter;
+
+/// <summary>
+///
+/// </summary>
+/// <remarks>
+///
+/// </remarks>
+/// <author>Mark Pollack</author>
+public class MessageContentsHandler : IMessageContentsHandler
 {
-    /// <summary>
-    ///
-    /// </summary>
-    /// <remarks>
-    ///
-    /// </remarks>
-    /// <author>Mark Pollack</author>
-    public class MessageContentsHandler : IMessageContentsHandler
+    public int HandledStringCount;
+
+    public int HandledByteArrayCount;
+
+    public void HandleMessage(IDictionary message)
     {
-        public int HandledStringCount;
+        throw new System.NotImplementedException();
+    }
 
-        public int HandledByteArrayCount;
+    public void HandleMessage(byte[] message)
+    {
+        HandledByteArrayCount++;
+    }
 
-        public void HandleMessage(IDictionary message)
-        {
-            throw new System.NotImplementedException();
-        }
+    public void HandleMessage(int message)
+    {
+        throw new System.NotImplementedException();
+    }
 
-        public void HandleMessage(byte[] message)
-        {
-            HandledByteArrayCount++;
-        }
+    public void HandleMessage(object message)
+    {
+        throw new System.NotImplementedException();
+    }
 
-        public void HandleMessage(int message)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void HandleMessage(object message)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void HandleMessage(string message)
-        {
-            HandledStringCount++;
-        }
+    public void HandleMessage(string message)
+    {
+        HandledStringCount++;
     }
 }

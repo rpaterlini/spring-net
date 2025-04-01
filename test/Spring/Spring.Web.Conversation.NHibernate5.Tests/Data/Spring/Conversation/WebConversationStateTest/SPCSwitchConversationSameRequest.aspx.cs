@@ -1,21 +1,23 @@
-using System;
-
+using Microsoft.Extensions.Logging;
 using Spring.Web.Conversation;
 using Spring.Entities;
 using NHibernate;
-using Common.Logging;
+using Spring;
 
 public partial class SPCSwitchConversationSameRequest : System.Web.UI.Page
 {
-    private static readonly ILog LOG = LogManager.GetLogger(typeof(SPCSwitchConversationSameRequest));
+    private static readonly ILogger<SPCSwitchConversationSameRequest> LOG = LogManager.GetLogger<SPCSwitchConversationSameRequest>();
 
     private IConversationState conversationA;
+
     public IConversationState ConversationA
     {
         get { return conversationA; }
         set { conversationA = value; }
     }
+
     private IConversationState conversationB;
+
     public IConversationState ConversationB
     {
         get { return conversationB; }
@@ -23,6 +25,7 @@ public partial class SPCSwitchConversationSameRequest : System.Web.UI.Page
     }
 
     private ISessionFactory sessionFactory;
+
     public ISessionFactory SessionFactory
     {
         get { return sessionFactory; }
@@ -98,7 +101,7 @@ public partial class SPCSwitchConversationSameRequest : System.Web.UI.Page
     {
         foreach (SPCDetailEnt sPCDetailEntItem in sPCMasterEnt.SPCDetailEntList)
         {
-            LOG.Debug(String.Format("Page_Load({1}): sPCDetailEntItem.Description={0}", sPCDetailEntItem.Description, desc));
+            LOG.LogDebug(String.Format("Page_Load({1}): sPCDetailEntItem.Description={0}", sPCDetailEntItem.Description, desc));
         }
     }
 }

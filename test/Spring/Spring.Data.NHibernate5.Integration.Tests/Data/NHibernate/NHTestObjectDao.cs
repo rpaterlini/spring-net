@@ -1,14 +1,12 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
- * 
+ * Copyright ï¿½ 2002-2011 the original author or authors.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,36 +14,21 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
-using System;
 using System.Collections;
-
 using NHibernate.Type;
-
 using Spring.Data.NHibernate.Support;
 using Spring.Transaction.Interceptor;
-
-#endregion
 
 namespace Spring.Data.NHibernate
 {
     public class NHTestObjectDao : HibernateDaoSupport, ITestObjectDao
     {
-        #region Constructor (s)
-
         /// <summary>
         /// Initializes a new instance of the <see cref="NHTestObjectDao"/> class.
         /// </summary>
         public NHTestObjectDao()
         {
         }
-
-        #endregion
-
-        #region ITestObjectDao Members
 
         [Transaction()]
         public void Create(TestObject to)
@@ -71,7 +54,7 @@ namespace Spring.Data.NHibernate
                 "from TestObject to where to.Name=?",
                 name,
                 TypeFactory.GetStringType(50)
-                );
+            );
 
             if (result.Count > 0)
             {
@@ -91,6 +74,6 @@ namespace Spring.Data.NHibernate
             throw new Exception("My expected exception for test purposes.");
         }
 
-        #endregion
+        
     }
 }

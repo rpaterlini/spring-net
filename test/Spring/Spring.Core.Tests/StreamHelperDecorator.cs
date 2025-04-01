@@ -1,7 +1,5 @@
-#region License
-
 /*
- * Copyright © 2002-2011 the original author or authors.
+ * Copyright ï¿½ 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +14,40 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring;
 
-using System.IO;
+public delegate void StreamHelperCallback(out Stream stream);
 
-namespace Spring
+/// <summary>
+/// Helper class for template style Stream usage.
+/// </summary>
+/// <author>Rick Evans</author>
+public class StreamHelperDecorator
 {
-    public delegate void StreamHelperCallback(out Stream stream);
+    private StreamHelperCallback callback;
 
-    /// <summary>
-    /// Helper class for template style Stream usage.
-    /// </summary>
-    /// <author>Rick Evans</author>
-    public class StreamHelperDecorator
+    public StreamHelperDecorator(StreamHelperCallback callback)
     {
-        private StreamHelperCallback callback;
+        this.callback = callback;
+    }
 
-        public StreamHelperDecorator(StreamHelperCallback callback)
+    public void Run()
+    {
+        Stream stream = null;
+        try
         {
-            this.callback = callback;
+            this.callback(out stream);
         }
-
-        public void Run()
+        finally
         {
-            Stream stream = null;
-            try
+            if (stream != null)
             {
-                this.callback(out stream);
-            }
-            finally
-            {
-                if (stream != null)
+                try
                 {
-                    try
-                    {
-                        stream.Close();
-                    }
-                    catch
-                    {
-                    }
+                    stream.Close();
+                }
+                catch
+                {
                 }
             }
         }

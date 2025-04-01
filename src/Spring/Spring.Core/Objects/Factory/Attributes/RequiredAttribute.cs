@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,22 +14,18 @@
  * limitations under the License.
  */
 
-#endregion
+namespace Spring.Objects.Factory.Attributes;
 
-namespace Spring.Objects.Factory.Attributes
+/// <summary>
+/// Marks a property as being 'required': that is, the setter property
+/// must be configured to be dependency-injected with a value.
+/// </summary>
+/// <remarks>Consult the SDK documentation for <see cref="RequiredAttributeObjectPostProcessor"/>,
+/// which, by default, checks for the presence of this annotation.
+/// </remarks>
+/// <author>Rob Harrop</author>
+/// <author>Mark Pollack</author>
+[AttributeUsage(AttributeTargets.Property, Inherited = true)]
+public class RequiredAttribute : Attribute
 {
-    /// <summary>
-    /// Marks a property as being 'required': that is, the setter property
-    /// must be configured to be dependency-injected with a value.
-    /// </summary>
-    /// <remarks>Consult the SDK documentation for <see cref="RequiredAttributeObjectPostProcessor"/>,
-    /// which, by default, checks for the presence of this annotation.
-    /// </remarks>
-    /// <author>Rob Harrop</author>
-    /// <author>Mark Pollack</author>
-    [AttributeUsage(AttributeTargets.Property, Inherited = true)]
-    public class RequiredAttribute : Attribute
-    {
-
-    }
 }

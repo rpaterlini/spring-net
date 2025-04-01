@@ -1,5 +1,3 @@
-#region License
-
 /*
  * Copyright � 2002-2011 the original author or authors.
  *
@@ -16,42 +14,35 @@
  * limitations under the License.
  */
 
-#endregion
-
-#region Imports
-
 using Spring.Util;
 
-#endregion
+namespace Spring.Aop.Framework.AutoProxy;
 
-namespace Spring.Aop.Framework.AutoProxy
+/// <summary>
+/// This AutoProxyCreator only proxies objects matching the specified <see cref="IPointcut"/>.
+/// </summary>
+/// <author>Erich Eichinger</author>
+public class PointcutFilteringAutoProxyCreator : AbstractFilteringAutoProxyCreator
 {
+    private IPointcut _pointcut;
+
     /// <summary>
-    /// This AutoProxyCreator only proxies objects matching the specified <see cref="IPointcut"/>.
+    /// Set the pointcut used to filter objects that should automatically get wrapped with proxies.
     /// </summary>
-    /// <author>Erich Eichinger</author>
-    public class PointcutFilteringAutoProxyCreator : AbstractFilteringAutoProxyCreator
+    public IPointcut Pointcut
     {
-        private IPointcut _pointcut;
+        set { _pointcut = value; }
+        get { return _pointcut; }
+    }
 
-        /// <summary>
-        /// Set the pointcut used to filter objects that should automatically get wrapped with proxies.
-        /// </summary>
-        public IPointcut Pointcut
-        {
-            set { _pointcut = value; }
-            get { return _pointcut; }
-        }
+    /// <summary>
+    /// Determines, whether the given object shall be proxied.
+    /// </summary>
+    protected override bool IsEligibleForProxying(Type targetType, string targetName)
+    {
+        AssertUtils.ArgumentNotNull(_pointcut, "Pointcut");
 
-        /// <summary>
-        /// Determines, whether the given object shall be proxied.
-        /// </summary>
-        protected override bool IsEligibleForProxying( Type targetType, string targetName )
-        {
-            AssertUtils.ArgumentNotNull(_pointcut, "Pointcut");
-
-            bool shallProxy = AopUtils.CanApply( _pointcut, targetType, null );
-            return shallProxy;
-        }
+        bool shallProxy = AopUtils.CanApply(_pointcut, targetType, null);
+        return shallProxy;
     }
 }

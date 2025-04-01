@@ -1,7 +1,3 @@
- 
-
-#region License
-
 /*
  * Copyright 2002-2010 the original author or authors.
  *
@@ -18,21 +14,17 @@
  * limitations under the License.
  */
 
-#endregion
-
 using Apache.NMS;
 
-namespace Spring.Messaging.Nms.Core
-{
-    /// <summary> Perform operations on the given Session and MessageProducer.
-    /// The message producer is not associated with any destination.
-    /// </summary>
-    /// <param name="session">the NMS <code>Session</code> object to use
-    /// </param>
-    /// <param name="producer">the NMS <code>MessageProducer</code> object to use
-    /// </param>
-    /// <returns> a result object from working with the <code>Session</code>, if any (can be <code>null</code>) 
-    /// </returns>
-    public delegate object ProducerDelegate(ISession session, IMessageProducer producer);
+namespace Spring.Messaging.Nms.Core;
 
-}
+/// <summary> Perform operations on the given Session and MessageProducer.
+/// The message producer is not associated with any destination.
+/// </summary>
+/// <param name="session">the NMS <code>Session</code> object to use
+/// </param>
+/// <param name="producer">the NMS <code>MessageProducer</code> object to use
+/// </param>
+/// <returns> a result object from working with the <code>Session</code>, if any (can be <code>null</code>)
+/// </returns>
+public delegate object ProducerDelegate(ISession session, IMessageProducer producer);
