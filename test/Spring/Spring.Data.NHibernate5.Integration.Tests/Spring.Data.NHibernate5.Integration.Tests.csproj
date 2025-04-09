@@ -26,4 +26,12 @@
     </Content>
     <EmbeddedResource Include="Data\NHibernate\*.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Data\NHibernate\templateTests.xml" />
+    <Content Remove="Data\NHibernate\TestObject.hbm.xml" />
+    <Content Remove="Data\NHibernate\testObject.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\NHibernate\testObject.sql" />
+  </ItemGroup>
 </Project>

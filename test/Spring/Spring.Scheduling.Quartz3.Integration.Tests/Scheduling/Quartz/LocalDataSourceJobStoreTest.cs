@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#endregion
-
 #region Imports
 
 using System;
@@ -24,6 +22,8 @@ using System.Threading;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
+
+#endregion
 
 namespace Spring.Scheduling.Quartz.Integration.Tests;
 
@@ -35,30 +35,23 @@ public class LocalDataSourceJobStoreTest
     [SetUp]
     public void SetUp()
     {
+        var cd = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        var occupation = ConfigurationManager.AppSettings["ConnectionString"];
+#if NETFRAMEWORK
         ctx = new XmlApplicationContext(
             "assembly://Spring.Scheduling.Quartz3.Integration.Tests/Spring.Scheduling.Quartz/LocalDataSourceJobStoreTest.xml");
-    }
-
-        [SetUp]
-        public void SetUp()
-        {
-            var cd = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            var occupation = ConfigurationManager.AppSettings["ConnectionString"];
-#if NETFRAMEWORK
-            ctx = new XmlApplicationContext(
-                "assembly://Spring.Scheduling.Quartz3.Integration.Tests/Spring.Scheduling.Quartz/LocalDataSourceJobStoreTest.xml");
 #else
-            ctx = new XmlApplicationContext(
-    "assembly://Spring.Scheduling.Quartz3.Integration.Tests/Spring.Scheduling.Quartz/LocalDataSourceJobStoreTest-core.xml");
+        ctx = new XmlApplicationContext(
+"assembly://Spring.Scheduling.Quartz3.Integration.Tests/Spring.Scheduling.Quartz/LocalDataSourceJobStoreTest-core.xml");
 #endif
-        }
-
-        [Test]
-        [Explicit("Appveyor problems")]
-        public void TestLocalDataSourceJobStore()
-        {
-            // sleep 20 seconds
-            Thread.Sleep(20000);
-        }
     }
+
+    [Test]
+    [Explicit("Appveyor problems")]
+    public void TestLocalDataSourceJobStore()
+    {
+        // sleep 20 seconds
+        Thread.Sleep(20000);
+    }
+
 }

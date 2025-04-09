@@ -29,36 +29,8 @@ public class VariableAccessorTests
     private static readonly Guid TESTGUID = Guid.NewGuid();
     private static readonly Guid TESTGUID_DEFAULT = Guid.NewGuid();
 
-        private static readonly DateTime TESTDATETIME = new DateTime(2007, 07, 06, 11, 12, 13);
-        private static readonly DateTime TESTDATETIME_DEFAULT = TESTDATETIME.AddDays(-1);
-        
-        private readonly IVariableSource _testVariableSource = new DictionaryVariableSource(null, true)
-            .Add("ValidString", "String")
-            .Add("EmptyString", "")
-            .Add("ValidChar", "c")
-            .Add("InvalidChar", "12")
-            .Add("ValidBoolean", "true")
-            .Add("InvalidBoolean", "")
-            .Add("ValidByte", "1")
-            .Add("InvalidByte", "")
-            .Add("ValidInt16", "1")
-            .Add("InvalidInt16", "")
-            .Add("ValidInt32", "1")
-            .Add("InvalidInt32", "")
-            .Add("ValidInt64", "1")
-            .Add("InvalidInt64", "")
-            .Add("ValidFloat", "1")
-            .Add("InvalidFloat", "")
-            .Add("ValidDouble", "1")
-            .Add("InvalidDouble", "")
-            .Add("ValidDecimal", "1")
-            .Add("InvalidDecimal", "")
-            .Add("ValidGuid", TESTGUID.ToString())
-            .Add("InvalidGuid", "")
-            .Add("ValidDateTime", TESTDATETIME.ToString())
-            .Add("InvalidDateTime", "blabla")
-            .Add("ValidDateTimeUtcRoundtripFormatted", TESTDATETIME.ToUniversalTime().ToString("u"))
-            ;
+    private static readonly DateTime TESTDATETIME = new DateTime(2007, 07, 06, 11, 12, 13);
+    private static readonly DateTime TESTDATETIME_DEFAULT = TESTDATETIME.AddDays(-1);
 
     private readonly IVariableSource _testVariableSource = new DictionaryVariableSource(null, true)
         .Add("ValidString", "String")
@@ -83,7 +55,7 @@ public class VariableAccessorTests
         .Add("InvalidDecimal", "")
         .Add("ValidGuid", TESTGUID.ToString())
         .Add("InvalidGuid", "")
-        .Add("ValidDateTime", TESTDATETIME.ToString(CultureInfo.InvariantCulture))
+        .Add("ValidDateTime", TESTDATETIME.ToString())
         .Add("InvalidDateTime", "blabla")
         .Add("ValidDateTimeUtcRoundtripFormatted", TESTDATETIME.ToUniversalTime().ToString("u"));
 
