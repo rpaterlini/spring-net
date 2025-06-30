@@ -17,6 +17,7 @@
     <Company>SpringSource</Company>
     <Copyright>Copyright 2002-2021 Spring.NET Framework Team.</Copyright>
     <Trademark>Apache License, Version 2.0</Trademark>
+    <AssemblyVersion>3.1.0</AssemblyVersion>
 
     <Authors>SpringSource</Authors>
     <PackageIcon>SpringSource_Leaves32x32.png</PackageIcon>
